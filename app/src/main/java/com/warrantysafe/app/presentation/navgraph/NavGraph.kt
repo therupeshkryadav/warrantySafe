@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.presentation.home.SearchNavigation
 import com.warrantysafe.app.presentation.search.SearchScreen
 import com.warrantysafe.app.presentation.splash.SplashSheet
@@ -28,7 +29,8 @@ fun NavGraph(
 
         // BottomNavigation Flow
         composable(Route.BottomNavigation.route) {
-           WarrantyNavigator(navController=navController)
+            val bottomNavController = rememberNavController()
+           WarrantyNavigator(navController=bottomNavController)
         }
 
         // Search Flow (Search Screen)
