@@ -24,9 +24,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainActivityContent() {
-    val navController = rememberNavController()
-    // Navigation graph
-    NavGraph(navController = navController)
+    NavGraph()
 }
 
 @Preview

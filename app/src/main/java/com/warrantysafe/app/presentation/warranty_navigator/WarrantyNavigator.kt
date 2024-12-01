@@ -26,6 +26,7 @@ import com.warrantysafe.app.presentation.common.components.textCompose
 import com.warrantysafe.app.presentation.home.HomeScreen
 import com.warrantysafe.app.presentation.navgraph.Route
 import com.warrantysafe.app.presentation.profile.ProfileScreen
+import com.warrantysafe.app.presentation.search.SearchScreen
 import com.warrantysafe.app.presentation.warranty_navigator.components.BottomNavigationItem
 import com.warrantysafe.app.presentation.warranty_navigator.components.WarrantyBottomNavigation
 
@@ -134,18 +135,17 @@ fun WarrantyNavigator(
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Route.HomeScreen.route) {
-                HomeScreen(
-                    navController = navController,
-                    navigateToSearch = {
-                        navController.navigate(Route.SearchNavigation.route)
-                    }
-                )
+                HomeScreen(navController = navController)
             }
             composable(Route.AddScreen.route) {
                 AddScreen(navController = navController)
             }
             composable(Route.ProfileScreen.route) {
                 ProfileScreen(navController = navController)
+            }
+            // Search Flow (Search Screen)
+            composable(Route.SearchScreen.route) {
+                SearchScreen(navController = navController)
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,8 +27,7 @@ import com.warrantysafe.app.presentation.search.SearchScreen
 
 @Composable
 fun HomeScreen(
-    navController: NavController,
-    navigateToSearch: () -> Unit
+    navController: NavController
 ) {
     Column(
         modifier = Modifier
@@ -39,17 +39,17 @@ fun HomeScreen(
                 .fillMaxWidth()
                 .padding(top = 4.dp,bottom = 8.dp)
                 .padding(horizontal = 32.dp)
-                .clip(shape = RoundedCornerShape(28.dp)),
+                .clip(shape = RoundedCornerShape(28.dp))
+                .clickable {
+                    navController.navigate(route = Route.SearchScreen.route)
+                },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SearchBar(
                 query = "",
                 enabled = false,
                 onQueryChange = {},
-                onSearch = {
-                    // Navigate to Search screen when search bar is clicked
-                    navController.navigate(Route.SearchNavigation.route)
-                }
+                onSearch = {}
             )
         }
         ProductCard(
@@ -106,8 +106,8 @@ fun SearchNavigation(navController: NavHostController) {
 @Preview
 @Composable
 fun HomeScreenPreview() {
+    val homeNavController = rememberNavController()
     HomeScreen(
-        rememberNavController(),
-        navigateToSearch = {}
+        homeNavController
     )
 }
