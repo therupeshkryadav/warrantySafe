@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -37,7 +39,7 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 4.dp,bottom = 8.dp)
+                .padding(top = 8.dp,bottom = 8.dp)
                 .padding(horizontal = 32.dp)
                 .clip(shape = RoundedCornerShape(28.dp))
                 .clickable {

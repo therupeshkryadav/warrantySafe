@@ -27,7 +27,10 @@ fun NavGraph() {
         // BottomNavigation Flow
         composable(Route.BottomNavigation.route) {
             val bottomNavController = rememberNavController()
-           WarrantyNavigator(navController=bottomNavController)
+            WarrantyNavigator(
+                navController = bottomNavController,
+                startDestination = Route.HomeScreen.route
+            )
         }
 
     }

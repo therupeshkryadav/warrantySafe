@@ -1,12 +1,15 @@
 package com.warrantysafe.app.presentation.warranty_navigator
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,7 +30,8 @@ import com.warrantysafe.app.presentation.warranty_navigator.components.WarrantyB
 
 @Composable
 fun WarrantyNavigator(
-    navController: NavHostController
+    navController: NavHostController,
+    startDestination: String
 ) {
     val bottomNavigationItems = remember {
         listOf(
@@ -55,6 +59,7 @@ fun WarrantyNavigator(
 
     // Observe the current route for top bar logic
     val currentRoute = backStackState?.destination?.route
+
 
     Scaffold(
         topBar = {
@@ -152,7 +157,7 @@ fun WarrantyNavigator(
         // Navigation host with padding applied
         NavHost(
             navController = navController,
-            startDestination = Route.HomeScreen.route,
+            startDestination = startDestination,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Route.HomeScreen.route) {
@@ -184,8 +189,9 @@ private fun navigateToTab(navController: NavController, route: String) {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewWarranty(){
-    WarrantyNavigator(navController = rememberNavController())
+    WarrantyNavigator(navController = rememberNavController(),
+        startDestination = Route.AddScreen.route)
 }

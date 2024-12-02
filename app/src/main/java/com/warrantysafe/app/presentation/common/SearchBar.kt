@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.common
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,7 +50,7 @@ fun SearchBar(
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun SearchBarPreview(){
     SearchBar(
