@@ -40,7 +40,7 @@ fun navigationIcons(
     }
     else if(isSearch.equals(true))
     {
-        IconButton(onClick = {}) {
+        IconButton(onClick = {navController.popBackStack()}) {
             Icon(
                 painter = androidx.compose.ui.res.painterResource(id = R.drawable.arrow_back),
                 contentDescription = "Back",
