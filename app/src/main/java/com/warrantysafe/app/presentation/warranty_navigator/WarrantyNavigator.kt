@@ -1,15 +1,9 @@
 package com.warrantysafe.app.presentation.warranty_navigator
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -20,6 +14,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.add.AddScreen
+import com.warrantysafe.app.presentation.common.CustomTopAppBar
 import com.warrantysafe.app.presentation.common.components.actions
 import com.warrantysafe.app.presentation.common.components.navigationIcons
 import com.warrantysafe.app.presentation.common.components.textCompose
@@ -30,7 +25,6 @@ import com.warrantysafe.app.presentation.search.SearchScreen
 import com.warrantysafe.app.presentation.warranty_navigator.components.BottomNavigationItem
 import com.warrantysafe.app.presentation.warranty_navigator.components.WarrantyBottomNavigation
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WarrantyNavigator(
     navController: NavHostController
@@ -64,7 +58,7 @@ fun WarrantyNavigator(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CustomTopAppBar(
                 title = {
                     when (currentRoute) {
                         Route.HomeScreen.route, Route.ProfileScreen.route -> textCompose(
@@ -72,6 +66,13 @@ fun WarrantyNavigator(
                             isAddWarranty = false,
                             isHomeorProfile = true
                         )
+
+                        Route.SearchScreen.route->textCompose(
+                            isSearch = true,
+                            isAddWarranty = false,
+                            isHomeorProfile = false
+                        )
+
                         Route.AddScreen.route -> textCompose(
                             isSearch = false,
                             isAddWarranty = true,
@@ -83,11 +84,21 @@ fun WarrantyNavigator(
                 navigationIcon = {
                     when (currentRoute) {
                         Route.HomeScreen.route, Route.ProfileScreen.route -> navigationIcons(
+                            navController = navController,
                             isSearch = false,
                             isAddWarranty = false,
                             isHomeorProfile = true
                         )
+
+                        Route.SearchScreen.route -> navigationIcons(
+                            navController = navController,
+                            isSearch = true,
+                            isAddWarranty = false,
+                            isHomeorProfile = false
+                        )
+
                         Route.AddScreen.route -> navigationIcons(
+                            navController = navController,
                             isSearch = false,
                             isAddWarranty = true,
                             isHomeorProfile = false
@@ -98,12 +109,22 @@ fun WarrantyNavigator(
                 actions = {
                     when (currentRoute) {
                         Route.HomeScreen.route, Route.ProfileScreen.route -> actions(
-                            isSearch = false,
+                            navController = navController,
+                            isSearch= false,
                             isAddWarranty = false,
                             isHomeorProfile = true
                         )
+
+                        Route.SearchScreen.route -> actions(
+                            navController = navController,
+                            isSearch= true,
+                            isAddWarranty = false,
+                            isHomeorProfile = false
+                        )
+
                         Route.AddScreen.route -> actions(
-                            isSearch = false,
+                            navController = navController,
+                            isSearch= false,
                             isAddWarranty = true,
                             isHomeorProfile = false
                         )
@@ -161,4 +182,10 @@ private fun navigateToTab(navController: NavController, route: String) {
         launchSingleTop = true
         restoreState = true
     }
+}
+
+@Preview
+@Composable
+fun PreviewWarranty(){
+    WarrantyNavigator(navController = rememberNavController())
 }

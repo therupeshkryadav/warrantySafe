@@ -12,9 +12,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.navgraph.Route
 
 @Composable
 fun actions(
+    navController: NavHostController,
     isSearch: Boolean,
     isAddWarranty: Boolean,
     isHomeorProfile: Boolean
@@ -35,16 +40,22 @@ fun actions(
                 )
             }
         }
-        else if(isSearch.equals(true))
-        {
-
-        }
         else if(isAddWarranty.equals(true))
         {
-            IconButton(onClick = {}) {
+            IconButton(onClick = {navController.navigate(Route.HomeScreen.route)}) {
                 Icon(
                     imageVector = Icons.Filled.Check,
                     contentDescription = "Check Icon"
+                )
+            }
+        }
+        else if(isSearch.equals(true))
+        {
+            IconButton(onClick = {}) {
+                Icon(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.search_warranty),
+                    contentDescription = "Search",
+                    tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
                 )
             }
         }
@@ -55,8 +66,9 @@ fun actions(
 @Composable
 fun actionsPreview() {
     actions(
-        isSearch = false,
-        isAddWarranty = true,
+        navController = rememberNavController(),
+        isSearch = true,
+        isAddWarranty = false,
         isHomeorProfile = false
     )
 }

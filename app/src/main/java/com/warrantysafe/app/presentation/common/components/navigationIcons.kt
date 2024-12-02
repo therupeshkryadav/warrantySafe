@@ -8,10 +8,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.warrantysafe.app.R
 
 @SuppressLint("ComposableNaming")
 @Composable
 fun navigationIcons(
+    navController: NavHostController,
     isSearch: Boolean,
     isAddWarranty: Boolean,
     isHomeorProfile: Boolean
@@ -25,16 +29,22 @@ fun navigationIcons(
             )
         }
     }
-    else if(isSearch.equals(true))
-    {
-
-    }
     else if(isAddWarranty.equals(true))
     {
-        IconButton(onClick = {}) {
+        IconButton(onClick = {navController.popBackStack()}) {
             Icon(
                 imageVector = Icons.Filled.Close,
                 contentDescription = "Close Icon"
+            )
+        }
+    }
+    else if(isSearch.equals(true))
+    {
+        IconButton(onClick = {}) {
+            Icon(
+                painter = androidx.compose.ui.res.painterResource(id = R.drawable.arrow_back),
+                contentDescription = "Back",
+                tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
             )
         }
     }
@@ -44,8 +54,9 @@ fun navigationIcons(
 @Composable
 fun navigationIconsPreview() {
     navigationIcons(
-        isSearch = false,
-        isAddWarranty = true,
+        navController = rememberNavController(),
+        isSearch = true,
+        isAddWarranty = false,
         isHomeorProfile = false
     )
 }
