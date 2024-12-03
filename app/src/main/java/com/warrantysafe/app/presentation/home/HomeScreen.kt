@@ -30,7 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.SearchBar
 import com.warrantysafe.app.presentation.navgraph.Route
-import com.warrantysafe.app.presentation.product.ProductCard
+import com.warrantysafe.app.presentation.productCard.ProductCard
 
 
 // Data class for ProductCard

@@ -4,9 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.warrantysafe.app.presentation.home.HomeScreen
-import com.warrantysafe.app.presentation.search.SearchScreen
-import com.warrantysafe.app.presentation.splash.SplashScreen
+import com.warrantysafe.app.presentation.splash.SplashSheet
 import com.warrantysafe.app.presentation.warranty_navigator.WarrantyNavigator
 
 @Composable
@@ -16,7 +14,7 @@ fun NavGraph() {
     NavHost(navController, startDestination = Route.SplashSheet.route) {
         // SplashScreen to BottomNavigation
         composable(Route.SplashSheet.route) {
-            SplashScreen(
+            SplashSheet(
                 navController = navController,
                 onFinish = {
                     navController.navigate(Route.BottomNavigation.route) {

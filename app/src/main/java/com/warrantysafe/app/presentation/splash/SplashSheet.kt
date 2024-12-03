@@ -26,7 +26,7 @@ import com.warrantysafe.app.ui.theme.WarrantySafeTheme
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(
+fun SplashSheet(
     navController: NavController,
     onFinish: () -> Unit
 ) {
@@ -65,7 +65,7 @@ fun SplashScreen(
 @Composable
 fun SplashSheetPreview() {
     WarrantySafeTheme {
-        SplashScreen(navController = rememberNavController(),
+        SplashSheet(navController = rememberNavController(),
             onFinish = {})
     }
 }
