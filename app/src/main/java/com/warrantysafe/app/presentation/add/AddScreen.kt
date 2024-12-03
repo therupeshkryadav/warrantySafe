@@ -16,12 +16,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,7 +40,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddScreen(navController: NavController) {
 
@@ -86,7 +83,7 @@ fun AddScreen(navController: NavController) {
                     .height(60.dp),
                 onValueChange = { productName = it },
                 label = { Text(fontSize = 16.sp, text = "Product name") },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
+                colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = colorResource(R.color.black),
                     focusedLabelColor = colorResource(R.color.xtreme2),
                     unfocusedLabelColor = colorResource(R.color.xtreme),
@@ -280,7 +277,7 @@ fun AddScreen(navController: NavController) {
                     )
                 },
                 label = { Text(fontSize = 16.sp, text = "Notes") },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
+                colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = colorResource(R.color.black),
                     focusedLabelColor = colorResource(R.color.xtreme2),
                     unfocusedLabelColor = colorResource(R.color.xtreme),

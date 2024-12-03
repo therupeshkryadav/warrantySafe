@@ -18,222 +18,103 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.profile.components.ProfileDetailRow
 
 
 @Composable
 fun ProfileScreen(navController: NavController) {
-
-    var fullName by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
+    val fullName = "Rupesh Kumar Yadav"
+    val email = "rupesh.official484@gmail.com"
+    val phoneNumber = "7233966649"
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+            .padding(8.dp)
     ) {
-        //profile_avatarcontainer
+        // Edit Profile Icon
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Icon(
+                modifier = Modifier
+                    .size(24.dp)
+                    .align(Alignment.CenterEnd),
+                painter = painterResource(R.drawable.edit),
+                contentDescription = "Edit Profile"
+            )
+        }
+
+        // Profile Avatar
         Box(
             modifier = Modifier
                 .size(244.dp)
-                .clip(shape = CircleShape)
-                .align(alignment = Alignment.CenterHorizontally)
+                .clip(CircleShape)
                 .background(color = colorResource(R.color.black))
+                .align(Alignment.CenterHorizontally)
         ) {
             Image(
                 painter = painterResource(R.drawable.profile_avatar),
                 modifier = Modifier
                     .size(240.dp)
                     .align(Alignment.Center)
-                    .clip(shape = CircleShape),
-                contentScale = ContentScale.Crop,
-                contentDescription = null
+                    .clip(CircleShape),
+                contentDescription = "Profile Avatar",
+                contentScale = ContentScale.Crop
             )
         }
 
-        //Name,Email,Phone Number,change password container
+        // Profile Details
+        ProfileDetailRow("Name", fullName, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
+        ProfileDetailRow("Email", email, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
+        ProfileDetailRow("Phone", phoneNumber, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
+
+        // Change Password Button
         Box(
             modifier = Modifier
-                .fillMaxWidth(1f)
+                .padding(vertical = 8.dp)
+                .fillMaxWidth()
+                .border(1.dp, colorResource(R.color.purple_500))
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(1f)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .background(color = colorResource(R.color.purple_700)),
+                horizontalArrangement = Arrangement.Center
             ) {
-
-                Box(
+                Text(
                     modifier = Modifier
-                        .padding(vertical = 8.dp)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxHeight(1f)
-                                .padding(vertical = 12.dp),
-                            text = "Email:",
-                            fontSize = 16.sp,
-                            color = colorResource(id = R.color.black)
-                        )
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight(1f)
-                                .border(width = 1.dp, color = colorResource(R.color.black))
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxHeight(1f)
-                                    .fillMaxWidth()
-                                    .padding(all = 8.dp),
-                                text = "yourEmail@domain.com",
-                                textAlign = TextAlign.Start,
-                                fontSize = 16.sp,
-                                color = colorResource(id = R.color.purple_500)
-                            )
-                        }
-
-                    }
-                }
-
-                Box(
+                        .align(Alignment.CenterVertically)
+                        .padding(vertical = 11.dp),
+                    text = "Change Your Password",
+                    fontSize = 18.sp,
+                    color = colorResource(R.color.white)
+                )
+                Icon(
                     modifier = Modifier
-                        .padding(vertical = 8.dp)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxHeight(1f)
-                                .padding(vertical = 12.dp),
-                            text = "Phone:",
-                            fontSize = 16.sp,
-                            color = colorResource(id = R.color.black)
-                        )
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight(1f)
-                                .border(width = 1.dp, color = colorResource(R.color.black))
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxHeight(1f)
-                                    .fillMaxWidth()
-                                    .padding(all = 8.dp),
-                                text = "XXXXXXXXXX",
-                                textAlign = TextAlign.Start,
-                                fontSize = 16.sp,
-                                color = colorResource(id = R.color.purple_500)
-                            )
-                        }
-
-                    }
-                }
-
-                Box(
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxHeight(1f)
-                                .padding(vertical = 12.dp),
-                            text = "Name:",
-                            fontSize = 16.sp,
-                            color = colorResource(id = R.color.black)
-                        )
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight(1f)
-                                .border(width = 1.dp, color = colorResource(R.color.black))
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxHeight(1f)
-                                    .fillMaxWidth()
-                                    .padding(all = 8.dp),
-                                text = "Intellectual Person",
-                                textAlign = TextAlign.Start,
-                                fontSize = 16.sp,
-                                color = colorResource(id = R.color.purple_500)
-                            )
-                        }
-
-                    }
-                }
-
-                Box(
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxWidth()
-                        .border(width = 1.dp, color = colorResource(R.color.purple_500))
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(1f)
-                            .height(48.dp)
-                            .background(color = colorResource(R.color.purple_700)),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxHeight(1f)
-                                .padding(vertical = 11.dp)
-                                .padding(end = 4.dp)
-                                .align(Alignment.CenterVertically),
-                            text = "Change Your Password",
-                            fontSize = 18.sp,
-                            color = colorResource(id = R.color.white)
-                        )
-                        Icon(
-                            modifier = Modifier
-                                .width(24.dp)
-                                .fillMaxHeight(1f)
-                                .padding(vertical = 9.dp),
-                            painter = painterResource(R.drawable.fast_forward),
-                            tint = colorResource(R.color.white),
-                            contentDescription = null
-                        )
-                    }
-
-                }
+                        .width(24.dp)
+                        .fillMaxHeight()
+                        .padding(vertical = 9.dp),
+                    painter = painterResource(R.drawable.fast_forward),
+                    tint = colorResource(R.color.white),
+                    contentDescription = "Change Password"
+                )
             }
         }
-
     }
-
 }
+
 
 @Preview(showBackground = true)
 @Composable

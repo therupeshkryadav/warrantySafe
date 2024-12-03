@@ -6,15 +6,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,10 +29,10 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.common.SearchBar
 import com.warrantysafe.app.presentation.navgraph.Route
 import com.warrantysafe.app.presentation.productCard.ProductCard
 
@@ -44,7 +48,10 @@ data class Product(
 
 @Composable
 fun ProductList(products: List<Product>) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(bottom = 48.dp) // Padding at the bottom
+    ) {
         items(products) { product ->
             ProductCard(
                 title = product.title,
@@ -158,24 +165,42 @@ fun HomeScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp)
-                .clip(shape = RoundedCornerShape(28.dp))
-                .clickable {
-                    navController.navigate(route = Route.SearchScreen.route)
-                }
+                .clip(shape = RoundedCornerShape(56.dp))
+                .background(color = colorResource(R.color.black))
         ) {
-            SearchBar(
-                query = "",
-                enabled = false,
-                onQueryChange = {},
-                onSearch = {}
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(shape = RoundedCornerShape(56.dp))
+                    .background(color = colorResource(R.color.black))
+                    .clickable {
+                        navController.navigate(route = Route.SearchScreen.route)
+                    }
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .background(color = MaterialTheme.colorScheme.surface)
+                        .padding(8.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.search_warranty),
+                        contentDescription = null
+                    )
+                    Text(
+                        modifier = Modifier.padding(start = 8.dp),
+                        text = "Search",
+                        fontSize = 20.sp,
+                        color = colorResource(R.color.xtreme)
+                    )
+                }
+            }
         }
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp),
+                .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween, // Distribute components to start and end
             verticalAlignment = Alignment.CenterVertically // Center items vertically
         ) {
@@ -238,7 +263,7 @@ fun HomeScreen(
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
     val homeNavController = rememberNavController()

@@ -2,7 +2,6 @@ package com.warrantysafe.app.presentation.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,27 +16,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.common.components.actions
+import com.warrantysafe.app.presentation.common.components.actionIcons
 import com.warrantysafe.app.presentation.common.components.navigationIcons
-import com.warrantysafe.app.presentation.common.components.textCompose
+import com.warrantysafe.app.presentation.common.components.titleAppBar
+import com.warrantysafe.app.presentation.navgraph.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTopAppBar(
-    title: @Composable () -> Unit = {},
-    navigationIcon: @Composable () -> Unit = {},
-    actions: @Composable() (RowScope.() -> Unit) = {},
-    backgroundColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surface,
-    titleColor: androidx.compose.ui.graphics.Color = colorResource(R.color.black)
+    navController: androidx.navigation.NavHostController,
+    currentRoute: String
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         CenterAlignedTopAppBar(
-            title = title,
-            navigationIcon = navigationIcon,
-            actions = actions,
+            title = {
+                titleAppBar(currentRoute = currentRoute)
+            },
+            navigationIcon = {
+                navigationIcons(navController = navController, currentRoute = currentRoute)
+            },
+            actions = {
+                actionIcons(navController = navController, currentRoute = currentRoute)
+            },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = backgroundColor, // Background color
-                titleContentColor = titleColor // Title color
+                containerColor = MaterialTheme.colorScheme.surface,
+                titleContentColor = colorResource(R.color.black)
             )
         )
         Spacer(
@@ -49,34 +52,48 @@ fun CustomTopAppBar(
     }
 }
 
-
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "SmartCustomTopAppBar Previews")
 @Composable
-fun TopAppBarProfilePreview(
-) {
+fun SmartCustomTopAppBarPreview() {
+    val navController = rememberNavController()
 
-    CustomTopAppBar(
-        title = {
-            textCompose(
-                isSearch = false,
-                isAddWarranty = true,
-                isHomeorProfile = false
-            )
-        },
-        navigationIcon = {
-            navigationIcons(
-                navController = rememberNavController(),
-                isSearch = false,
-            isAddWarranty = true,
-            isHomeorProfile = false
-        ) },
-        actions = {
-            actions(
-                navController = rememberNavController(),
-                isSearch = false,
-                isAddWarranty = true,
-                isHomeorProfile = false
-            )
-        }
-    )
+    Column {
+        // Home Screen Preview
+        CustomTopAppBar(
+            navController = navController,
+            currentRoute = Route.HomeScreen.route
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Profile Screen Preview
+        CustomTopAppBar(
+            navController = navController,
+            currentRoute = Route.ProfileScreen.route
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Add Warranty Screen Preview
+        CustomTopAppBar(
+            navController = navController,
+            currentRoute = Route.AddScreen.route
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Search Screen Preview
+        CustomTopAppBar(
+            navController = navController,
+            currentRoute = Route.SearchScreen.route
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Unknown Route Preview
+        CustomTopAppBar(
+            navController = navController,
+            currentRoute = "unknown_route"
+        )
+    }
 }

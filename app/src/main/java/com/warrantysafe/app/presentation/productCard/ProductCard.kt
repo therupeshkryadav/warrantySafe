@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -31,7 +32,7 @@ import com.warrantysafe.app.R
 fun ProductCard(
     title: String,
     description: String,
-    purchase:String,
+    purchase: String,
     progress: Float, // Progress value from 0f to 1f
     imageResId: Int // Image resource ID
 ) {
@@ -48,21 +49,24 @@ fun ProductCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(110.dp)
-                .padding(16.dp),
+                .height(110.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 painter = painterResource(id = imageResId),
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth(0.25f)
+                    .fillMaxWidth(0.35f)
                     .fillMaxHeight(1f)
-                    .padding(end = 16.dp).clip(shape = RoundedCornerShape(16.dp)),
+                    .padding(end = 16.dp)
+                    .clip(shape = RectangleShape),
                 contentScale = ContentScale.Crop
             )
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(end = 16.dp)
             ) {
                 Text(
                     text = title,

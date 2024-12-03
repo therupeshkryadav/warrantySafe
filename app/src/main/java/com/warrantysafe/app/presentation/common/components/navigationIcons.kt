@@ -11,52 +11,66 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.navgraph.Route
 
 @SuppressLint("ComposableNaming")
 @Composable
 fun navigationIcons(
     navController: NavHostController,
-    isSearch: Boolean,
-    isAddWarranty: Boolean,
-    isHomeorProfile: Boolean
+    currentRoute: String
 ) {
-    if (isHomeorProfile.equals(true))
-    {
-        IconButton(onClick = {}) {
-            Icon(
-                imageVector = Icons.Filled.Menu,
-                contentDescription = "Overflow Menu Icon"
+    val navigationIcon = when (currentRoute) {
+        Route.HomeScreen.route, Route.ProfileScreen.route -> {
+            NavigationIconConfig(
+                icon = Icons.Filled.Menu,
+                contentDescription = "Menu",
+                onClick = { /* Handle menu click, e.g., open a drawer */ }
             )
         }
-    }
-    else if(isAddWarranty.equals(true))
-    {
-        IconButton(onClick = {navController.popBackStack()}) {
-            Icon(
-                imageVector = Icons.Filled.Close,
-                contentDescription = "Close Icon"
+        Route.AddScreen.route -> {
+            NavigationIconConfig(
+                icon = Icons.Filled.Close,
+                contentDescription = "Close",
+                onClick = { navController.popBackStack() }
             )
         }
-    }
-    else if(isSearch.equals(true))
-    {
-        IconButton(onClick = {navController.popBackStack()}) {
-            Icon(
-                painter = androidx.compose.ui.res.painterResource(id = R.drawable.arrow_back),
+        Route.SearchScreen.route -> {
+            NavigationIconConfig(
+                iconPainter = androidx.compose.ui.res.painterResource(id = R.drawable.arrow_back),
                 contentDescription = "Back",
-                tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
+                onClick = { navController.popBackStack() }
             )
+        }
+        else -> null // No icon for unrecognized or fallback routes
+    }
+
+    navigationIcon?.let {
+        IconButton(onClick = it.onClick) {
+            if (it.icon != null) {
+                Icon(imageVector = it.icon, contentDescription = it.contentDescription)
+            } else if (it.iconPainter != null) {
+                Icon(
+                    painter = it.iconPainter,
+                    contentDescription = it.contentDescription,
+                    tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
+                )
+            }
         }
     }
 }
 
-@Preview
+data class NavigationIconConfig(
+    val icon: androidx.compose.ui.graphics.vector.ImageVector? = null,
+    val iconPainter: androidx.compose.ui.graphics.painter.Painter? = null,
+    val contentDescription: String,
+    val onClick: () -> Unit
+)
+
+@Preview(showBackground = true)
 @Composable
-fun navigationIconsPreview() {
+fun NavigationIconsPreview() {
     navigationIcons(
         navController = rememberNavController(),
-        isSearch = true,
-        isAddWarranty = false,
-        isHomeorProfile = false
+        currentRoute = Route.HomeScreen.route
     )
 }
