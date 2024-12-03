@@ -25,8 +25,7 @@ fun actions(
     isHomeorProfile: Boolean
 ) {
     Row {
-        if (isHomeorProfile.equals(true))
-        {
+        if (isHomeorProfile.equals(true)) {
             IconButton(onClick = {}) {
                 Icon(
                     imageVector = Icons.Filled.Notifications,
@@ -39,18 +38,20 @@ fun actions(
                     contentDescription = "Overflow Menu Icon"
                 )
             }
-        }
-        else if(isAddWarranty.equals(true))
-        {
-            IconButton(onClick = {navController.navigate(Route.HomeScreen.route)}) {
+        } else if (isAddWarranty.equals(true)) {
+            IconButton(onClick = {
+                // Clear back stack of Route.AppScreen.route
+                navController.popBackStack(Route.AddScreen.route, inclusive = true)
+
+                // Navigate to HomeScreen
+                navController.navigate(Route.HomeScreen.route)
+            }) {
                 Icon(
                     imageVector = Icons.Filled.Check,
                     contentDescription = "Check Icon"
                 )
             }
-        }
-        else if(isSearch.equals(true))
-        {
+        } else if (isSearch.equals(true)) {
             IconButton(onClick = {}) {
                 Icon(
                     painter = androidx.compose.ui.res.painterResource(id = R.drawable.search_warranty),
