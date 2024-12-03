@@ -2,9 +2,11 @@ package com.warrantysafe.app.presentation.product
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -39,7 +41,7 @@ fun ProductCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 8.dp, end = 8.dp, bottom = 6.dp)
+            .padding(bottom = 6.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(color = colorResource(R.color.xtreme)),
         colors = CardDefaults.cardColors(
@@ -49,6 +51,7 @@ fun ProductCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .height(110.dp)
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -56,8 +59,9 @@ fun ProductCard(
                 painter = painterResource(id = imageResId),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(64.dp)
-                    .padding(end = 16.dp),
+                    .fillMaxWidth(0.25f)
+                    .fillMaxHeight(1f)
+                    .padding(end = 16.dp).clip(shape = RoundedCornerShape(16.dp)),
                 contentScale = ContentScale.Crop
             )
             Column(
@@ -91,7 +95,7 @@ fun ProductCard(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun ProductCardPreview() {
     MaterialTheme {
@@ -100,7 +104,7 @@ fun ProductCardPreview() {
             purchase = "30/11/2024",
             description = "1 years 0 months 0 days",
             progress = 0.7f,
-            imageResId = R.drawable.warranty_logo // Replace with your drawable resource
+            imageResId = R.drawable.item_image_placeholder // Replace with your drawable resource
         )
     }
 }

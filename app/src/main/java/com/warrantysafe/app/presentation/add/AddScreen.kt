@@ -61,7 +61,7 @@ fun AddScreen(navController: NavController) {
             painter = painterResource(R.drawable.item_image_placeholder),
             modifier = Modifier
                 .fillMaxWidth(1f)
-                .fillMaxHeight(0.4f)
+                .fillMaxHeight(0.3f)
                 .padding(top = 8.dp)
                 .border(width = 2.dp, color = colorResource(R.color.black)),
             contentScale = ContentScale.Crop,
@@ -193,15 +193,25 @@ fun AddScreen(navController: NavController) {
                         .clip(shape = RoundedCornerShape(2.dp))
                         .border(width = 1.dp, color = colorResource(R.color.black))
                 ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(1f)
-                            .padding(start = 16.dp, top = 12.dp, end = 16.dp),
-                        text = "DD / MM / YYYY",
-                        textAlign = TextAlign.Start,
-                        fontSize = 16.sp,
-                        color = colorResource(id = R.color.xtreme)
-                    )
+                    Row {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth(0.85f)
+                                .padding(start = 16.dp, top = 12.dp),
+                            text = "DD / MM / YYYY",
+                            textAlign = TextAlign.Start,
+                            fontSize = 16.sp,
+                            color = colorResource(id = R.color.xtreme)
+                        )
+                        Icon(
+                            modifier = Modifier
+                                .width(24.dp)
+                                .padding(end = 8.dp)
+                                .fillMaxHeight(1f),
+                            painter = painterResource(R.drawable.calendar),
+                            contentDescription = null
+                        )
+                    }
                 }
 
             }
@@ -225,15 +235,25 @@ fun AddScreen(navController: NavController) {
                         .clip(shape = RoundedCornerShape(2.dp))
                         .border(width = 1.dp, color = colorResource(R.color.black))
                 ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(1f)
-                            .padding(start = 16.dp, top = 12.dp, end = 16.dp),
-                        text = "DD / MM / YYYY",
-                        textAlign = TextAlign.Start,
-                        fontSize = 16.sp,
-                        color = colorResource(id = R.color.xtreme)
-                    )
+                    Row {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth(0.85f)
+                                .padding(start = 16.dp, top = 12.dp),
+                            text = "DD / MM / YYYY",
+                            textAlign = TextAlign.Start,
+                            fontSize = 16.sp,
+                            color = colorResource(id = R.color.xtreme)
+                        )
+                        Icon(
+                            modifier = Modifier
+                                .width(24.dp)
+                                .padding(end = 8.dp)
+                                .fillMaxHeight(1f),
+                            painter = painterResource(R.drawable.calendar),
+                            contentDescription = null
+                        )
+                    }
                 }
             }
         }
