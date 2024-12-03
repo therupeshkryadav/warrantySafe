@@ -55,237 +55,242 @@ fun AddScreen(navController: NavController) {
         modifier = Modifier
             .padding(start = 8.dp, end = 8.dp)
             .fillMaxSize()
-            .verticalScroll(scrollState) // Enable vertical scrolling
     ) {
         Image(
             painter = painterResource(R.drawable.item_image_placeholder),
             modifier = Modifier
                 .fillMaxWidth(1f)
-                .fillMaxHeight(0.3f)
-                .padding(top = 8.dp)
+                .height(280.dp)
+                .padding(top = 8.dp, bottom = 8.dp)
                 .border(width = 2.dp, color = colorResource(R.color.black)),
             contentScale = ContentScale.Crop,
             contentDescription = null
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier
+            .background(color = colorResource(R.color.black))
+            .fillMaxWidth()
+            .height(1.dp))
 
-
-        OutlinedTextField(
-            value = productName,
-            enabled = true,
-            textStyle = TextStyle.Default.copy(fontSize = 16.sp),
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .height(60.dp),
-            onValueChange = { productName = it },
-            label = { Text(fontSize = 16.sp, text = "Product name") },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedTextColor = colorResource(R.color.black),
-                focusedLabelColor = colorResource(R.color.xtreme2),
-                unfocusedLabelColor = colorResource(R.color.xtreme),
-                focusedBorderColor = colorResource(R.color.xtreme2),
-                unfocusedBorderColor = colorResource(R.color.black),
-            )
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp)
+        Column(modifier = Modifier
+            .fillMaxHeight()
+            .verticalScroll(scrollState)
         ) {
-            Text(
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
-                text = "Category :",
-                fontSize = 16.sp,
-                color = colorResource(id = R.color.black)
+            OutlinedTextField(
+                value = productName,
+                enabled = true,
+                textStyle = TextStyle.Default.copy(fontSize = 16.sp),
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .padding(top = 8.dp)
+                    .height(60.dp),
+                onValueChange = { productName = it },
+                label = { Text(fontSize = 16.sp, text = "Product name") },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedTextColor = colorResource(R.color.black),
+                    focusedLabelColor = colorResource(R.color.xtreme2),
+                    unfocusedLabelColor = colorResource(R.color.xtreme),
+                    focusedBorderColor = colorResource(R.color.xtreme2),
+                    unfocusedBorderColor = colorResource(R.color.black),
+                )
             )
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .clip(shape = RoundedCornerShape(2.dp))
-                    .border(width = 1.dp, color = colorResource(R.color.black))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .background(colorResource(R.color.xtreme)), // Set a fixed height to align items properly
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(0.9f) // Use weight to distribute space equally
-                            .padding(start = 16.dp),
-                        textAlign = TextAlign.Start,
-                        text = "Electronics",
-                        fontSize = 16.sp
-                    )
-                    Icon(
-                        modifier = Modifier
-                            .width(24.dp)
-                            .fillMaxHeight(1f),
-                        painter = painterResource(R.drawable.drop_down),
-                        contentDescription = null
-                    )
-                }
-            }
-
-        }
-
-        Column {
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
-                    .height(48.dp)
-                    .clip(shape = RoundedCornerShape(2.dp))
-                    .background(colorResource(R.color.green))
-                    .border(width = 1.dp, color = colorResource(R.color.black))
-
             ) {
+                Text(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
+                    text = "Category :",
+                    fontSize = 16.sp,
+                    color = colorResource(id = R.color.black)
+                )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .clip(shape = RoundedCornerShape(2.dp))
+                        .border(width = 1.dp, color = colorResource(R.color.black))
+
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .background(colorResource(R.color.xtreme)), // Set a fixed height to align items properly
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth(0.9f) // Use weight to distribute space equally
+                                .padding(start = 16.dp),
+                            textAlign = TextAlign.Start,
+                            text = "Electronics",
+                            fontSize = 16.sp
+                        )
+                        Icon(
+                            modifier = Modifier
+                                .width(24.dp)
+                                .fillMaxHeight(1f),
+                            painter = painterResource(R.drawable.drop_down),
+                            contentDescription = null
+                        )
+                    }
+                }
+
+            }
+
+            Column {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                        .height(48.dp)
+                        .clip(shape = RoundedCornerShape(2.dp))
+                        .background(colorResource(R.color.green))
+                        .border(width = 1.dp, color = colorResource(R.color.black))
+
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(start = 48.dp), // Set a fixed height to align items properly
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth(0.6f), // Use weight to distribute space equally
+                            textAlign = TextAlign.Start,
+                            text = "Upload Receipt Image",
+                            fontSize = 16.sp,
+                            maxLines = 1
+                        )
+                        Icon(
+                            modifier = Modifier
+                                .padding(start = 2.dp)
+                                .fillMaxHeight(1f),
+                            painter = painterResource(R.drawable.upload),
+                            contentDescription = null
+                        )
+                    }
+                }
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp)
-                        .padding(start = 48.dp), // Set a fixed height to align items properly
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(vertical = 4.dp)
                 ) {
                     Text(
-                        modifier = Modifier
-                            .fillMaxWidth(0.6f), // Use weight to distribute space equally
-                        textAlign = TextAlign.Start,
-                        text = "Upload Receipt Image",
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
+                        text = "Purchase Date:",
                         fontSize = 16.sp,
-                        maxLines = 1
+                        color = colorResource(id = R.color.black)
                     )
-                    Icon(
+
+                    Box(
                         modifier = Modifier
-                            .padding(start = 2.dp)
-                            .fillMaxHeight(1f),
-                        painter = painterResource(R.drawable.upload),
-                        contentDescription = null
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .clip(shape = RoundedCornerShape(2.dp))
+                            .border(width = 1.dp, color = colorResource(R.color.black))
+                    ) {
+                        Row {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.85f)
+                                    .padding(start = 16.dp, top = 12.dp),
+                                text = "DD / MM / YYYY",
+                                textAlign = TextAlign.Start,
+                                fontSize = 16.sp,
+                                color = colorResource(id = R.color.xtreme)
+                            )
+                            Icon(
+                                modifier = Modifier
+                                    .width(24.dp)
+                                    .padding(end = 8.dp)
+                                    .fillMaxHeight(1f),
+                                painter = painterResource(R.drawable.calendar),
+                                contentDescription = null
+                            )
+                        }
+                    }
+
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
+                        text = "Expiration Date:",
+                        fontSize = 16.sp,
+                        color = colorResource(id = R.color.black)
                     )
-                }
-            }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp)
-            ) {
-                Text(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
-                    text = "Purchase Date:",
-                    fontSize = 16.sp,
-                    color = colorResource(id = R.color.black)
-                )
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .clip(shape = RoundedCornerShape(2.dp))
-                        .border(width = 1.dp, color = colorResource(R.color.black))
-                ) {
-                    Row {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth(0.85f)
-                                .padding(start = 16.dp, top = 12.dp),
-                            text = "DD / MM / YYYY",
-                            textAlign = TextAlign.Start,
-                            fontSize = 16.sp,
-                            color = colorResource(id = R.color.xtreme)
-                        )
-                        Icon(
-                            modifier = Modifier
-                                .width(24.dp)
-                                .padding(end = 8.dp)
-                                .fillMaxHeight(1f),
-                            painter = painterResource(R.drawable.calendar),
-                            contentDescription = null
-                        )
-                    }
-                }
-
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp)
-            ) {
-                Text(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
-                    text = "Expiration Date:",
-                    fontSize = 16.sp,
-                    color = colorResource(id = R.color.black)
-                )
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .clip(shape = RoundedCornerShape(2.dp))
-                        .border(width = 1.dp, color = colorResource(R.color.black))
-                ) {
-                    Row {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth(0.85f)
-                                .padding(start = 16.dp, top = 12.dp),
-                            text = "DD / MM / YYYY",
-                            textAlign = TextAlign.Start,
-                            fontSize = 16.sp,
-                            color = colorResource(id = R.color.xtreme)
-                        )
-                        Icon(
-                            modifier = Modifier
-                                .width(24.dp)
-                                .padding(end = 8.dp)
-                                .fillMaxHeight(1f),
-                            painter = painterResource(R.drawable.calendar),
-                            contentDescription = null
-                        )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .clip(shape = RoundedCornerShape(2.dp))
+                            .border(width = 1.dp, color = colorResource(R.color.black))
+                    ) {
+                        Row {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.85f)
+                                    .padding(start = 16.dp, top = 12.dp),
+                                text = "DD / MM / YYYY",
+                                textAlign = TextAlign.Start,
+                                fontSize = 16.sp,
+                                color = colorResource(id = R.color.xtreme)
+                            )
+                            Icon(
+                                modifier = Modifier
+                                    .width(24.dp)
+                                    .padding(end = 8.dp)
+                                    .fillMaxHeight(1f),
+                                painter = painterResource(R.drawable.calendar),
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        OutlinedTextField(
-            value = notes,
-            enabled = true,
-            textStyle = TextStyle.Default.copy(fontSize = 16.sp),
-            modifier = Modifier
-                .fillMaxSize(1f)
-                .padding(bottom = 24.dp),
-            onValueChange = { notes = it },
-            placeholder = {
-                Text(
-                    modifier = Modifier.fillMaxSize(1f),
-                    text = "//Something about the product ...",
-                    color = colorResource(R.color.xtreme)
+            OutlinedTextField(
+                value = notes,
+                enabled = true,
+                textStyle = TextStyle.Default.copy(fontSize = 16.sp),
+                modifier = Modifier
+                    .fillMaxSize(1f)
+                    .padding(bottom = 24.dp),
+                onValueChange = { notes = it },
+                placeholder = {
+                    Text(
+                        modifier = Modifier.fillMaxSize(1f),
+                        text = "//Something about the product ...",
+                        color = colorResource(R.color.xtreme)
+                    )
+                },
+                label = { Text(fontSize = 16.sp, text = "Notes") },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedTextColor = colorResource(R.color.black),
+                    focusedLabelColor = colorResource(R.color.xtreme2),
+                    unfocusedLabelColor = colorResource(R.color.xtreme),
+                    focusedBorderColor = colorResource(R.color.xtreme2),
+                    unfocusedBorderColor = colorResource(R.color.black),
                 )
-            },
-            label = { Text(fontSize = 16.sp, text = "Notes") },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedTextColor = colorResource(R.color.black),
-                focusedLabelColor = colorResource(R.color.xtreme2),
-                unfocusedLabelColor = colorResource(R.color.xtreme),
-                focusedBorderColor = colorResource(R.color.xtreme2),
-                unfocusedBorderColor = colorResource(R.color.black),
             )
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
+        }
     }
-
 }
 
 @Preview(showBackground = true)
