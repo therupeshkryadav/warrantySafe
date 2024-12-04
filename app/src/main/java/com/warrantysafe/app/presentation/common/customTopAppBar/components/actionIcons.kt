@@ -2,7 +2,9 @@ package com.warrantysafe.app.presentation.common.customTopAppBar.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MoreVert
@@ -17,7 +19,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
@@ -54,10 +58,10 @@ fun actionIcons(
                 // Dropdown Menu
                 DropdownMenu(
                     expanded = isMenuExpanded,
+                    containerColor = colorResource(R.color.white),
                     onDismissRequest = { isMenuExpanded = false }
                 ) {
                     DropDownMenuContent(
-                        modifier = Modifier.fillMaxSize(),
                         onItemClicked = {}
                     )
                 }
@@ -98,8 +102,6 @@ fun actionIcons(
 @Preview
 @Composable
 fun ActionsPreview() {
-    WarrantyNavigator(
-        navController = rememberNavController(),
-        startDestination = Route.HomeScreen.route
-    )
+    actionIcons(navController = rememberNavController(),
+        currentRoute = Route.HomeScreen.route)
 }

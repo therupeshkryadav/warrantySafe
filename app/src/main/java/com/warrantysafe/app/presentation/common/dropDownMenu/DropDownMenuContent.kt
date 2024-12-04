@@ -2,6 +2,8 @@ package com.warrantysafe.app.presentation.common.dropDownMenu
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,12 +16,10 @@ import com.warrantysafe.app.presentation.common.dropDownMenu.components.dropDown
 
 @Composable
 fun DropDownMenuContent(
-    modifier: Modifier = Modifier,
     onItemClicked: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .width(120.dp)
+        modifier = Modifier.width(120.dp)
             .background(color = colorResource(R.color.white)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -30,11 +30,10 @@ fun DropDownMenuContent(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun PreviewDropDown(){
+fun PreviewDropDown() {
     DropDownMenuContent(
-        modifier = Modifier,
         onItemClicked = {}
     )
 }
