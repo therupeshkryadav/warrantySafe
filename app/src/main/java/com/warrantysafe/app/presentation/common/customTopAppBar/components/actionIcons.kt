@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.common.components
+package com.warrantysafe.app.presentation.common.customTopAppBar.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Row

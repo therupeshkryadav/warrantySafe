@@ -1,32 +1,41 @@
-package com.warrantysafe.app.presentation.common.components
+package com.warrantysafe.app.presentation.common.customTopAppBar.components
 
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navgraph.Route
+import kotlinx.coroutines.launch
 
 @SuppressLint("ComposableNaming")
 @Composable
 fun navigationIcons(
     navController: NavHostController,
-    currentRoute: String
+    currentRoute: String,
+    drawerState: DrawerState
 ) {
     val navigationIcon = when (currentRoute) {
         Route.HomeScreen.route, Route.ProfileScreen.route -> {
+            val coroutineScope = rememberCoroutineScope()
             NavigationIconConfig(
                 icon = Icons.Filled.Menu,
                 contentDescription = "Menu",
-                onClick = { /* Handle menu click, e.g., open a drawer */ }
+                onClick = { coroutineScope.launch { drawerState.open() } }
             )
         }
+
         Route.AddScreen.route -> {
             NavigationIconConfig(
                 icon = Icons.Filled.Close,
@@ -34,13 +43,15 @@ fun navigationIcons(
                 onClick = { navController.popBackStack() }
             )
         }
+
         Route.SearchScreen.route -> {
             NavigationIconConfig(
-                iconPainter = androidx.compose.ui.res.painterResource(id = R.drawable.arrow_back),
+                iconPainter = painterResource(id = R.drawable.arrow_back),
                 contentDescription = "Back",
                 onClick = { navController.popBackStack() }
             )
         }
+
         else -> null // No icon for unrecognized or fallback routes
     }
 
@@ -71,6 +82,7 @@ data class NavigationIconConfig(
 fun NavigationIconsPreview() {
     navigationIcons(
         navController = rememberNavController(),
-        currentRoute = Route.HomeScreen.route
+        currentRoute = Route.HomeScreen.route,
+        drawerState = rememberDrawerState(DrawerValue.Closed)
     )
 }

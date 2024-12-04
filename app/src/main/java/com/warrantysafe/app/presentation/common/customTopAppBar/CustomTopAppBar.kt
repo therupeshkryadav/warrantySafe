@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.common
+package com.warrantysafe.app.presentation.common.customTopAppBar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -6,9 +6,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -16,16 +19,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.common.components.actionIcons
-import com.warrantysafe.app.presentation.common.components.navigationIcons
-import com.warrantysafe.app.presentation.common.components.titleAppBar
+import com.warrantysafe.app.presentation.common.customTopAppBar.components.actionIcons
+import com.warrantysafe.app.presentation.common.customTopAppBar.components.navigationIcons
+import com.warrantysafe.app.presentation.common.customTopAppBar.components.titleAppBar
 import com.warrantysafe.app.presentation.navgraph.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTopAppBar(
     navController: androidx.navigation.NavHostController,
-    currentRoute: String
+    currentRoute: String,
+    drawerState: DrawerState
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         CenterAlignedTopAppBar(
@@ -33,7 +37,11 @@ fun CustomTopAppBar(
                 titleAppBar(currentRoute = currentRoute)
             },
             navigationIcon = {
-                navigationIcons(navController = navController, currentRoute = currentRoute)
+                navigationIcons(
+                    navController = navController,
+                    currentRoute = currentRoute,
+                    drawerState = drawerState
+                )
             },
             actions = {
                 actionIcons(navController = navController, currentRoute = currentRoute)
@@ -61,7 +69,8 @@ fun SmartCustomTopAppBarPreview() {
         // Home Screen Preview
         CustomTopAppBar(
             navController = navController,
-            currentRoute = Route.HomeScreen.route
+            currentRoute = Route.HomeScreen.route,
+            drawerState = rememberDrawerState(DrawerValue.Closed)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -69,7 +78,8 @@ fun SmartCustomTopAppBarPreview() {
         // Profile Screen Preview
         CustomTopAppBar(
             navController = navController,
-            currentRoute = Route.ProfileScreen.route
+            currentRoute = Route.ProfileScreen.route,
+            drawerState = rememberDrawerState(DrawerValue.Closed)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -77,7 +87,8 @@ fun SmartCustomTopAppBarPreview() {
         // Add Warranty Screen Preview
         CustomTopAppBar(
             navController = navController,
-            currentRoute = Route.AddScreen.route
+            currentRoute = Route.AddScreen.route,
+            drawerState = rememberDrawerState(DrawerValue.Closed)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -85,7 +96,8 @@ fun SmartCustomTopAppBarPreview() {
         // Search Screen Preview
         CustomTopAppBar(
             navController = navController,
-            currentRoute = Route.SearchScreen.route
+            currentRoute = Route.SearchScreen.route,
+            drawerState = rememberDrawerState(DrawerValue.Closed)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -93,7 +105,8 @@ fun SmartCustomTopAppBarPreview() {
         // Unknown Route Preview
         CustomTopAppBar(
             navController = navController,
-            currentRoute = "unknown_route"
+            currentRoute = "unknown_route",
+            drawerState = rememberDrawerState(DrawerValue.Closed)
         )
     }
 }
