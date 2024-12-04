@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.sideDrawer.components.SideDrawerItem
@@ -33,11 +35,12 @@ fun SideDrawerContent(onItemClicked: (String) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)
-                .padding(8.dp),
+                .statusBarsPadding()
+                .padding(start = 8.dp, end = 8.dp, top = 16.dp, bottom = 16.dp),
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(R.drawable.warranty_logo), // Replace with your logo or avatar
+                painter = painterResource(R.drawable.item_image_placeholder), // Replace with your logo or avatar
                 contentDescription = "Drawer Header"
             )
         }
@@ -49,4 +52,10 @@ fun SideDrawerContent(onItemClicked: (String) -> Unit) {
             SideDrawerItem(item = item, onClick = onItemClicked)
         }
     }
+}
+
+@Preview
+@Composable
+fun SideDrawerContentPreview(){
+    SideDrawerContent(onItemClicked = {})
 }
