@@ -12,13 +12,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProgressIndicatorDefaults
+import androidx.compose.material3.ProgressIndicatorDefaults.drawStopIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -26,12 +30,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.productCard.components.CustomLinearProgressIndicator
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductCard(
     title: String,
-    description: String,
+    period: String,
     purchase: String,
     progress: Float, // Progress value from 0f to 1f
     imageResId: Int // Image resource ID
@@ -81,15 +87,21 @@ fun ProductCard(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Expiry in $description",
+                    text = "Expiry in $period",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                LinearProgressIndicator(
+
+                CustomLinearProgressIndicator(
                     progress = progress,
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.primary
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(28.dp),
+                    trackColor = colorResource(R.color.white),
+                    progressColor = colorResource(R.color.purple_700),
+                    strokeWidth = 18f,
+                    gapSize = 0f,
                 )
             }
         }
@@ -103,8 +115,8 @@ fun ProductCardPreview() {
         ProductCard(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
-            description = "1 years 0 months 0 days",
-            progress = 0.7f,
+            period = "1 years 0 months 0 days",
+            progress = 0.9f,
             imageResId = R.drawable.item_image_placeholder // Replace with your drawable resource
         )
     }
