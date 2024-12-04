@@ -22,11 +22,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.common.sideDrawer.components.SideDrawerItem
 
 @SuppressLint("ComposableNaming")
 @Composable
-fun dropDownItem(item: String, onClick: (String) -> Unit) {
+fun dropDownMenuItem(item: String, onClick: (String) -> Unit) {
 
     Box(
         modifier = Modifier
@@ -62,5 +61,5 @@ fun dropDownItem(item: String, onClick: (String) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun dropDownItemPreview() {
-    dropDownItem("Home", onClick = {})
+    dropDownMenuItem("Home", onClick = {})
 }

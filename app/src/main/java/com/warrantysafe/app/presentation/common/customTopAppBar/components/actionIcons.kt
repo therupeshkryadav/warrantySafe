@@ -6,13 +6,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.common.dropDownMenu.DropDownMenuContent
 import com.warrantysafe.app.presentation.navgraph.Route
 
 @SuppressLint("ComposableNaming")
@@ -20,7 +26,7 @@ import com.warrantysafe.app.presentation.navgraph.Route
 fun actionIcons(
     navController: NavHostController,
     currentRoute: String,
-    isMenuExpanded: Boolean
+    isMenuExpanded: MutableState<Boolean>
 ) {
     Row {
         when (currentRoute) {
@@ -32,10 +38,20 @@ fun actionIcons(
                         contentDescription = "Notifications"
                     )
                 }
-                IconButton(onClick = { isMenuExpanded.not()}) {
+                IconButton(onClick = { isMenuExpanded.value != isMenuExpanded.value}) {
                     Icon(
                         imageVector = Icons.Filled.MoreVert,
                         contentDescription = "More Options"
+                    )
+                }
+                // Dropdown Menu
+                DropdownMenu(
+                    expanded = isMenuExpanded.value,
+                    onDismissRequest = { isMenuExpanded.value = false }
+                ) {
+                    DropDownMenuContent(
+                        modifier = Modifier,
+                        onItemClicked = {}
                     )
                 }
             }
@@ -77,6 +93,6 @@ fun ActionsPreview() {
     actionIcons(
         navController = rememberNavController(),
         currentRoute = Route.HomeScreen.route,
-        isMenuExpanded = false
+        isMenuExpanded = remember { mutableStateOf(false) }
     )
 }

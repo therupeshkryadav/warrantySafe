@@ -111,7 +111,7 @@ fun WarrantyNavigator(
                         navController = navController,
                         currentRoute = it,
                         drawerState = drawerState,
-                        isMenuExpanded=isMenuExpanded
+                        isMenuExpanded= remember {mutableStateOf(isMenuExpanded)}
                     )
                 }
             },
