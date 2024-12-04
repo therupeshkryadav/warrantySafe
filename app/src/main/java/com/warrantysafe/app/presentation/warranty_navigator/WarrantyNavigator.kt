@@ -25,6 +25,7 @@ import com.warrantysafe.app.presentation.common.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.common.sideDrawer.SideDrawerContent
 import com.warrantysafe.app.presentation.home.HomeScreen
 import com.warrantysafe.app.presentation.navgraph.Route
+import com.warrantysafe.app.presentation.notifification.NotificationScreen
 import com.warrantysafe.app.presentation.profile.ProfileScreen
 import com.warrantysafe.app.presentation.search.SearchScreen
 import com.warrantysafe.app.presentation.warranty_navigator.components.BottomNavigationItem
@@ -139,6 +140,9 @@ fun WarrantyNavigator(
                 }
                 composable(Route.AddScreen.route) {
                     AddScreen(navController = navController)
+                }
+                composable(Route.NotificationScreen.route) {
+                    NotificationScreen(navController = navController)
                 }
                 composable(Route.ProfileScreen.route) {
                     ProfileScreen(navController = navController)

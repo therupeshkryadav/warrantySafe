@@ -32,6 +32,7 @@ fun titleAppBar(currentRoute: String) {
     val titleConfig = mapOf(
         Route.HomeScreen.route to TitleConfig.Title(""), // Home screen with empty title
         Route.ProfileScreen.route to TitleConfig.Title(""), // Profile screen
+        Route.NotificationScreen.route to TitleConfig.Title("Notifications"), // Profile screen
         Route.AddScreen.route to TitleConfig.Title("Add Warranty"), // Add Warranty screen
         Route.SearchScreen.route to TitleConfig.SearchBar // Search screen with a search bar
     )

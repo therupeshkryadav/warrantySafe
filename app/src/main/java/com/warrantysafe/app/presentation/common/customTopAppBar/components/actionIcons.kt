@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -42,13 +43,15 @@ fun actionIcons(
         when (currentRoute) {
             Route.HomeScreen.route, Route.ProfileScreen.route -> {
                 // Home or Profile screen actions
-                IconButton(onClick = { /* Handle Notifications Click */ }) {
+                IconButton(onClick = {
+                    navController.navigate(route = Route.NotificationScreen.route)
+                }) {
                     Icon(
                         imageVector = Icons.Filled.Notifications,
                         contentDescription = "Notifications"
                     )
                 }
-                IconButton(onClick = { isMenuExpanded = !isMenuExpanded}) {
+                IconButton(onClick = { isMenuExpanded = !isMenuExpanded }) {
                     Icon(
                         imageVector = Icons.Filled.MoreVert,
                         contentDescription = "More Options"
@@ -58,7 +61,7 @@ fun actionIcons(
                 // Dropdown Menu
                 DropdownMenu(
                     expanded = isMenuExpanded,
-                    containerColor = colorResource(R.color.white),
+                    containerColor = MaterialTheme.colorScheme.surface,
                     onDismissRequest = { isMenuExpanded = false }
                 ) {
                     DropDownMenuContent(
@@ -67,6 +70,7 @@ fun actionIcons(
                 }
 
             }
+
             Route.AddScreen.route -> {
                 // Add Warranty screen action
                 IconButton(onClick = {
@@ -82,6 +86,7 @@ fun actionIcons(
                     )
                 }
             }
+
             Route.SearchScreen.route -> {
                 // Search screen action
                 IconButton(onClick = { /* Handle Search Click */ }) {
@@ -92,6 +97,7 @@ fun actionIcons(
                     )
                 }
             }
+
             else -> {
                 // Fallback case if no matching route
             }
@@ -102,6 +108,8 @@ fun actionIcons(
 @Preview
 @Composable
 fun ActionsPreview() {
-    actionIcons(navController = rememberNavController(),
-        currentRoute = Route.HomeScreen.route)
+    actionIcons(
+        navController = rememberNavController(),
+        currentRoute = Route.HomeScreen.route
+    )
 }
