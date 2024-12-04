@@ -13,16 +13,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProgressIndicatorDefaults
-import androidx.compose.material3.ProgressIndicatorDefaults.drawStopIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -37,6 +36,8 @@ import com.warrantysafe.app.presentation.productCard.components.CustomLinearProg
 @Composable
 fun ProductCard(
     title: String,
+    itemTint: Color,
+    progressTint: Color,
     period: String,
     purchase: String,
     progress: Float, // Progress value from 0f to 1f
@@ -47,7 +48,7 @@ fun ProductCard(
             .fillMaxWidth()
             .padding(bottom = 6.dp)
             .clip(RoundedCornerShape(20.dp))
-            .background(color = colorResource(R.color.xtreme)),
+            .background(color = itemTint),
         colors = CardDefaults.cardColors(
             containerColor = colorResource(R.color.xtreme)
         )
@@ -66,6 +67,10 @@ fun ProductCard(
                     .fillMaxHeight(1f)
                     .padding(end = 16.dp)
                     .clip(shape = RectangleShape),
+                colorFilter = ColorFilter.tint(
+                    color = colorResource(R.color.expired), // Change this to your desired color
+                    blendMode = BlendMode.Color
+                    ),
                 contentScale = ContentScale.Crop
             )
             Column(
@@ -99,7 +104,7 @@ fun ProductCard(
                         .fillMaxWidth()
                         .height(28.dp),
                     trackColor = colorResource(R.color.white),
-                    progressColor = colorResource(R.color.purple_700),
+                    progressColor = progressTint,
                     strokeWidth = 18f,
                     gapSize = 0f,
                 )
@@ -117,6 +122,8 @@ fun ProductCardPreview() {
             purchase = "30/11/2024",
             period = "1 years 0 months 0 days",
             progress = 0.9f,
+            itemTint = colorResource(R.color.expired),
+            progressTint = colorResource(R.color.expired),
             imageResId = R.drawable.item_image_placeholder // Replace with your drawable resource
         )
     }

@@ -6,11 +6,8 @@ sealed class Route(
     object SplashSheet : Route(route = "splashSheet")
     object HomeScreen : Route(route = "homeScreen")
     object SearchScreen : Route(route = "search_screen")
-    object SearchNavigation : Route(route = "searchNavigation")
     object AddScreen : Route(route = "addScreen")
     object ProfileScreen : Route(route = "profileScreen")
     object NotificationScreen : Route(route = "notificationScreen")
-    object SettingsScreen : Route(route = "settingsScreen")
-    object AppStartNavigation : Route(route = "appStartNavigation")
     object BottomNavigation : Route(route = "bottomNavigation")
 }

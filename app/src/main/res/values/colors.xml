@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="xtreme">#74ABAAA8</color>
+    <color name="active">#00FFFFFF</color>
+    <color name="expired">#6B6767</color>
     <color name="xtreme2">#DAE0D252</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="body">#4E4B66</color>
