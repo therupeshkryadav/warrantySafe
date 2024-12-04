@@ -110,8 +110,7 @@ fun WarrantyNavigator(
                     CustomTopAppBar(
                         navController = navController,
                         currentRoute = it,
-                        drawerState = drawerState,
-                        isMenuExpanded= remember {mutableStateOf(isMenuExpanded)}
+                        drawerState = drawerState
                     )
                 }
             },

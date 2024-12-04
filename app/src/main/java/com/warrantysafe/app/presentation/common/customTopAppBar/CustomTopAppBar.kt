@@ -14,6 +14,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -32,9 +33,10 @@ import com.warrantysafe.app.presentation.navgraph.Route
 fun CustomTopAppBar(
     navController: androidx.navigation.NavHostController,
     currentRoute: String,
-    drawerState: DrawerState,
-    isMenuExpanded: MutableState<Boolean>
+    drawerState: DrawerState
 ) {
+
+
     Column(modifier = Modifier.fillMaxWidth()) {
         CenterAlignedTopAppBar(
             title = {
@@ -50,8 +52,7 @@ fun CustomTopAppBar(
             actions = {
                 actionIcons(
                     navController = navController,
-                    currentRoute = currentRoute,
-                    isMenuExpanded = isMenuExpanded
+                    currentRoute = currentRoute
                 )
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -78,8 +79,7 @@ fun SmartCustomTopAppBarPreview() {
         CustomTopAppBar(
             navController = navController,
             currentRoute = Route.HomeScreen.route,
-            drawerState = rememberDrawerState(DrawerValue.Closed),
-            isMenuExpanded = remember { mutableStateOf(false)}
+            drawerState = rememberDrawerState(DrawerValue.Closed)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -88,8 +88,7 @@ fun SmartCustomTopAppBarPreview() {
         CustomTopAppBar(
             navController = navController,
             currentRoute = Route.ProfileScreen.route,
-            drawerState = rememberDrawerState(DrawerValue.Closed),
-            isMenuExpanded = remember { mutableStateOf(false)}
+            drawerState = rememberDrawerState(DrawerValue.Closed)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -98,8 +97,7 @@ fun SmartCustomTopAppBarPreview() {
         CustomTopAppBar(
             navController = navController,
             currentRoute = Route.AddScreen.route,
-            drawerState = rememberDrawerState(DrawerValue.Closed),
-            isMenuExpanded = remember { mutableStateOf(false)}
+            drawerState = rememberDrawerState(DrawerValue.Closed)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -108,8 +106,7 @@ fun SmartCustomTopAppBarPreview() {
         CustomTopAppBar(
             navController = navController,
             currentRoute = Route.SearchScreen.route,
-            drawerState = rememberDrawerState(DrawerValue.Closed),
-            isMenuExpanded = remember { mutableStateOf(false)}
+            drawerState = rememberDrawerState(DrawerValue.Closed)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -118,8 +115,7 @@ fun SmartCustomTopAppBarPreview() {
         CustomTopAppBar(
             navController = navController,
             currentRoute = "unknown_route",
-            drawerState = rememberDrawerState(DrawerValue.Closed),
-            isMenuExpanded = remember { mutableStateOf(false)}
+            drawerState = rememberDrawerState(DrawerValue.Closed)
         )
     }
 }

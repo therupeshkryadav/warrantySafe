@@ -2,6 +2,7 @@ package com.warrantysafe.app.presentation.common.customTopAppBar.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MoreVert
@@ -11,8 +12,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -20,14 +23,17 @@ import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.dropDownMenu.DropDownMenuContent
 import com.warrantysafe.app.presentation.navgraph.Route
+import com.warrantysafe.app.presentation.warranty_navigator.WarrantyNavigator
 
 @SuppressLint("ComposableNaming")
 @Composable
 fun actionIcons(
     navController: NavHostController,
-    currentRoute: String,
-    isMenuExpanded: MutableState<Boolean>
+    currentRoute: String
 ) {
+    // State to manage the visibility of the dropdown menu
+    var isMenuExpanded by remember { mutableStateOf(false) }
+
     Row {
         when (currentRoute) {
             Route.HomeScreen.route, Route.ProfileScreen.route -> {
@@ -38,22 +44,24 @@ fun actionIcons(
                         contentDescription = "Notifications"
                     )
                 }
-                IconButton(onClick = { isMenuExpanded.value != isMenuExpanded.value}) {
+                IconButton(onClick = { isMenuExpanded = !isMenuExpanded}) {
                     Icon(
                         imageVector = Icons.Filled.MoreVert,
                         contentDescription = "More Options"
                     )
                 }
+
                 // Dropdown Menu
                 DropdownMenu(
-                    expanded = isMenuExpanded.value,
-                    onDismissRequest = { isMenuExpanded.value = false }
+                    expanded = isMenuExpanded,
+                    onDismissRequest = { isMenuExpanded = false }
                 ) {
                     DropDownMenuContent(
-                        modifier = Modifier,
+                        modifier = Modifier.fillMaxSize(),
                         onItemClicked = {}
                     )
                 }
+
             }
             Route.AddScreen.route -> {
                 // Add Warranty screen action
@@ -90,9 +98,8 @@ fun actionIcons(
 @Preview
 @Composable
 fun ActionsPreview() {
-    actionIcons(
+    WarrantyNavigator(
         navController = rememberNavController(),
-        currentRoute = Route.HomeScreen.route,
-        isMenuExpanded = remember { mutableStateOf(false) }
+        startDestination = Route.HomeScreen.route
     )
 }
