@@ -171,30 +171,37 @@ fun HomeScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(shape = RoundedCornerShape(56.dp))
-                    .background(color = colorResource(R.color.black))
-                    .clickable {
-                        navController.navigate(route = Route.SearchScreen.route)
-                    }
+                    .padding(1.dp)
             ) {
-                Row(
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth(1f)
-                        .background(color = MaterialTheme.colorScheme.surface)
-                        .padding(8.dp)
+                        .fillMaxWidth()
+                        .clip(shape = RoundedCornerShape(56.dp))
+                        .background(color = colorResource(R.color.black))
+                        .clickable {
+                            navController.navigate(route = Route.SearchScreen.route)
+                        }
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.search_warranty),
-                        contentDescription = null
-                    )
-                    Text(
-                        modifier = Modifier.padding(start = 8.dp),
-                        text = "Search",
-                        fontSize = 20.sp,
-                        color = colorResource(R.color.xtreme)
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(1f)
+                            .background(color = MaterialTheme.colorScheme.surface)
+                            .padding(8.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.search_warranty),
+                            contentDescription = null
+                        )
+                        Text(
+                            modifier = Modifier.padding(start = 8.dp),
+                            text = "Search",
+                            fontSize = 20.sp,
+                            color = colorResource(R.color.xtreme)
+                        )
+                    }
                 }
             }
+
         }
 
         Row(
@@ -207,7 +214,7 @@ fun HomeScreen(
             // First Box (Sort By Section)
             Box(
                 modifier = Modifier
-                    .background(color = colorResource(R.color.white))
+                    .background(color = MaterialTheme.colorScheme.surface)
                     .border(
                         width = 1.dp,
                         shape = RectangleShape,
@@ -234,7 +241,7 @@ fun HomeScreen(
             // Second Box (Filter Section)
             Box(
                 modifier = Modifier
-                    .background(color = colorResource(R.color.white))
+                    .background(color = MaterialTheme.colorScheme.surface)
                     .border(
                         width = 1.dp, shape = RectangleShape,
                         color = colorResource(R.color.black)
@@ -257,7 +264,6 @@ fun HomeScreen(
                 }
             }
         }
-
         ProductList(products = products)
     }
 }

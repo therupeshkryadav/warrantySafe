@@ -19,7 +19,8 @@ import com.warrantysafe.app.presentation.navgraph.Route
 @Composable
 fun actionIcons(
     navController: NavHostController,
-    currentRoute: String
+    currentRoute: String,
+    isMenuExpanded: Boolean
 ) {
     Row {
         when (currentRoute) {
@@ -31,7 +32,7 @@ fun actionIcons(
                         contentDescription = "Notifications"
                     )
                 }
-                IconButton(onClick = { /* Handle More Options Click */ }) {
+                IconButton(onClick = { isMenuExpanded.not()}) {
                     Icon(
                         imageVector = Icons.Filled.MoreVert,
                         contentDescription = "More Options"
@@ -75,6 +76,7 @@ fun actionIcons(
 fun ActionsPreview() {
     actionIcons(
         navController = rememberNavController(),
-        currentRoute = Route.HomeScreen.route
+        currentRoute = Route.HomeScreen.route,
+        isMenuExpanded = false
     )
 }
