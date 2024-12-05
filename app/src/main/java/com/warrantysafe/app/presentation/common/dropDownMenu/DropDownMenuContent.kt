@@ -16,7 +16,8 @@ fun DropDownMenuContent(
     onItemClicked: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier.width(120.dp)
+        modifier = Modifier
+            .width(120.dp)
             .background(color = MaterialTheme.colorScheme.surface),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

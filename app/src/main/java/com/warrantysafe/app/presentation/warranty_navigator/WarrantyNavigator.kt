@@ -159,10 +159,11 @@ fun WarrantyNavigator(
 private fun navigateToTab(navController: NavController, route: Route) {
     navController.navigate(route.route) {
         popUpTo(navController.graph.startDestinationId) {
-            saveState = true
+            inclusive = (route == Route.ProfileScreen) // Apply inclusive only for ProfileScreen
+            saveState = true // Save state for tabs
         }
-        launchSingleTop = true
-        restoreState = true
+        launchSingleTop = true // Avoid multiple instances of the same destination
+        restoreState = true // Restore the state if previously saved
     }
 }
 
