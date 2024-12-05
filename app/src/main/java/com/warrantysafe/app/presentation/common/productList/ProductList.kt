@@ -11,6 +11,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.home.Product
 import com.warrantysafe.app.presentation.common.productList.components.productCard.ProductCard
@@ -18,6 +20,7 @@ import com.warrantysafe.app.presentation.common.productList.components.productCa
 
 @Composable
 fun ProductList(
+    navController: NavController,
     itemTint: Color,
     productType: List<Product> // Changed to a flat list of products
 ) {
@@ -29,6 +32,7 @@ fun ProductList(
             when (product) {
                 is Product.Active -> {
                     ProductCard(
+                        navController = navController,
                         title = product.title,
                         purchase = product.purchase,
                         period = product.period,
@@ -42,6 +46,7 @@ fun ProductList(
 
                 is Product.Expired -> {
                     ProductCard(
+                        navController = navController,
                         title = product.title,
                         purchase = product.purchase,
                         period = product.period,
@@ -85,6 +90,7 @@ fun PreviewProductList() {
     )
 
     ProductList(
+        navController = rememberNavController(),
         itemTint = Color.Green,
         productType = activeProducts
     )

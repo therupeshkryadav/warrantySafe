@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.DropdownMenu
@@ -69,6 +70,15 @@ fun actionIcons(
                     )
                 }
 
+            }
+
+            Route.ProductDetailsScreen.route -> {
+                IconButton(onClick = {}) {
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = "Edit Icon"
+                    )
+                }
             }
 
             Route.AddScreen.route -> {

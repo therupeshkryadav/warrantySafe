@@ -2,6 +2,7 @@ package com.warrantysafe.app.presentation.common.productList.components.productC
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,13 +29,17 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.productList.components.productCard.components.CustomLinearProgressIndicator
+import com.warrantysafe.app.presentation.navgraph.Route
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductCard(
+    navController: NavController,
     title: String,
     itemTint: Color,
     progressTint: Color,
@@ -49,6 +54,8 @@ fun ProductCard(
             .fillMaxWidth()
             .padding(bottom = 6.dp)
             .clip(RoundedCornerShape(20.dp))
+            .clickable {
+                navController.navigate(route = Route.ProductDetailsScreen.route) }
             .background(color = itemTint),
         colors = CardDefaults.cardColors(
             containerColor = colorResource(R.color.xtreme)
@@ -119,6 +126,7 @@ fun ProductCard(
 fun ProductCardPreview() {
     MaterialTheme {
         ProductCard(
+            navController = rememberNavController(),
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
             period = "0 years 0 months 0 days",

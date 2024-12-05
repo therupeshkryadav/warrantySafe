@@ -6,12 +6,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.productList.components.productCard.ProductCard
 import com.warrantysafe.app.presentation.home.Product
 
 @Composable
 fun SearchList(
+    navController: NavController,
     matchedList: List<Product>
 ) {
     LazyColumn(
@@ -26,6 +28,7 @@ fun SearchList(
         items(activeList.size) { index ->
             val product = activeList[index]
             ProductCard(
+                navController = navController,
                 title = product.title,
                 purchase = product.purchase,
                 period = product.period,
@@ -41,6 +44,7 @@ fun SearchList(
         items(expiredList.size) { index ->
             val product = expiredList[index]
             ProductCard(
+                navController = navController,
                 title = product.title,
                 purchase = product.purchase,
                 period = product.period,

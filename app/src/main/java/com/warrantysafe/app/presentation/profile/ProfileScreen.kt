@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.profile.components.ProfileDetailRow
+import com.warrantysafe.app.presentation.profile.components.DetailRow
 
 
 @Composable
@@ -75,9 +75,9 @@ fun ProfileScreen(navController: NavController) {
         }
 
         // Profile Details
-        ProfileDetailRow("Name", fullName, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
-        ProfileDetailRow("Email", email, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
-        ProfileDetailRow("Phone", phoneNumber, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
+        DetailRow("Name", fullName, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
+        DetailRow("Email", email, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
+        DetailRow("Phone", phoneNumber, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
 
         // Change Password Button
         Box(

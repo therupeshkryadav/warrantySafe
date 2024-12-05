@@ -20,12 +20,15 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.home.Product
 import com.warrantysafe.app.presentation.common.productList.ProductList
 
 @Composable
 fun ActiveTab(
+    navController: NavController,
     activeProducts: List<Product>
 ) {
 //Tab Values
@@ -93,6 +96,7 @@ fun ActiveTab(
             }
         }
         ProductList(
+            navController = navController,
             itemTint = colorResource(R.color.transparent),
             productType = activeProducts
         )

@@ -191,8 +191,8 @@ fun HomeScreen(
         ) { page ->
             // Content for each page
             when (page) {
-                0 -> ActiveTab(activeProducts = activeProducts) // Content for Tab 1
-                1 -> ExpiredTab(expiredProducts = expiredProducts) // Content for Tab 2
+                0 -> ActiveTab(navController = navController, activeProducts = activeProducts) // Content for Tab 1
+                1 -> ExpiredTab(navController = navController, expiredProducts = expiredProducts) // Content for Tab 2
             }
         }
 

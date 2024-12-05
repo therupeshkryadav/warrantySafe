@@ -21,12 +21,15 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.home.Product
 import com.warrantysafe.app.presentation.common.productList.ProductList
 
 @Composable
 fun ExpiredTab(
+    navController: NavController,
     expiredProducts: List<Product>
 ) {
 //Tab Values
@@ -94,6 +97,7 @@ fun ExpiredTab(
             }
         }
         ProductList(
+            navController = navController,
             itemTint = colorResource(R.color.expired),
             productType = expiredProducts
         )
@@ -126,5 +130,5 @@ fun onPreview() {
             imageResId = R.drawable.item_image_placeholder
         )
     )
-    ExpiredTab(expiredProducts = expiredProducts)
+    ExpiredTab(navController = rememberNavController(), expiredProducts = expiredProducts)
 }

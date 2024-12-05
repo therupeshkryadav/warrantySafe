@@ -62,7 +62,7 @@ fun SearchScreen(navController: NavController) {
                 imageResId = R.drawable.item_image_placeholder
             )
         )
-        SearchList(matchedList = matchedList)
+        SearchList(navController = navController, matchedList = matchedList)
     }
 }
 

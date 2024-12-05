@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.warrantysafe.app.R
 
 @Composable
-fun ProfileDetailRow(label: String, value: String, textColor: Color, borderColor: Color) {
+fun DetailRow(label: String, value: String, textColor: Color, borderColor: Color) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -61,7 +60,7 @@ fun ProfileDetailRow(label: String, value: String, textColor: Color, borderColor
 @Preview(showBackground = true)
 @Composable
 fun ProfileDetailRowPreview() {
-    ProfileDetailRow(
+    DetailRow(
         label = "Email",
         value = "example@example.com",
         textColor = colorResource(R.color.black),
