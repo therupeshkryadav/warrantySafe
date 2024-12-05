@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.productCard.components
+package com.warrantysafe.app.presentation.common.productList.components.productCard.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.material3.MaterialTheme

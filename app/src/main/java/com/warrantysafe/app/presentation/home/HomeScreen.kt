@@ -17,11 +17,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
@@ -62,7 +58,6 @@ sealed class Product {
 fun HomeScreen(
     navController: NavController
 ) {
-    var selectedTabIndex by remember { mutableStateOf(0) }
 
     val activeProducts = listOf(
         Product.Active(
@@ -90,24 +85,24 @@ fun HomeScreen(
 
     val expiredProducts = listOf(
         Product.Expired(
-            title = "Realme 3 Pro",
+            title = "Rado Watch",
             purchase = "30/11/2024",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
+            period = "0 year 0 months 0 days",
+            progress = 1f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
-            title = "Realme 7 Pro",
+            title = "PS5",
             purchase = "30/11/2024",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
+            period = "0 year 0 months 0 days",
+            progress = 1f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
-            title = "Redmi Note 10 ",
+            title = "LG Washing Machine ",
             purchase = "30/11/2024",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
+            period = "0 year 0 months 0 days",
+            progress = 1f,
             imageResId = R.drawable.item_image_placeholder
         )
     )

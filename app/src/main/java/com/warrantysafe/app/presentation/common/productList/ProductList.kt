@@ -1,9 +1,10 @@
-package com.warrantysafe.app.presentation.home.components
+package com.warrantysafe.app.presentation.common.productList
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -12,7 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.home.Product
-import com.warrantysafe.app.presentation.productCard.ProductCard
+import com.warrantysafe.app.presentation.common.productList.components.productCard.ProductCard
+
 
 @Composable
 fun ProductList(
@@ -32,8 +34,9 @@ fun ProductList(
                         period = product.period,
                         progress = product.progress,
                         imageResId = product.imageResId,
-                        progressTint = colorResource(R.color.transparent),
-                        itemTint = itemTint
+                        progressTint = colorResource(R.color.DaysLeft),
+                        itemTint = itemTint,
+                        detailsColor = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
@@ -42,10 +45,11 @@ fun ProductList(
                         title = product.title,
                         purchase = product.purchase,
                         period = product.period,
-                        progress = 1f,
-                        progressTint = colorResource(R.color.expired),
+                        progress = product.progress,
+                        progressTint = colorResource(R.color.noDaysLeft),
                         imageResId = product.imageResId,
-                        itemTint = Color.Red
+                        itemTint = itemTint,
+                        detailsColor = MaterialTheme.colorScheme.inversePrimary
                     )
                 }
             }

@@ -1,17 +1,20 @@
 package com.warrantysafe.app.presentation.notifification
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.notifification.components.notificationList.NotificationList
+
+data class Notifications(
+    val isRead: Boolean,
+    val notification: String
+)
 
 @Composable
 fun NotificationScreen(navController: NavController) {
@@ -19,15 +22,30 @@ fun NotificationScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(R.color.xtreme2))
     ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(colorResource(R.color.black)),
-            text = "No Notifications covered!!",
-            color = colorResource(R.color.white)
+        val notificationsList = listOf(
+            Notifications(
+                isRead = true,
+                notification = "I have read the notification -->"
+            ),
+            Notifications(
+                isRead = false,
+                notification = "The notification is unread!! -->"
+            ),
+            Notifications(
+                isRead = true,
+                notification = "I have read the notification -->"
+            ),
+            Notifications(
+                isRead = false,
+                notification = "The Notification is unread!! -->"
+            ),
+            Notifications(
+                isRead = true,
+                notification = "I have read the notification -->"
+            )
         )
+        NotificationList(notifications = notificationsList)
     }
 }
 

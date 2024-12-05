@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.productCard
+package com.warrantysafe.app.presentation.common.productList.components.productCard
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,7 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.productCard.components.CustomLinearProgressIndicator
+import com.warrantysafe.app.presentation.common.productList.components.productCard.components.CustomLinearProgressIndicator
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,6 +38,7 @@ fun ProductCard(
     title: String,
     itemTint: Color,
     progressTint: Color,
+    detailsColor: Color,
     period: String,
     purchase: String,
     progress: Float, // Progress value from 0f to 1f
@@ -82,19 +83,19 @@ fun ProductCard(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = detailsColor
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "Purchase Date: $purchase",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    color = detailsColor.copy(alpha = 0.7f)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "Expiry in $period",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    color = detailsColor.copy(alpha = 0.7f)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -120,10 +121,11 @@ fun ProductCardPreview() {
         ProductCard(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
-            period = "1 years 0 months 0 days",
+            period = "0 years 0 months 0 days",
             progress = 0.9f,
             itemTint = colorResource(R.color.expired),
             progressTint = colorResource(R.color.expired),
+            detailsColor = MaterialTheme.colorScheme.inversePrimary,
             imageResId = R.drawable.item_image_placeholder // Replace with your drawable resource
         )
     }

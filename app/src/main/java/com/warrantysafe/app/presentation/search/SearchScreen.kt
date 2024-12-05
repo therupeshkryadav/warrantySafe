@@ -1,17 +1,15 @@
 package com.warrantysafe.app.presentation.search
 
-import androidx.compose.foundation.background
+import SearchList
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.home.Product
 
 @Composable
 fun SearchScreen(navController: NavController) {
@@ -19,14 +17,52 @@ fun SearchScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(R.color.xtreme))
     ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(colorResource(R.color.white)),
-            text = "Search results for searched topic"
+        val matchedList = listOf(
+            Product.Active(
+                title = "Realme 3 Pro",
+                purchase = "30/11/2024",
+                period = "1 year 0 months 0 days",
+                progress = 0.7f,
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product.Active(
+                title = "Realme 7 Pro",
+                purchase = "30/11/2024",
+                period = "1 year 0 months 0 days",
+                progress = 0.7f,
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product.Active(
+                title = "Redmi Note 10 ",
+                purchase = "30/11/2024",
+                period = "1 year 0 months 0 days",
+                progress = 0.7f,
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product.Expired(
+                title = "Rado Watch",
+                purchase = "30/11/2024",
+                period = "0 year 0 months 0 days",
+                progress = 1f,
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product.Expired(
+                title = "PS5",
+                purchase = "30/11/2024",
+                period = "0 year 0 months 0 days",
+                progress = 1f,
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product.Expired(
+                title = "LG Washing Machine ",
+                purchase = "30/11/2024",
+                period = "0 year 0 months 0 days",
+                progress = 1f,
+                imageResId = R.drawable.item_image_placeholder
+            )
         )
+        SearchList(matchedList = matchedList)
     }
 }
 
