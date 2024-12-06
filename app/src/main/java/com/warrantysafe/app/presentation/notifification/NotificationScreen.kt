@@ -21,34 +21,33 @@ fun NotificationScreen(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val notificationsList = emptyList<Notifications>()
-//        val notificationsList = listOf(
-//            Notifications(
-//                isRead = true,
-//                notification = "I have read the notification -->"
-//            ),
-//            Notifications(
-//                isRead = false,
-//                notification = "The notification is unread!! -->"
-//            ),
-//            Notifications(
-//                isRead = true,
-//                notification = "I have read the notification -->"
-//            ),
-//            Notifications(
-//                isRead = false,
-//                notification = "The Notification is unread!! -->"
-//            ),
-//            Notifications(
-//                isRead = true,
-//                notification = "I have read the notification -->"
-//            )
-//        )
+        val notificationsList = listOf(
+            Notifications(
+                isRead = true,
+                notification = "I have read the notification -->"
+            ),
+            Notifications(
+                isRead = false,
+                notification = "The notification is unread!! -->"
+            ),
+            Notifications(
+                isRead = true,
+                notification = "I have read the notification -->"
+            ),
+            Notifications(
+                isRead = false,
+                notification = "The Notification is unread!! -->"
+            ),
+            Notifications(
+                isRead = true,
+                notification = "I have read the notification -->"
+            )
+        )
         NotificationList(notifications = notificationsList)
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewNotify(){
     NotificationScreen(navController = rememberNavController())

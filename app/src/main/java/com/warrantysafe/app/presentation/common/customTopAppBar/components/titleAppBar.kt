@@ -2,6 +2,7 @@ package com.warrantysafe.app.presentation.common.customTopAppBar.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -62,6 +63,7 @@ fun titleAppBar(currentRoute: String) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .fillMaxHeight(1f)
+                            .clickable {  }
                             .background(color = colorResource(R.color.transparent)),
                         text = "Search",
                         style = MaterialTheme.typography.titleLarge

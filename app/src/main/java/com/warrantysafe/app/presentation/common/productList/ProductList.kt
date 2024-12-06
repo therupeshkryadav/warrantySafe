@@ -90,7 +90,6 @@ private fun navigateToDetails(product: Product, navController: NavController) {
 }
 
 
-
 @Preview
 @Composable
 fun PreviewProductList() {
