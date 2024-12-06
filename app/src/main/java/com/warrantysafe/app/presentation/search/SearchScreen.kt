@@ -1,6 +1,6 @@
 package com.warrantysafe.app.presentation.search
 
-import SearchList
+import com.warrantysafe.app.presentation.search.components.SearchList
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -22,6 +22,7 @@ fun SearchScreen(navController: NavController) {
             Product.Active(
                 title = "Realme 3 Pro",
                 purchase = "30/11/2024",
+                expiry = "",
                 period = "1 year 0 months 0 days",
                 progress = 0.7f,
                 imageResId = R.drawable.item_image_placeholder
@@ -29,6 +30,7 @@ fun SearchScreen(navController: NavController) {
             Product.Active(
                 title = "Realme 7 Pro",
                 purchase = "30/11/2024",
+                expiry = "",
                 period = "1 year 0 months 0 days",
                 progress = 0.7f,
                 imageResId = R.drawable.item_image_placeholder
@@ -36,6 +38,7 @@ fun SearchScreen(navController: NavController) {
             Product.Active(
                 title = "Redmi Note 10 ",
                 purchase = "30/11/2024",
+                expiry = "",
                 period = "1 year 0 months 0 days",
                 progress = 0.7f,
                 imageResId = R.drawable.item_image_placeholder
@@ -43,6 +46,7 @@ fun SearchScreen(navController: NavController) {
             Product.Expired(
                 title = "Rado Watch",
                 purchase = "30/11/2024",
+                expiry = "",
                 period = "0 year 0 months 0 days",
                 progress = 1f,
                 imageResId = R.drawable.item_image_placeholder
@@ -50,6 +54,7 @@ fun SearchScreen(navController: NavController) {
             Product.Expired(
                 title = "PS5",
                 purchase = "30/11/2024",
+                expiry = "",
                 period = "0 year 0 months 0 days",
                 progress = 1f,
                 imageResId = R.drawable.item_image_placeholder
@@ -57,6 +62,7 @@ fun SearchScreen(navController: NavController) {
             Product.Expired(
                 title = "LG Washing Machine ",
                 purchase = "30/11/2024",
+                expiry = "",
                 period = "0 year 0 months 0 days",
                 progress = 1f,
                 imageResId = R.drawable.item_image_placeholder

@@ -10,15 +10,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.add.AddScreen
 import com.warrantysafe.app.presentation.common.customTopAppBar.CustomTopAppBar
@@ -145,9 +146,33 @@ fun WarrantyNavigator(
                 composable(Route.NotificationScreen.route) {
                     NotificationScreen(navController = navController)
                 }
-                composable(Route.ProductDetailsScreen.route) {
-                    ProductDetailsScreen(navController = navController)
+                composable(
+                    route = "productDetailsScreen/{productName}/{purchaseDate}/{expiryDate}/{progress}/{period}",
+                    arguments = listOf(
+                        navArgument("productName") { type = NavType.StringType },
+                        navArgument("purchaseDate") { type = NavType.StringType },
+                        navArgument("expiryDate") { type = NavType.StringType },
+                        navArgument("progress") { type = NavType.FloatType },
+                        navArgument("period") { type = NavType.StringType }
+                    )
+                ) {
+                    val productName = it.arguments?.getString("productName") ?: "Unknown"
+                    val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
+                    val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
+                    val progress = it.arguments?.getFloat("progress") ?: 0f
+                    val period = it.arguments?.getString("period") ?: "N/A"
+
+                    //Navigate to ProductDetailsScreen -->
+                    ProductDetailsScreen(
+                        navController = navController,
+                        productName = productName,
+                        purchaseDate = purchaseDate,
+                        expiryDate = expiryDate,
+                        progress = progress,
+                        period = period
+                    )
                 }
+
                 composable(Route.ProfileScreen.route) {
                     ProfileScreen(navController = navController)
                 }

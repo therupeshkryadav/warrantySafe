@@ -39,23 +39,24 @@ import com.warrantysafe.app.presentation.navgraph.Route
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductCard(
-    navController: NavController,
+    onClick: () -> Unit, // Callback to handle click and pass details
     title: String,
     itemTint: Color,
     progressTint: Color,
     detailsColor: Color,
     period: String,
     purchase: String,
+    expiry: String,
     progress: Float, // Progress value from 0f to 1f
     imageResId: Int // Image resource ID
 ) {
+//    fun onClick(){  }
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 6.dp)
             .clip(RoundedCornerShape(20.dp))
-            .clickable {
-                navController.navigate(route = Route.ProductDetailsScreen.route) }
+            .clickable { onClick() }
             .background(color = itemTint),
         colors = CardDefaults.cardColors(
             containerColor = colorResource(R.color.xtreme)
@@ -78,7 +79,7 @@ fun ProductCard(
                 colorFilter = ColorFilter.tint(
                     color = colorResource(R.color.expired), // Change this to your desired color
                     blendMode = BlendMode.Color
-                    ),
+                ),
                 contentScale = ContentScale.Crop
             )
             Column(
@@ -124,17 +125,16 @@ fun ProductCard(
 @Preview
 @Composable
 fun ProductCardPreview() {
-    MaterialTheme {
-        ProductCard(
-            navController = rememberNavController(),
-            title = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            period = "0 years 0 months 0 days",
-            progress = 0.9f,
-            itemTint = colorResource(R.color.expired),
-            progressTint = colorResource(R.color.expired),
-            detailsColor = MaterialTheme.colorScheme.inversePrimary,
-            imageResId = R.drawable.item_image_placeholder // Replace with your drawable resource
-        )
-    }
+    ProductCard(
+        onClick = {},
+        title = "Realme 3 Pro",
+        purchase = "30/11/2024",
+        expiry = "",
+        period = "0 years 0 months 0 days",
+        progress = 0.9f,
+        itemTint = colorResource(R.color.expired),
+        progressTint = colorResource(R.color.expired),
+        detailsColor = MaterialTheme.colorScheme.inversePrimary,
+        imageResId = R.drawable.item_image_placeholder // Replace with your drawable resource
+    )
 }

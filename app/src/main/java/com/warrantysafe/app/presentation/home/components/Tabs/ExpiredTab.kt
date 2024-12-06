@@ -111,6 +111,7 @@ fun onPreview() {
         Product.Expired(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
+            expiry = "",
             period = "1 year 0 months 0 days",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
@@ -118,6 +119,7 @@ fun onPreview() {
         Product.Expired(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
+            expiry = "",
             period = "1 year 0 months 0 days",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
@@ -125,6 +127,7 @@ fun onPreview() {
         Product.Expired(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
+            expiry = "",
             period = "1 year 0 months 0 days",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder

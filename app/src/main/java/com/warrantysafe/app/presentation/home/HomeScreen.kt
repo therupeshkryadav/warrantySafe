@@ -29,10 +29,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.home.components.Tabs.ActiveTab
 import com.warrantysafe.app.presentation.home.components.Tabs.ExpiredTab
+import com.warrantysafe.app.presentation.home.components.productDetailsScreen.ProductDetailsScreen
 import com.warrantysafe.app.presentation.navgraph.Route
 import kotlinx.coroutines.launch
 
@@ -41,6 +45,7 @@ sealed class Product {
     data class Active(
         val title: String,
         val purchase: String,
+        val expiry: String,
         val period: String,
         val progress: Float,
         val imageResId: Int
@@ -49,6 +54,7 @@ sealed class Product {
     data class Expired(
         val title: String,
         val purchase: String,
+        val expiry: String,
         val period: String,
         val progress: Float,
         val imageResId: Int
@@ -65,6 +71,7 @@ fun HomeScreen(
         Product.Active(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
+            expiry = "",
             period = "1 year 0 months 0 days",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
@@ -72,6 +79,7 @@ fun HomeScreen(
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
+            expiry = "",
             period = "1 year 0 months 0 days",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
@@ -79,6 +87,7 @@ fun HomeScreen(
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
+            expiry = "",
             period = "1 year 0 months 0 days",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
@@ -89,6 +98,7 @@ fun HomeScreen(
         Product.Expired(
             title = "Rado Watch",
             purchase = "30/11/2024",
+            expiry = "",
             period = "0 year 0 months 0 days",
             progress = 1f,
             imageResId = R.drawable.item_image_placeholder
@@ -96,6 +106,7 @@ fun HomeScreen(
         Product.Expired(
             title = "PS5",
             purchase = "30/11/2024",
+            expiry = "",
             period = "0 year 0 months 0 days",
             progress = 1f,
             imageResId = R.drawable.item_image_placeholder
@@ -103,6 +114,7 @@ fun HomeScreen(
         Product.Expired(
             title = "LG Washing Machine ",
             purchase = "30/11/2024",
+            expiry = "",
             period = "0 year 0 months 0 days",
             progress = 1f,
             imageResId = R.drawable.item_image_placeholder
@@ -195,8 +207,6 @@ fun HomeScreen(
                 1 -> ExpiredTab(navController = navController, expiredProducts = expiredProducts) // Content for Tab 2
             }
         }
-
-
     }
 }
 

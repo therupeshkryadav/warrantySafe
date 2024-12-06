@@ -1,3 +1,5 @@
+package com.warrantysafe.app.presentation.search.components
+
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,6 +12,7 @@ import androidx.navigation.NavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.productList.components.productCard.ProductCard
 import com.warrantysafe.app.presentation.home.Product
+import com.warrantysafe.app.presentation.navgraph.Route
 
 @Composable
 fun SearchList(
@@ -28,15 +31,16 @@ fun SearchList(
         items(activeList.size) { index ->
             val product = activeList[index]
             ProductCard(
-                navController = navController,
                 title = product.title,
                 purchase = product.purchase,
+                expiry = product.expiry,
                 period = product.period,
                 progress = product.progress,
                 imageResId = product.imageResId,
                 progressTint = colorResource(R.color.DaysLeft),
                 itemTint = colorResource(R.color.transparent),
-                detailsColor = MaterialTheme.colorScheme.onSurface
+                detailsColor = MaterialTheme.colorScheme.onSurface,
+                onClick = {}
             )
         }
 
@@ -44,15 +48,16 @@ fun SearchList(
         items(expiredList.size) { index ->
             val product = expiredList[index]
             ProductCard(
-                navController = navController,
                 title = product.title,
                 purchase = product.purchase,
+                expiry = product.expiry,
                 period = product.period,
                 progress = product.progress,
                 imageResId = product.imageResId,
                 progressTint = colorResource(R.color.noDaysLeft),
                 itemTint = colorResource(R.color.expired),
-                detailsColor = MaterialTheme.colorScheme.inversePrimary
+                detailsColor = MaterialTheme.colorScheme.inversePrimary,
+                onClick = {}
             )
         }
     }

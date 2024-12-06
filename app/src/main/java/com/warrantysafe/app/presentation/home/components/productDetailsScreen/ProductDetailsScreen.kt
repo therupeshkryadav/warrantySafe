@@ -37,8 +37,19 @@ import com.warrantysafe.app.presentation.profile.components.DetailRow
 
 @Composable
 fun ProductDetailsScreen(
-    navController: NavController
+    navController: NavController,
+    productName: String?,
+    purchaseDate: String?,
+    expiryDate: String?,
+    progress: Float?,
+    period: String?,
 ) {
+    val validProductName = productName ?: "Unknown Product"
+    val validPurchaseDate = purchaseDate ?: "Not Available"
+    val validExpiryDate = expiryDate ?: "Not Available"
+    val validProgress = progress ?: 0f
+    val validPeriod = period ?: "-- years -- months -- days"
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,12 +65,14 @@ fun ProductDetailsScreen(
             contentScale = ContentScale.Crop,
             contentDescription = null
         )
-        DetailRow(
-            label = "Product Name",
-            value = "LG Washing Machine",
-            textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black),
-        )
+        if (productName != null) {
+            DetailRow(
+                label = "Product Name",
+                value = validProductName,
+                textColor = colorResource(R.color.purple_500),
+                borderColor = colorResource(R.color.black),
+            )
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -95,7 +108,7 @@ fun ProductDetailsScreen(
                             .fillMaxWidth(0.9f) // Use weight to distribute space equally
                             .padding(start = 16.dp),
                         textAlign = TextAlign.Start,
-                        text = "Electronics",
+                        text = "General",
                         fontSize = 16.sp
                     )
                     Icon(
@@ -109,12 +122,14 @@ fun ProductDetailsScreen(
             }
 
         }
-        DetailRow(
-            label = "Purchase Date",
-            value = "11/12/2024",
-            textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black),
-        )
+        if (purchaseDate != null) {
+            DetailRow(
+                label = "Purchase Date",
+                value = validPurchaseDate,
+                textColor = colorResource(R.color.purple_500),
+                borderColor = colorResource(R.color.black),
+            )
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -182,23 +197,25 @@ fun ProductDetailsScreen(
         }
         Text(
             modifier = Modifier.padding(top = 8.dp),
-            text = "Expiry in 0 years 6 months 22 days",
+            text = "Expiry in $validPeriod",
             style = MaterialTheme.typography.labelSmall,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             color = colorResource(R.color.black)
         )
-        CustomLinearProgressIndicator(
-            progress = 0.8f,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 8.dp)
-                .height(28.dp),
-            trackColor = colorResource(R.color.xtreme),
-            progressColor = colorResource(R.color.DaysLeft),
-            strokeWidth = 18f,
-            gapSize = 0f,
-        )
+        if (progress != null) {
+            CustomLinearProgressIndicator(
+                progress = validProgress,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = 8.dp)
+                    .height(28.dp),
+                trackColor = colorResource(R.color.xtreme),
+                progressColor = colorResource(R.color.DaysLeft),
+                strokeWidth = 18f,
+                gapSize = 0f,
+            )
+        }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -208,7 +225,7 @@ fun ProductDetailsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(all = 8.dp),
-                text = "Notes would be given here ->",
+                text = "notes would be provided here,if stored!!",
                 textAlign = TextAlign.Start,
                 fontSize = 16.sp,
                 color = colorResource(R.color.purple_500)
@@ -220,6 +237,13 @@ fun ProductDetailsScreen(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewProductDetailsScreen() {
-    ProductDetailsScreen(navController = rememberNavController())
+    ProductDetailsScreen(
+        navController = rememberNavController(),
+        productName = "LG WASHING MACHINE",
+        purchaseDate = "11/01/2023",
+        expiryDate = "11/09/2026",
+        progress = 0.4f,
+        period = "0 years 8 months 28 days"
+    )
 
 }
