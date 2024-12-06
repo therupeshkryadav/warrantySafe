@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,9 +33,9 @@ fun SideDrawerItem(
         modifier = Modifier
             .fillMaxWidth()
             .height(36.dp)
-            .padding(start = 16.dp)
+            .padding(end = 32.dp)
             .clickable { onClick(item) },
-        horizontalArrangement = Arrangement.Start,
+        horizontalArrangement = Arrangement.Absolute.Right,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -51,10 +52,4 @@ fun SideDrawerItem(
             color = Color.Black
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SideDrawerItemPreview() {
-    SideDrawerItem("Home",0, onClick = {})
 }

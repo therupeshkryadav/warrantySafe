@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -14,10 +13,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,7 +40,7 @@ fun SideDrawerContent(onItemClicked: (String) -> Unit) {
             contentAlignment = Alignment.Center
         ) {
             Image(
-                modifier = Modifier.size(200.dp),
+                modifier = Modifier.size(200.dp).align(AbsoluteAlignment.CenterRight),
                 painter = painterResource(R.drawable.warranty_logo), // Replace with your logo or avatar
                 contentDescription = "Drawer Header"
             )
@@ -50,7 +49,7 @@ fun SideDrawerContent(onItemClicked: (String) -> Unit) {
         Divider(modifier = Modifier.padding(bottom = 16.dp), color = Color.Gray, thickness = 1.dp)
 
         // Inside your SideDrawerContent composable or wherever you're setting up the drawer
-        listOf("Settings" to R.drawable.settings_warranty, "Logout" to R.drawable.logout).forEach { (item, iconRes) ->
+        listOf("About Developer" to R.drawable.about_developer,"Settings" to R.drawable.settings_warranty, "Logout" to R.drawable.logout).forEach { (item, iconRes) ->
             // Pass the item name, corresponding image resource, and the onClick handler
             SideDrawerItem(item = item, itemImg = iconRes, onClick = {
                 onItemClicked(item) // Calling onItemClicked with the item name (Settings or Logout)
