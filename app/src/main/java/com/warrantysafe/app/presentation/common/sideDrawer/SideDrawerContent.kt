@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
@@ -35,23 +36,28 @@ fun SideDrawerContent(onItemClicked: (String) -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp)
                 .statusBarsPadding()
                 .padding(start = 8.dp, end = 8.dp, top = 16.dp, bottom = 16.dp),
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(R.drawable.item_image_placeholder), // Replace with your logo or avatar
+                modifier = Modifier.size(200.dp),
+                painter = painterResource(R.drawable.warranty_logo), // Replace with your logo or avatar
                 contentDescription = "Drawer Header"
             )
         }
 
         Divider(modifier = Modifier.padding(bottom = 16.dp), color = Color.Gray, thickness = 1.dp)
 
-        // Navigation Items
-        listOf("Home", "Profile", "Settings", "Logout").forEach { item ->
-            SideDrawerItem(item = item, onClick = onItemClicked)
+        // Inside your SideDrawerContent composable or wherever you're setting up the drawer
+        listOf("Settings" to R.drawable.settings_warranty, "Logout" to R.drawable.logout).forEach { (item, iconRes) ->
+            // Pass the item name, corresponding image resource, and the onClick handler
+            SideDrawerItem(item = item, itemImg = iconRes, onClick = {
+                onItemClicked(item) // Calling onItemClicked with the item name (Settings or Logout)
+            })
         }
+
+
     }
 }
 
