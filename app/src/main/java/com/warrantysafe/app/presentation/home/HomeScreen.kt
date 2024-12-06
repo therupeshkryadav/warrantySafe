@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -176,25 +177,38 @@ fun HomeScreen(
             pageCount = { tabTitles.size })
         val scope = rememberCoroutineScope()
 
-        // TabRow for displaying the tabs
+        // Custom TabRow with no click effect
         TabRow(
-            selectedTabIndex = pagerState.currentPage, // Highlights the active tab
+            selectedTabIndex = pagerState.currentPage,
             modifier = Modifier.fillMaxWidth()
         ) {
             tabTitles.forEachIndexed { index, title ->
-                // Define individual tabs
-                Tab(
-                    selected = pagerState.currentPage == index, // Highlight the selected tab
-                    onClick = {
-                        // Navigate to the clicked tab
-                        scope.launch {
-                            pagerState.animateScrollToPage(index)
+                // Custom Tab Implementation
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(4.dp)
+                        .clip(RoundedCornerShape(8.dp)) // Optional for styling
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null // Disables ripple effect
+                        ) {
+                            scope.launch { pagerState.animateScrollToPage(index) }
                         }
-                    },
-                    text = { Text(text = title) }
-                )
+                        .padding(8.dp),
+                    contentAlignment = androidx.compose.ui.Alignment.Center
+                ) {
+                    Text(
+                        text = title,
+                        fontWeight = FontWeight.Bold,
+                        color = if (pagerState.currentPage == index) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         }
+
 
         // HorizontalPager for the content
         HorizontalPager(
@@ -203,8 +217,14 @@ fun HomeScreen(
         ) { page ->
             // Content for each page
             when (page) {
-                0 -> ActiveTab(navController = navController, activeProducts = activeProducts) // Content for Tab 1
-                1 -> ExpiredTab(navController = navController, expiredProducts = expiredProducts) // Content for Tab 2
+                0 -> ActiveTab(
+                    navController = navController,
+                    activeProducts = activeProducts
+                ) // Content for Tab 1
+                1 -> ExpiredTab(
+                    navController = navController,
+                    expiredProducts = expiredProducts
+                ) // Content for Tab 2
             }
         }
     }
