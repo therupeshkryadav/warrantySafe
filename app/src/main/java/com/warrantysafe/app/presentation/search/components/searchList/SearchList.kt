@@ -64,6 +64,7 @@ fun SearchList(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(top = 8.dp, start = 8.dp, end = 8.dp)
         ) {
+
             // Dynamically filter the input list for Active and Expired products
             val activeList = matchedList.filterIsInstance<Product.Active>()
             val expiredList = matchedList.filterIsInstance<Product.Expired>()
