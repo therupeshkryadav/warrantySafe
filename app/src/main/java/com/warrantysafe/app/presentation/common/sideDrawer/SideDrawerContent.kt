@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.AbsoluteAlignment
@@ -50,7 +50,11 @@ fun SideDrawerContent(onItemClicked: (String) -> Unit) {
             )
         }
 
-        Divider(modifier = Modifier.padding(bottom = 16.dp), color = Color.Gray, thickness = 1.dp)
+        HorizontalDivider(
+            modifier = Modifier.padding(bottom = 16.dp),
+            thickness = 1.dp,
+            color = Color.Gray
+        )
 
         // Inside your SideDrawerContent composable or wherever you're setting up the drawer
         listOf(
@@ -73,10 +77,10 @@ fun SideDrawerContent(onItemClicked: (String) -> Unit) {
                 })
         }
 
-        Divider(
+        HorizontalDivider(
             modifier = Modifier.padding(top = 158.dp, bottom = 16.dp),
-            color = Color.Gray,
-            thickness = 1.dp
+            thickness = 1.dp,
+            color = Color.Gray
         )
 
         SideDrawerItem(
