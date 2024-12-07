@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -31,12 +32,18 @@ import com.warrantysafe.app.R
 @Composable
 fun dropDownMenuItem(item: String, onClick: (String) -> Unit) {
 
-    Box(
-        modifier = Modifier
+    Row(
+        modifier = Modifier.wrapContentHeight().padding( horizontal = 4.dp)
             .background(color = colorResource(R.color.transparent))
     ) {
+        Icon(
+            painter = painterResource(R.drawable.logout), // Replace with relevant icons
+            contentDescription = null,
+            tint = Color.Gray,
+            modifier = Modifier.size(21.dp)
+        )
         Text(
-            modifier = Modifier.wrapContentSize().padding(8.dp).align(Alignment.Center),
+            modifier = Modifier.wrapContentHeight(),
             text = item,
             textAlign = TextAlign.Center,
             maxLines = 1,
