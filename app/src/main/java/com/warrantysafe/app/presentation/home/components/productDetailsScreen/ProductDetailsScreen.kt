@@ -68,8 +68,9 @@ fun ProductDetailsScreen(
         if (productName != null) {
             DetailRow(
                 label = "Product Name",
-                value = validProductName,
+                initialValue = validProductName,
                 textColor = colorResource(R.color.purple_500),
+                enable = false,
                 borderColor = colorResource(R.color.black),
             )
         }
@@ -125,8 +126,9 @@ fun ProductDetailsScreen(
         if (purchaseDate != null) {
             DetailRow(
                 label = "Purchase Date",
-                value = validPurchaseDate,
+                initialValue = validPurchaseDate,
                 textColor = colorResource(R.color.purple_500),
+                enable = false,
                 borderColor = colorResource(R.color.black),
             )
         }

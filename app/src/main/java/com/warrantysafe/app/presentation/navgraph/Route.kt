@@ -27,6 +27,21 @@ sealed class Route(
             val safePeriod = Uri.encode(period ?: "N/A")
             return "productDetailsScreen/$safeProductName/$safePurchaseDate/$safeExpiryDate/$safeProgress/$safePeriod"}
     }
+
+    object EditProfileScreen : Route("editProfileScreen/{fullName}/{userName}/{emailId}/{phone}") {
+        fun createRoute(
+            fullName: String?,
+            userName: String?,
+            emailId: String?,
+            phone: String?
+        ) :String{
+            // Provide safe defaults and encode the values
+            val safeFullName = Uri.encode(fullName ?: "----")
+            val safeUserName = Uri.encode(userName ?: "----")
+            val safeEmailId = Uri.encode(emailId ?: "----")
+            val safePhone = Uri.encode(phone ?: "----")
+            return "editProfileScreen/$safeFullName/$safeUserName/$safeEmailId/$safePhone"}
+    }
     object NotificationScreen : Route(route = "notificationScreen")
     object BottomNavigation : Route(route = "bottomNavigation")
 }
