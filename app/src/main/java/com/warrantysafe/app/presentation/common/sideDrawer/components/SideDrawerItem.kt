@@ -17,8 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.warrantysafe.app.R
@@ -26,6 +28,8 @@ import com.warrantysafe.app.R
 @Composable
 fun SideDrawerItem(
     item: String,
+    fontSize: TextUnit,
+    fontWeight: FontWeight?,
     @DrawableRes itemImg: Int,
     onClick: (String) -> Unit
 ) {
@@ -45,11 +49,26 @@ fun SideDrawerItem(
             modifier = Modifier
         )
         Text(
-            modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 8.dp),
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(horizontal = 8.dp),
             text = item,
             textAlign = TextAlign.Center,
-            fontSize = 18.sp,
+            fontSize = fontSize,
+            fontWeight = fontWeight,
             color = Color.Black
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewSide() {
+    SideDrawerItem(
+        item = "Settings",
+        fontSize = 18.sp,
+        fontWeight = null,
+        itemImg = R.drawable.settings,
+        onClick = { TODO() }
+    ) 
 }

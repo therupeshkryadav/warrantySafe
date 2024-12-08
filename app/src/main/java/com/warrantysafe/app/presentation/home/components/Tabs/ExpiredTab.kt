@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.home.Product
 import com.warrantysafe.app.presentation.common.productList.ProductList
+import com.warrantysafe.app.presentation.home.Product
 
 @Composable
 fun ExpiredTab(
@@ -33,7 +34,7 @@ fun ExpiredTab(
     expiredProducts: List<Product>
 ) {
 //Tab Values
-    Box(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize()) {
 
         Row(
             modifier = Modifier

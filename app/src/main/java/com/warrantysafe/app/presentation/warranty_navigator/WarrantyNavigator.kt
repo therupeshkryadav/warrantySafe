@@ -29,6 +29,7 @@ import com.warrantysafe.app.presentation.home.components.productDetailsScreen.Pr
 import com.warrantysafe.app.presentation.navgraph.Route
 import com.warrantysafe.app.presentation.notifification.NotificationScreen
 import com.warrantysafe.app.presentation.profile.ProfileScreen
+import com.warrantysafe.app.presentation.profile.edit.EditProfileScreen
 import com.warrantysafe.app.presentation.search.SearchScreen
 import com.warrantysafe.app.presentation.warranty_navigator.components.BottomNavigationItem
 import com.warrantysafe.app.presentation.warranty_navigator.components.WarrantyBottomNavigation
@@ -170,6 +171,30 @@ fun WarrantyNavigator(
                         expiryDate = expiryDate,
                         progress = progress,
                         period = period
+                    )
+                }
+
+                composable(
+                    route = "editProfileScreen/{fullName}/{userName}/{emailId}/{phone}",
+                    arguments = listOf(
+                        navArgument("fullName") { type = NavType.StringType },
+                        navArgument("userName") { type = NavType.StringType },
+                        navArgument("emailId") { type = NavType.StringType },
+                        navArgument("phone") { type = NavType.StringType }
+                    )
+                ) {
+                    val fullName = it.arguments?.getString("fullName") ?: "----"
+                    val userName = it.arguments?.getString("userName") ?: "----"
+                    val emailId = it.arguments?.getString("emailId") ?: "----"
+                    val phone = it.arguments?.getString("phone") ?: "----"
+
+                    //Navigate to EditProfileScreen -->
+                    EditProfileScreen(
+                        navController = navController,
+                        fullName = fullName,
+                        userName = userName,
+                        emailId = emailId,
+                        phoneNumber = phone
                     )
                 }
 

@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.AbsoluteAlignment
@@ -18,8 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.sideDrawer.components.SideDrawerItem
 
@@ -40,28 +42,60 @@ fun SideDrawerContent(onItemClicked: (String) -> Unit) {
             contentAlignment = Alignment.Center
         ) {
             Image(
-                modifier = Modifier.size(200.dp).align(AbsoluteAlignment.CenterRight),
+                modifier = Modifier
+                    .size(200.dp)
+                    .align(Alignment.Center),
                 painter = painterResource(R.drawable.warranty_logo), // Replace with your logo or avatar
                 contentDescription = "Drawer Header"
             )
         }
 
-        Divider(modifier = Modifier.padding(bottom = 16.dp), color = Color.Gray, thickness = 1.dp)
+        HorizontalDivider(
+            modifier = Modifier.padding(bottom = 16.dp),
+            thickness = 1.dp,
+            color = Color.Gray
+        )
 
         // Inside your SideDrawerContent composable or wherever you're setting up the drawer
-        listOf("About Developer" to R.drawable.about_developer,"Settings" to R.drawable.settings_warranty, "Logout" to R.drawable.logout).forEach { (item, iconRes) ->
+        listOf(
+            "List of Product Cards" to R.drawable.list_product_card,
+            "Help & Support" to R.drawable.help_support,
+            "Rate and Review" to R.drawable.rate_review,
+            "Share with Friends" to R.drawable.share_warranty,
+            "Terms & Privacy" to R.drawable.policy_warranty,
+            "About the App" to R.drawable.about_app,
+            "Upcoming Features" to R.drawable.upcoming_features
+        ).forEach { (item, iconRes) ->
             // Pass the item name, corresponding image resource, and the onClick handler
-            SideDrawerItem(item = item, itemImg = iconRes, onClick = {
-                onItemClicked(item) // Calling onItemClicked with the item name (Settings or Logout)
-            })
+            SideDrawerItem(
+                item = item,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                itemImg = iconRes,
+                onClick = {
+                    onItemClicked(item) // Calling onItemClicked with the item name (Settings or Logout)
+                })
         }
 
+        HorizontalDivider(
+            modifier = Modifier.padding(top = 158.dp, bottom = 16.dp),
+            thickness = 1.dp,
+            color = Color.Gray
+        )
 
+        SideDrawerItem(
+            item = "Settings",
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            itemImg = R.drawable.settings
+        ) { }
     }
+
+
 }
 
 @Preview
 @Composable
-fun SideDrawerContentPreview(){
+fun SideDrawerContentPreview() {
     SideDrawerContent(onItemClicked = {})
 }

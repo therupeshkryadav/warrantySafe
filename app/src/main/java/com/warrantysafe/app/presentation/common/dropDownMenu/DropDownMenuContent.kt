@@ -22,7 +22,7 @@ fun DropDownMenuContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Navigation Items
-        listOf("Share", "Rate us", "Privacy Policy", "Feedback").forEach { item ->
+        listOf("Logout").forEach { item ->
             dropDownMenuItem(item = item, onClick = onItemClicked)
         }
     }

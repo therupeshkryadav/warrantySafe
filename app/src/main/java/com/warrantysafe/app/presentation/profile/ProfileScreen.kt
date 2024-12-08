@@ -3,6 +3,7 @@ package com.warrantysafe.app.presentation.profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +15,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,26 +33,38 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.navgraph.Route
 import com.warrantysafe.app.presentation.profile.components.DetailRow
 
 
 @Composable
 fun ProfileScreen(navController: NavController) {
     val fullName = "Rupesh Kumar Yadav"
+    val username = "therupeshkryadav"
     val email = "rupesh.official484@gmail.com"
     val phoneNumber = "7233966649"
+
+    var scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp)
+            .padding(top = 8.dp, start = 8.dp, end = 8.dp)
+            .verticalScroll(scrollState)
     ) {
         // Edit Profile Icon
         Box(modifier = Modifier.fillMaxWidth()) {
             Icon(
                 modifier = Modifier
                     .size(24.dp)
-                    .align(Alignment.CenterEnd),
+                    .align(Alignment.CenterEnd)
+                    .clickable { navigateToEditProfile(
+                        navController = navController,
+                        fullName = fullName,
+                        userName = username,
+                        emailId = email,
+                        phone = phoneNumber,
+                    ) },
                 painter = painterResource(R.drawable.edit),
                 contentDescription = "Edit Profile"
             )
@@ -58,7 +73,7 @@ fun ProfileScreen(navController: NavController) {
         // Profile Avatar
         Box(
             modifier = Modifier
-                .size(244.dp)
+                .size(200.dp)
                 .clip(CircleShape)
                 .background(color = colorResource(R.color.black))
                 .align(Alignment.CenterHorizontally)
@@ -66,18 +81,42 @@ fun ProfileScreen(navController: NavController) {
             Image(
                 painter = painterResource(R.drawable.profile_avatar),
                 modifier = Modifier
-                    .size(240.dp)
+                    .size(198.dp)
                     .align(Alignment.Center)
                     .clip(CircleShape),
                 contentDescription = "Profile Avatar",
                 contentScale = ContentScale.Crop
             )
         }
-
         // Profile Details
-        DetailRow("Name", fullName, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
-        DetailRow("Email", email, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
-        DetailRow("Phone", phoneNumber, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
+        DetailRow(
+            "Name",
+            fullName,
+            enable = false,
+            textColor = colorResource(R.color.purple_500),
+            borderColor = colorResource(R.color.black)
+        )
+        DetailRow(
+            "Username",
+            username,
+            enable = false,
+            textColor = colorResource(R.color.purple_500),
+            borderColor = colorResource(R.color.black)
+        )
+        DetailRow(
+            "Email",
+            email,
+            enable = false,
+            textColor = colorResource(R.color.purple_500),
+            borderColor = colorResource(R.color.black)
+        )
+        DetailRow(
+            "Phone",
+            phoneNumber,
+            enable = false,
+            textColor = colorResource(R.color.purple_500),
+            borderColor = colorResource(R.color.black)
+        )
 
         // Change Password Button
         Box(
@@ -113,6 +152,22 @@ fun ProfileScreen(navController: NavController) {
             }
         }
     }
+}
+
+fun navigateToEditProfile(
+    navController: NavController,
+    fullName: String,
+    userName: String,
+    emailId: String,
+    phone: String
+) {
+    val route = Route.EditProfileScreen.createRoute(
+        fullName = fullName,
+        userName = userName,
+        emailId = emailId,
+        phone = phone
+    )
+    navController.navigate(route)
 }
 
 

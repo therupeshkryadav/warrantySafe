@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -20,9 +21,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navgraph.Route
 
@@ -31,16 +35,38 @@ import com.warrantysafe.app.presentation.navgraph.Route
 fun titleAppBar(currentRoute: String) {
     // Define route-to-title mapping
     val titleConfig = mapOf(
-        Route.HomeScreen.route to TitleConfig.Title(""), // Home screen with empty title
-        Route.ProfileScreen.route to TitleConfig.Title(""), // Profile screen
-        Route.NotificationScreen.route to TitleConfig.Title("Notifications"), // Profile screen
-        Route.ProductDetailsScreen.route to TitleConfig.Title("Product Card Details"), // Profile screen
-        Route.AddScreen.route to TitleConfig.Title("Add Warranty"), // Add Warranty screen
+        Route.HomeScreen.route to TitleConfig.Title(
+            "Welcome, therupeshkryadav !!",
+            textAlign = TextAlign.Start
+        ), // Home screen with empty title
+        Route.ProfileScreen.route to TitleConfig.Title(
+            "",
+            textAlign = TextAlign.Center
+        ), // Profile screen
+        Route.EditProfileScreen.route to TitleConfig.Title(
+            "Edit Profile",
+            textAlign = TextAlign.Center
+        ), // Profile screen
+        Route.NotificationScreen.route to TitleConfig.Title(
+            "Notifications",
+            textAlign = TextAlign.Center
+        ), // Profile screen
+        Route.ProductDetailsScreen.route to TitleConfig.Title(
+            "Product Card Details",
+            textAlign = TextAlign.Center
+        ), // Profile screen
+        Route.AddScreen.route to TitleConfig.Title(
+            "Add Warranty",
+            textAlign = TextAlign.Center
+        ), // Add Warranty screen
         Route.SearchScreen.route to TitleConfig.SearchBar // Search screen with a search bar
     )
 
     // Determine the title configuration based on the route
-    val titleConfigForRoute = titleConfig[currentRoute] ?: TitleConfig.Title("Unknown Screen")
+    val titleConfigForRoute = titleConfig[currentRoute] ?: TitleConfig.Title(
+        "Unknown Screen",
+        textAlign = TextAlign.Center
+    )
 
     // Render the appropriate UI
     when (titleConfigForRoute) {
@@ -48,8 +74,11 @@ fun titleAppBar(currentRoute: String) {
             Text(
                 text = titleConfigForRoute.text,
                 style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                textAlign = titleConfigForRoute.textAlign,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                maxLines = 2,
+                modifier = Modifier.fillMaxWidth().wrapContentHeight()
             )
         }
 
@@ -63,7 +92,7 @@ fun titleAppBar(currentRoute: String) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .fillMaxHeight(1f)
-                            .clickable {  }
+                            .clickable { }
                             .background(color = colorResource(R.color.transparent)),
                         text = "Search",
                         style = MaterialTheme.typography.titleLarge
@@ -90,7 +119,7 @@ fun titleAppBar(currentRoute: String) {
 
 // Configuration sealed class for dynamic title management
 sealed class TitleConfig {
-    data class Title(val text: String) : TitleConfig()
+    data class Title(val text: String, val textAlign: TextAlign) : TitleConfig()
     object SearchBar : TitleConfig()
 }
 

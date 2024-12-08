@@ -81,14 +81,18 @@ fun actionIcons(
                 }
             }
 
-            Route.AddScreen.route -> {
+            Route.AddScreen.route,Route.EditProfileScreen.route -> {
                 // Add Warranty screen action
                 IconButton(onClick = {
                     // Clear back stack of Route.AddScreen.route
-                    navController.popBackStack(Route.AddScreen.route, inclusive = true)
+                    navController.popBackStack(currentRoute, inclusive = true)
 
+                    if(currentRoute==Route.EditProfileScreen.route){
+                        navController.navigate(Route.ProfileScreen.route)
+                    }else{
                     // Navigate to HomeScreen
                     navController.navigate(Route.HomeScreen.route)
+                    }
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Check,
