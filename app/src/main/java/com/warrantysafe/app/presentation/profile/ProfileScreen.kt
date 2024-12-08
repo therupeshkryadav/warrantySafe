@@ -36,6 +36,7 @@ import com.warrantysafe.app.presentation.profile.components.DetailRow
 @Composable
 fun ProfileScreen(navController: NavController) {
     val fullName = "Rupesh Kumar Yadav"
+    val username = "therupeshkryadav"
     val email = "rupesh.official484@gmail.com"
     val phoneNumber = "7233966649"
 
@@ -76,6 +77,7 @@ fun ProfileScreen(navController: NavController) {
 
         // Profile Details
         DetailRow("Name", fullName, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
+        DetailRow("Username", username, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
         DetailRow("Email", email, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
         DetailRow("Phone", phoneNumber, textColor = colorResource(R.color.purple_500), borderColor = colorResource(R.color.black))
 

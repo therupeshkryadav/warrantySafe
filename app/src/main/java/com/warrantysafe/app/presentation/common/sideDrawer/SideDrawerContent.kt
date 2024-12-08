@@ -44,7 +44,7 @@ fun SideDrawerContent(onItemClicked: (String) -> Unit) {
             Image(
                 modifier = Modifier
                     .size(200.dp)
-                    .align(AbsoluteAlignment.CenterRight),
+                    .align(Alignment.Center),
                 painter = painterResource(R.drawable.warranty_logo), // Replace with your logo or avatar
                 contentDescription = "Drawer Header"
             )
