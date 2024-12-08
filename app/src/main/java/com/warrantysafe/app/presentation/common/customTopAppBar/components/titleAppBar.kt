@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -35,11 +36,15 @@ fun titleAppBar(currentRoute: String) {
     // Define route-to-title mapping
     val titleConfig = mapOf(
         Route.HomeScreen.route to TitleConfig.Title(
-            "Welcome, username !!",
+            "Welcome, therupeshkryadav !!",
             textAlign = TextAlign.Start
         ), // Home screen with empty title
         Route.ProfileScreen.route to TitleConfig.Title(
             "",
+            textAlign = TextAlign.Center
+        ), // Profile screen
+        Route.EditProfileScreen.route to TitleConfig.Title(
+            "Edit Profile",
             textAlign = TextAlign.Center
         ), // Profile screen
         Route.NotificationScreen.route to TitleConfig.Title(
@@ -71,9 +76,9 @@ fun titleAppBar(currentRoute: String) {
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = titleConfigForRoute.textAlign,
                 fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                maxLines = 1,
-                modifier = Modifier.fillMaxWidth()
+                fontSize = 16.sp,
+                maxLines = 2,
+                modifier = Modifier.fillMaxWidth().wrapContentHeight()
             )
         }
 
