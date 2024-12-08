@@ -27,8 +27,7 @@ fun ProductList(
     productType: List<Product> // Changed to a flat list of products
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(vertical = 48.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
         items(productType) { product ->
             when (product) {

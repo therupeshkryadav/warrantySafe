@@ -87,6 +87,7 @@ fun SearchScreen(navController: NavController) {
                 imageResId = R.drawable.item_image_placeholder
             )
         )
+
         if (!matchedList.isEmpty()) {
             Row(
                 modifier = Modifier
