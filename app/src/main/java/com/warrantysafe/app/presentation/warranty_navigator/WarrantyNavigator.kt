@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -23,8 +24,10 @@ import androidx.navigation.navArgument
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.add.AddScreen
 import com.warrantysafe.app.presentation.common.customTopAppBar.CustomTopAppBar
+import com.warrantysafe.app.presentation.common.productList.ProductList
 import com.warrantysafe.app.presentation.common.sideDrawer.SideDrawerContent
 import com.warrantysafe.app.presentation.home.HomeScreen
+import com.warrantysafe.app.presentation.home.Product
 import com.warrantysafe.app.presentation.home.components.productDetailsScreen.ProductDetailsScreen
 import com.warrantysafe.app.presentation.home.components.productDetailsScreen.edit.EditProductDetailsScreen
 import com.warrantysafe.app.presentation.navgraph.Route
@@ -44,7 +47,6 @@ fun WarrantyNavigator(
 ) {
 
     val backStackState = navController.currentBackStackEntryAsState().value
-
 
     // Show bottom navigation for specific routes
     val isBottomBarVisible = backStackState?.destination?.route in listOf(
@@ -78,8 +80,120 @@ fun WarrantyNavigator(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
-    // State to manage the visibility of the dropdown menu
-    val isMenuExpanded by remember { mutableStateOf(false) }
+    val productList = listOf(
+        Product.Active(
+            title = "Realme 3 Pro",
+            purchase = "30/11/2024",
+            expiry = "",
+            period = "1 year 0 months 0 days",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 7 Pro",
+            purchase = "30/11/2024",
+            expiry = "",
+            period = "1 year 0 months 0 days",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Redmi Note 10 ",
+            purchase = "30/11/2024",
+            expiry = "",
+            period = "1 year 0 months 0 days",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 7 Pro",
+            purchase = "30/11/2024",
+            expiry = "",
+            period = "1 year 0 months 0 days",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Redmi Note 10 ",
+            purchase = "30/11/2024",
+            expiry = "",
+            period = "1 year 0 months 0 days",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 7 Pro",
+            purchase = "30/11/2024",
+            expiry = "",
+            period = "1 year 0 months 0 days",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Redmi Note 10 ",
+            purchase = "30/11/2024",
+            expiry = "",
+            period = "1 year 0 months 0 days",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 7 Pro",
+            purchase = "30/11/2024",
+            expiry = "",
+            period = "1 year 0 months 0 days",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Redmi Note 10 ",
+            purchase = "30/11/2024",
+            expiry = "",
+            period = "1 year 0 months 0 days",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 7 Pro",
+            purchase = "30/11/2024",
+            expiry = "",
+            period = "1 year 0 months 0 days",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Redmi Note 10 ",
+            purchase = "30/11/2024",
+            expiry = "",
+            period = "1 year 0 months 0 days",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "Rado Watch",
+            purchase = "30/11/2024",
+            expiry = "",
+            period = "0 year 0 months 0 days",
+            progress = 1f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "PS5",
+            purchase = "30/11/2024",
+            expiry = "",
+            period = "0 year 0 months 0 days",
+            progress = 1f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "LG Washing Machine ",
+            purchase = "30/11/2024",
+            expiry = "",
+            period = "0 year 0 months 0 days",
+            progress = 1f,
+            imageResId = R.drawable.item_image_placeholder
+        )
+    )
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -89,20 +203,40 @@ fun WarrantyNavigator(
                     coroutineScope.launch { drawerState.close() }
                     // Perform navigation or actions based on the clicked item
                     when (item) {
-                        "Home" -> {
-                            // Handle Home navigation
+                        "List of Product Cards" -> {
+                           navigateToTab(
+
+                               navController = navController,
+                               route = Route.ProductList
+                           ) // Handle List of Product navigation
                         }
 
-                        "Profile" -> {
-                            // Handle Profile navigation
+                        "Help & Support" -> {
+                            // Handle Help & Support navigation
+                        }
+
+                        "Rate and Review" -> {
+                            // Handle Rate and Review navigation
+                        }
+
+                        "Share with Friends" -> {
+                            // Handle Share with Friends navigation
+                        }
+
+                        "Terms & Privacy" -> {
+                            // Handle Terms & Privacy navigation
+                        }
+
+                        "About the App" -> {
+                            // Handle About the App navigation
+                        }
+
+                        "Upcoming Features" -> {
+                            // Handle Upcoming Features navigation
                         }
 
                         "Settings" -> {
-                            // Handle Settings navigation
-                        }
-
-                        "Logout" -> {
-                            // Handle Logout
+                            //  Handle Settings navigation
                         }
                     }
                 }
@@ -148,6 +282,14 @@ fun WarrantyNavigator(
                 }
                 composable(Route.AddScreen.route) {
                     AddScreen(navController = navController)
+                }
+
+                composable(Route.ProductList.route){
+                    ProductList(
+                        navController = navController,
+                        itemTint = colorResource(R.color.transparent),
+                        productType = productList
+                    )
                 }
                 composable(Route.NotificationScreen.route) {
                     NotificationScreen(navController = navController)
@@ -239,7 +381,6 @@ fun WarrantyNavigator(
 private fun navigateToTab(navController: NavController, route: Route) {
     navController.navigate(route.route) {
         popUpTo(navController.graph.startDestinationId) {
-            inclusive = (route == Route.ProfileScreen) // Apply inclusive only for ProfileScreen
             saveState = true // Save state for tabs
         }
         launchSingleTop = true // Avoid multiple instances of the same destination

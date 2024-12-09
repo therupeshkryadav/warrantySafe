@@ -10,6 +10,7 @@ sealed class Route(
     object SearchScreen : Route(route = "search_screen")
     object AddScreen : Route(route = "addScreen")
     object ProfileScreen : Route(route = "profileScreen")
+    object ProductList : Route(route = "productList")
 
     object ProductDetailsScreen : Route("productDetailsScreen/{productName}/{purchaseDate}/{expiryDate}/{progress}/{period}") {
         fun createRoute(

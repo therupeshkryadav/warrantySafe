@@ -51,6 +51,10 @@ fun titleAppBar(currentRoute: String) {
             "Edit Product Card Details",
             textAlign = TextAlign.Center
         ), // Edit Product Details screen
+        Route.ProductList.route to TitleConfig.Title(
+            "List of Product Cards",
+            textAlign = TextAlign.Center
+        ), // Edit Product Details screen
         Route.NotificationScreen.route to TitleConfig.Title(
             "Notifications",
             textAlign = TextAlign.Center
