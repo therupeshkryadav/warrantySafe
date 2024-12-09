@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -39,6 +40,9 @@ fun actionIcons(
 ) {
     // State to manage the visibility of the dropdown menu
     var isMenuExpanded by remember { mutableStateOf(false) }
+    val productName = "productName"
+    val purchaseDate = "DD/MM/YYYY"
+    val expiryDate = "DD/MM/YYYY"
 
     Row {
         when (currentRoute) {
@@ -72,8 +76,20 @@ fun actionIcons(
 
             }
 
-            Route.ProductDetailsScreen.route -> {
-                IconButton(onClick = {}) {
+            Route.ProductDetailsScreen.route, Route.EditProfileScreen.route -> {
+                IconButton(onClick = {
+                    if (currentRoute == Route.EditProfileScreen.route) {
+                        navController.popBackStack(currentRoute, inclusive = true)
+                        navController.navigate(Route.EditProfileScreen.route)
+                    } else {
+                        navigateToEditProductDetails(
+                            navController = navController,
+                            productName = productName,
+                            purchaseDate = purchaseDate,
+                            expiryDate = expiryDate
+                        )
+                    }
+                }) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
                         contentDescription = "Edit Icon"
@@ -81,17 +97,19 @@ fun actionIcons(
                 }
             }
 
-            Route.AddScreen.route,Route.EditProfileScreen.route -> {
+            Route.AddScreen.route, Route.EditProfileScreen.route, Route.EditProductDetailsScreen.route -> {
                 // Add Warranty screen action
                 IconButton(onClick = {
                     // Clear back stack of Route.AddScreen.route
                     navController.popBackStack(currentRoute, inclusive = true)
 
-                    if(currentRoute==Route.EditProfileScreen.route){
+                    if (currentRoute == Route.EditProfileScreen.route) {
                         navController.navigate(Route.ProfileScreen.route)
-                    }else{
-                    // Navigate to HomeScreen
-                    navController.navigate(Route.HomeScreen.route)
+                    } else if (currentRoute == Route.EditProductDetailsScreen.route) {
+                        navController.navigate(Route.ProductDetailsScreen.route)
+                    } else {
+                        // Navigate to HomeScreen
+                        navController.navigate(Route.HomeScreen.route)
                     }
                 }) {
                     Icon(
@@ -105,9 +123,9 @@ fun actionIcons(
                 // Search screen action
                 IconButton(onClick = { /* Handle Search Click */ }) {
                     Icon(
-                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.search_warranty),
+                        painter = painterResource(id = R.drawable.search_warranty),
                         contentDescription = "Search",
-                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -119,11 +137,25 @@ fun actionIcons(
     }
 }
 
+fun navigateToEditProductDetails(
+    navController: NavHostController,
+    productName: String,
+    purchaseDate: String,
+    expiryDate: String
+) {
+    val route=Route.EditProductDetailsScreen.createRoute(
+        productName =productName,
+        purchaseDate = purchaseDate,
+        expiryDate = expiryDate
+    )
+    navController.navigate(route)
+}
+
 @Preview
 @Composable
 fun ActionsPreview() {
     actionIcons(
         navController = rememberNavController(),
-        currentRoute = Route.HomeScreen.route
+        currentRoute = Route.EditProductDetailsScreen.route
     )
 }

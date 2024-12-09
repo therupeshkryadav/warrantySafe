@@ -26,6 +26,7 @@ import com.warrantysafe.app.presentation.common.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.common.sideDrawer.SideDrawerContent
 import com.warrantysafe.app.presentation.home.HomeScreen
 import com.warrantysafe.app.presentation.home.components.productDetailsScreen.ProductDetailsScreen
+import com.warrantysafe.app.presentation.home.components.productDetailsScreen.edit.EditProductDetailsScreen
 import com.warrantysafe.app.presentation.navgraph.Route
 import com.warrantysafe.app.presentation.notifification.NotificationScreen
 import com.warrantysafe.app.presentation.profile.ProfileScreen
@@ -171,6 +172,27 @@ fun WarrantyNavigator(
                         expiryDate = expiryDate,
                         progress = progress,
                         period = period
+                    )
+                }
+
+                composable(
+                    route = "editProductDetailsScreen/{productName}/{purchaseDate}/{expiryDate}",
+                    arguments = listOf(
+                        navArgument("productName") { type = NavType.StringType },
+                        navArgument("purchaseDate") { type = NavType.StringType },
+                        navArgument("expiryDate") { type = NavType.StringType }
+                    )
+                ) {
+                    val productName = it.arguments?.getString("productName") ?: "Unknown"
+                    val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
+                    val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
+
+                    //Navigate to EditProductDetailsScreen -->
+                    EditProductDetailsScreen(
+                        navController = navController,
+                        productName = productName,
+                        purchaseDate = purchaseDate,
+                        expiryDate = expiryDate,
                     )
                 }
 
