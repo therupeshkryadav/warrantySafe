@@ -107,7 +107,11 @@ fun WarrantyNavigator(
                     }
                 }
             )
-        }
+        },
+        gesturesEnabled = currentRoute in listOf(
+            Route.HomeScreen.route,
+            Route.ProfileScreen.route
+        ) // Enable gestures only for specific routes
     ) {
         Scaffold(
             topBar = {
