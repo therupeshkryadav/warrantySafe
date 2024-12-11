@@ -76,7 +76,7 @@ fun actionIcons(
 
             }
 
-            Route.ProductDetailsScreen.route, Route.EditProfileScreen.route -> {
+            Route.ProductDetailsScreen.route -> {
                 IconButton(onClick = {
                     if (currentRoute == Route.EditProfileScreen.route) {
                         navController.popBackStack(currentRoute, inclusive = true)
