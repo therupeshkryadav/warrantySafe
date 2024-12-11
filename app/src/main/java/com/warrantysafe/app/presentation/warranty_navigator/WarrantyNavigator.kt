@@ -22,10 +22,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.aboutApp.AboutAppScreen
 import com.warrantysafe.app.presentation.add.AddScreen
 import com.warrantysafe.app.presentation.common.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.common.productList.ProductList
 import com.warrantysafe.app.presentation.common.sideDrawer.SideDrawerContent
+import com.warrantysafe.app.presentation.helpSupport.HelpSupportScreen
 import com.warrantysafe.app.presentation.home.HomeScreen
 import com.warrantysafe.app.presentation.home.Product
 import com.warrantysafe.app.presentation.home.components.productDetailsScreen.ProductDetailsScreen
@@ -35,6 +37,8 @@ import com.warrantysafe.app.presentation.notifification.NotificationScreen
 import com.warrantysafe.app.presentation.profile.ProfileScreen
 import com.warrantysafe.app.presentation.profile.edit.EditProfileScreen
 import com.warrantysafe.app.presentation.search.SearchScreen
+import com.warrantysafe.app.presentation.termsPrivacy.TermsPrivacyScreen
+import com.warrantysafe.app.presentation.upcomingFeatures.UpcomingFeaturesScreen
 import com.warrantysafe.app.presentation.warranty_navigator.components.BottomNavigationItem
 import com.warrantysafe.app.presentation.warranty_navigator.components.WarrantyBottomNavigation
 import com.warrantysafe.app.utils.toRoute
@@ -290,9 +294,27 @@ fun WarrantyNavigator(
                         productType = productList
                     )
                 }
+
+                composable(Route.HelpSupportScreen.route){
+                    HelpSupportScreen()
+                }
+
+                composable(Route.TermsPrivacyScreen.route){
+                    TermsPrivacyScreen()
+                }
+
+                composable(Route.AboutAppScreen.route){
+                    AboutAppScreen()
+                }
+
+                composable(Route.UpcomingFeaturesScreen.route){
+                    UpcomingFeaturesScreen()
+                }
+
                 composable(Route.NotificationScreen.route) {
                     NotificationScreen(navController = navController)
                 }
+
                 composable(
                     route = "productDetailsScreen/{productName}/{purchaseDate}/{expiryDate}/{progress}/{period}",
                     arguments = listOf(
