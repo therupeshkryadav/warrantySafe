@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.home.components.Tabs
+package com.warrantysafe.app.presentation.home.components.tabs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,72 +35,8 @@ fun ActiveTab(
 ) {
     //Tab Values
     Column(modifier = Modifier.fillMaxSize()) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween, // Distribute components to start and end
-            verticalAlignment = Alignment.CenterVertically // Center items vertically
-        ) {
-            // First Box (Sort By Section)
-            Box(
-                modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.surface)
-                    .border(
-                        width = 1.dp,
-                        shape = RectangleShape,
-                        color = colorResource(R.color.black)
-                    )
-                    .padding(start = 8.dp) // Padding for spacing within the Box
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically // Align items vertically
-                ) {
-                    Text(
-                        text = "Sort By",
-                        modifier = Modifier.padding(end = 4.dp) // Space between text and icon
-                    )
-                    Icon(
-                        modifier = Modifier
-                            .size(24.dp), // Define a consistent size for the icon
-                        painter = painterResource(R.drawable.drop_down),
-                        contentDescription = null
-                    )
-                }
-            }
-
-            // Second Box (Filter Section)
-            Box(
-                modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.surface)
-                    .border(
-                        width = 1.dp, shape = RectangleShape,
-                        color = colorResource(R.color.black)
-                    )
-                    .padding(end = 8.dp) // Padding for spacing within the Box
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically // Align items vertically
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(24.dp) // Define a consistent size for the icon
-                            .padding(start = 8.dp), // Space between icon and text
-                        painter = painterResource(R.drawable.filter),
-                        contentDescription = null
-                    )
-                    Text(
-                        text = "Filter"
-                    )
-                }
-            }
-
-        }
         ProductList(
             navController = navController,
-            itemTint = colorResource(R.color.transparent),
             productType = activeProducts
         )
     }

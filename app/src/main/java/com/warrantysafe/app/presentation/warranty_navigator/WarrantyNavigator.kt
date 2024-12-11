@@ -287,7 +287,6 @@ fun WarrantyNavigator(
                 composable(Route.ProductList.route){
                     ProductList(
                         navController = navController,
-                        itemTint = colorResource(R.color.transparent),
                         productType = productList
                     )
                 }
