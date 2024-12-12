@@ -208,15 +208,18 @@ fun WarrantyNavigator(
                     // Perform navigation or actions based on the clicked item
                     when (item) {
                         "List of Product Cards" -> {
-                           navigateToTab(
+                            navigateToTab(
 
-                               navController = navController,
-                               route = Route.ProductList
-                           ) // Handle List of Product navigation
+                                navController = navController,
+                                route = Route.ProductList
+                            ) // Handle List of Product navigation
                         }
 
                         "Help & Support" -> {
-                            // Handle Help & Support navigation
+                            navigateToTab(
+                                navController = navController,
+                                route = Route.HelpSupportScreen
+                            ) // Handle Help & Support navigation
                         }
 
                         "Rate and Review" -> {
@@ -228,15 +231,24 @@ fun WarrantyNavigator(
                         }
 
                         "Terms & Privacy" -> {
-                            // Handle Terms & Privacy navigation
+                            navigateToTab(
+                                navController = navController,
+                                route = Route.TermsPrivacyScreen
+                            )// Handle Terms & Privacy navigation
                         }
 
                         "About the App" -> {
-                            // Handle About the App navigation
+                            navigateToTab(
+                                navController = navController,
+                                route = Route.AboutAppScreen
+                            )// Handle About the App navigation
                         }
 
                         "Upcoming Features" -> {
-                            // Handle Upcoming Features navigation
+                            navigateToTab(
+                                navController = navController,
+                                route = Route.UpcomingFeaturesScreen
+                            )// Handle Upcoming Features navigation
                         }
 
                         "Settings" -> {
@@ -288,26 +300,26 @@ fun WarrantyNavigator(
                     AddScreen(navController = navController)
                 }
 
-                composable(Route.ProductList.route){
+                composable(Route.ProductList.route) {
                     ProductList(
                         navController = navController,
                         productType = productList
                     )
                 }
 
-                composable(Route.HelpSupportScreen.route){
+                composable(Route.HelpSupportScreen.route) {
                     HelpSupportScreen()
                 }
 
-                composable(Route.TermsPrivacyScreen.route){
+                composable(Route.TermsPrivacyScreen.route) {
                     TermsPrivacyScreen()
                 }
 
-                composable(Route.AboutAppScreen.route){
+                composable(Route.AboutAppScreen.route) {
                     AboutAppScreen()
                 }
 
-                composable(Route.UpcomingFeaturesScreen.route){
+                composable(Route.UpcomingFeaturesScreen.route) {
                     UpcomingFeaturesScreen()
                 }
 
