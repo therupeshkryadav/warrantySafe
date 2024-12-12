@@ -71,6 +71,7 @@ fun ProductDetailsScreen(
                 initialValue = validProductName,
                 textColor = colorResource(R.color.purple_500),
                 enable = false,
+                icon = null,
                 borderColor = colorResource(R.color.black),
             )
         }
@@ -129,6 +130,7 @@ fun ProductDetailsScreen(
                 initialValue = validPurchaseDate,
                 textColor = colorResource(R.color.purple_500),
                 enable = false,
+                icon = null,
                 borderColor = colorResource(R.color.black),
             )
         }

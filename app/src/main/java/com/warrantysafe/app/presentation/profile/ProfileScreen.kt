@@ -94,13 +94,14 @@ fun ProfileScreen(navController: NavController) {
             fullName,
             enable = false,
             textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black)
+            icon = null,borderColor = colorResource(R.color.black)
         )
         DetailRow(
             "Username",
             username,
             enable = false,
             textColor = colorResource(R.color.purple_500),
+            icon = null,
             borderColor = colorResource(R.color.black)
         )
         DetailRow(
@@ -108,6 +109,7 @@ fun ProfileScreen(navController: NavController) {
             email,
             enable = false,
             textColor = colorResource(R.color.purple_500),
+            icon = null,
             borderColor = colorResource(R.color.black)
         )
         DetailRow(
@@ -115,6 +117,7 @@ fun ProfileScreen(navController: NavController) {
             phoneNumber,
             enable = false,
             textColor = colorResource(R.color.purple_500),
+            icon = null,
             borderColor = colorResource(R.color.black)
         )
 

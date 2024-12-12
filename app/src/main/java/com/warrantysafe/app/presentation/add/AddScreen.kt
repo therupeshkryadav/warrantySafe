@@ -3,6 +3,8 @@ package com.warrantysafe.app.presentation.add
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +14,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -32,6 +36,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,11 +44,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.profile.components.DetailRow
 
 @Composable
 fun AddScreen(navController: NavController) {
 
     var productName by remember { mutableStateOf("") }
+    var purchaseDate by remember { mutableStateOf("") }
+    var expiryDate by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
     // Create a ScrollState for vertical scrolling
     val scrollState = rememberScrollState()
@@ -52,6 +60,7 @@ fun AddScreen(navController: NavController) {
         modifier = Modifier
             .padding(start = 8.dp, end = 8.dp)
             .fillMaxSize()
+            .verticalScroll(scrollState)
     ) {
         Image(
             painter = painterResource(R.drawable.item_image_placeholder),
@@ -63,229 +72,126 @@ fun AddScreen(navController: NavController) {
             contentScale = ContentScale.Crop,
             contentDescription = null
         )
-
-        Spacer(modifier = Modifier
-            .background(color = colorResource(R.color.black))
-            .fillMaxWidth()
-            .height(1.dp))
-
-        Column(modifier = Modifier
-            .fillMaxHeight()
-            .verticalScroll(scrollState)
+        DetailRow(
+            label = "Product Name",
+            initialValue = productName,
+            textColor = colorResource(R.color.purple_500),
+            enable = true,
+            icon = null,
+            borderColor = colorResource(R.color.black),
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
         ) {
-            OutlinedTextField(
-                value = productName,
-                enabled = true,
-                textStyle = TextStyle.Default.copy(fontSize = 16.sp),
+            Text(
                 modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .padding(top = 8.dp)
-                    .height(60.dp),
-                onValueChange = { productName = it },
-                label = { Text(fontSize = 16.sp, text = "Product name") },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = colorResource(R.color.black),
-                    focusedLabelColor = colorResource(R.color.xtreme2),
-                    unfocusedLabelColor = colorResource(R.color.xtreme),
-                    focusedBorderColor = colorResource(R.color.xtreme2),
-                    unfocusedBorderColor = colorResource(R.color.black),
-                )
+                    .padding(vertical = 12.dp)
+                    .padding(end = 8.dp),
+                text = "Category :",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = colorResource(id = R.color.black)
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp)
+                    .height(48.dp)
+                    .clip(shape = RoundedCornerShape(2.dp))
+                    .clickable {  }
+                    .border(width = 1.dp, color = colorResource(R.color.black))
+
             ) {
-                Text(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
-                    text = "Category :",
-                    fontSize = 16.sp,
-                    color = colorResource(id = R.color.black)
-                )
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .clip(shape = RoundedCornerShape(2.dp))
-                        .border(width = 1.dp, color = colorResource(R.color.black))
-
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .background(colorResource(R.color.xtreme)), // Set a fixed height to align items properly
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth(0.9f) // Use weight to distribute space equally
-                                .padding(start = 16.dp),
-                            textAlign = TextAlign.Start,
-                            text = "Electronics",
-                            fontSize = 16.sp
-                        )
-                        Icon(
-                            modifier = Modifier
-                                .width(24.dp)
-                                .fillMaxHeight(1f),
-                            painter = painterResource(R.drawable.drop_down),
-                            contentDescription = null
-                        )
-                    }
-                }
-
-            }
-
-            Column {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                        .height(48.dp)
-                        .clip(shape = RoundedCornerShape(2.dp))
-                        .background(colorResource(R.color.green))
-                        .border(width = 1.dp, color = colorResource(R.color.black))
-
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .padding(start = 48.dp), // Set a fixed height to align items properly
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth(0.6f), // Use weight to distribute space equally
-                            textAlign = TextAlign.Start,
-                            text = "Upload Receipt Image",
-                            fontSize = 16.sp,
-                            maxLines = 1
-                        )
-                        Icon(
-                            modifier = Modifier
-                                .padding(start = 2.dp)
-                                .fillMaxHeight(1f),
-                            painter = painterResource(R.drawable.upload),
-                            contentDescription = null
-                        )
-                    }
-                }
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp)
+                        .height(56.dp)
+                        .background(colorResource(R.color.xtreme)), // Set a fixed height to align items properly
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
-                        text = "Purchase Date:",
-                        fontSize = 16.sp,
-                        color = colorResource(id = R.color.black)
-                    )
-
-                    Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                            .clip(shape = RoundedCornerShape(2.dp))
-                            .border(width = 1.dp, color = colorResource(R.color.black))
-                    ) {
-                        Row {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth(0.85f)
-                                    .padding(start = 16.dp, top = 12.dp),
-                                text = "DD / MM / YYYY",
-                                textAlign = TextAlign.Start,
-                                fontSize = 16.sp,
-                                color = colorResource(id = R.color.xtreme)
-                            )
-                            Icon(
-                                modifier = Modifier
-                                    .width(24.dp)
-                                    .padding(end = 8.dp)
-                                    .fillMaxHeight(1f),
-                                painter = painterResource(R.drawable.calendar),
-                                contentDescription = null
-                            )
-                        }
-                    }
-
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                ) {
-                    Text(
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
-                        text = "Expiration Date:",
-                        fontSize = 16.sp,
-                        color = colorResource(id = R.color.black)
+                            .fillMaxWidth(0.9f) // Use weight to distribute space equally
+                            .padding(start = 16.dp),
+                        textAlign = TextAlign.Start,
+                        text = "General",
+                        fontSize = 16.sp
                     )
-
-                    Box(
+                    Icon(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                            .clip(shape = RoundedCornerShape(2.dp))
-                            .border(width = 1.dp, color = colorResource(R.color.black))
-                    ) {
-                        Row {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth(0.85f)
-                                    .padding(start = 16.dp, top = 12.dp),
-                                text = "DD / MM / YYYY",
-                                textAlign = TextAlign.Start,
-                                fontSize = 16.sp,
-                                color = colorResource(id = R.color.xtreme)
-                            )
-                            Icon(
-                                modifier = Modifier
-                                    .width(24.dp)
-                                    .padding(end = 8.dp)
-                                    .fillMaxHeight(1f),
-                                painter = painterResource(R.drawable.calendar),
-                                contentDescription = null
-                            )
-                        }
-                    }
+                            .width(24.dp)
+                            .fillMaxHeight(1f),
+                        painter = painterResource(R.drawable.drop_down),
+                        contentDescription = null
+                    )
                 }
             }
 
-            OutlinedTextField(
-                value = notes,
-                enabled = true,
-                textStyle = TextStyle.Default.copy(fontSize = 16.sp),
-                modifier = Modifier
-                    .fillMaxSize(1f)
-                    .padding(bottom = 24.dp),
-                onValueChange = { notes = it },
-                placeholder = {
-                    Text(
-                        modifier = Modifier.fillMaxSize(1f),
-                        text = "//Something about the product ...",
-                        color = colorResource(R.color.xtreme)
-                    )
-                },
-                label = { Text(fontSize = 16.sp, text = "Notes") },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = colorResource(R.color.black),
-                    focusedLabelColor = colorResource(R.color.xtreme2),
-                    unfocusedLabelColor = colorResource(R.color.xtreme),
-                    focusedBorderColor = colorResource(R.color.xtreme2),
-                    unfocusedBorderColor = colorResource(R.color.black),
+        }
+        DetailRow(
+            label = "Purchase Date",
+            initialValue = purchaseDate,
+            textColor = colorResource(R.color.purple_500),
+            enable = true,
+            icon = R.drawable.calendar,
+            borderColor = colorResource(R.color.black),
+        )
+        DetailRow(
+            label = "Expiry Date",
+            initialValue = expiryDate,
+            textColor = colorResource(R.color.purple_500),
+            enable = true,
+            icon = R.drawable.calendar,
+            borderColor = colorResource(R.color.black),
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(colorResource(R.color.body))
+                .border(
+                    width = 1.dp,
+                    color = colorResource(R.color.black)
                 )
+                .padding(horizontal = 8.dp, vertical = 8.dp), // Set a fixed height to align items properly
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                modifier = Modifier.align(Alignment.CenterVertically), // Use weight to distribute space equally
+                textAlign = TextAlign.Center,
+                color = colorResource(R.color.white),
+                text = "Upload Receipt Image",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                maxLines = 1
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Icon(
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .fillMaxHeight(1f),
+                tint = colorResource(R.color.white),
+                painter = painterResource(R.drawable.upload),
+                contentDescription = null
+            )
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+                .border(1.dp, colorResource(R.color.black))
+        ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(all = 8.dp),
+                text = "notes would be provided here,if stored!!",
+                textAlign = TextAlign.Start,
+                fontSize = 16.sp,
+                color = colorResource(R.color.purple_500)
+            )
         }
     }
 }

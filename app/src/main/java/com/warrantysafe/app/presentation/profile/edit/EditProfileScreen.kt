@@ -71,6 +71,7 @@ fun EditProfileScreen(
             fullName,
             enable = true,
             textColor = colorResource(R.color.purple_500),
+            icon = null,
             borderColor = colorResource(R.color.black)
         )
         DetailRow(
@@ -78,6 +79,7 @@ fun EditProfileScreen(
             userName,
             enable = true,
             textColor = colorResource(R.color.purple_500),
+            icon = null,
             borderColor = colorResource(R.color.black)
         )
         DetailRow(
@@ -85,6 +87,7 @@ fun EditProfileScreen(
             emailId,
             enable = true,
             textColor = colorResource(R.color.purple_500),
+            icon = null,
             borderColor = colorResource(R.color.black)
         )
         DetailRow(
@@ -92,6 +95,7 @@ fun EditProfileScreen(
             phoneNumber,
             enable = true,
             textColor = colorResource(R.color.purple_500),
+            icon = null,
             borderColor = colorResource(R.color.black)
         )
     }

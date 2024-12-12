@@ -14,7 +14,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,11 +47,14 @@ fun EditProductDetailsScreen(
     val validProductName = productName ?: "Unknown Product"
     val validPurchaseDate = purchaseDate ?: "Not Available"
     val validExpiryDate = expiryDate ?: "Not Available"
+    // Create a ScrollState for vertical scrolling
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 8.dp)
+            .verticalScroll(scrollState)
     ) {
         Image(
             painter = painterResource(R.drawable.item_image_placeholder),
@@ -66,6 +72,7 @@ fun EditProductDetailsScreen(
                 initialValue = validProductName,
                 textColor = colorResource(R.color.purple_500),
                 enable = true,
+                icon = null,
                 borderColor = colorResource(R.color.black),
             )
         }
@@ -125,6 +132,7 @@ fun EditProductDetailsScreen(
                 initialValue = validPurchaseDate,
                 textColor = colorResource(R.color.purple_500),
                 enable = true,
+                icon = R.drawable.calendar,
                 borderColor = colorResource(R.color.black),
             )
         }
@@ -134,6 +142,7 @@ fun EditProductDetailsScreen(
                 initialValue = validExpiryDate,
                 textColor = colorResource(R.color.purple_500),
                 enable = true,
+                icon = R.drawable.calendar,
                 borderColor = colorResource(R.color.black),
             )
         }
@@ -207,11 +216,13 @@ fun EditProductDetailsScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(top = 8.dp)
                 .border(1.dp, colorResource(R.color.black))
         ) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .wrapContentHeight()
                     .padding(all = 8.dp),
                 text = "notes would be provided here,if stored!!",
                 textAlign = TextAlign.Start,
