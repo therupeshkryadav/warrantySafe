@@ -70,6 +70,7 @@ fun actionIcons(
                     onDismissRequest = { isMenuExpanded = false }
                 ) {
                     DropDownMenuContent(
+                        navController = navController,
                         onItemClicked = {}
                     )
                 }
@@ -156,6 +157,6 @@ fun navigateToEditProductDetails(
 fun ActionsPreview() {
     actionIcons(
         navController = rememberNavController(),
-        currentRoute = Route.EditProductDetailsScreen.route
+        currentRoute = Route.HomeScreen.route
     )
 }

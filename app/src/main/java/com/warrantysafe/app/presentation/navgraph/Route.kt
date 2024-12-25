@@ -6,6 +6,7 @@ sealed class Route(
     val route : String
 ){
     object SplashSheet : Route(route = "splashSheet")
+    object LoginSignUpScreen : Route(route = "loginSignUpScreen")
     object HomeScreen : Route(route = "homeScreen")
     object SearchScreen : Route(route = "search_screen")
     object AddScreen : Route(route = "addScreen")
