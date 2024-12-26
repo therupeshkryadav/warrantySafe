@@ -86,11 +86,10 @@ fun SideDrawerContent(onItemClicked: (String) -> Unit) {
             item = "Settings",
             fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
-            itemImg = R.drawable.settings
-        ) { }
+            itemImg = R.drawable.settings,
+            onClick = { onItemClicked("Settings") }
+        )
     }
-
-
 }
 
 @Preview

@@ -34,7 +34,9 @@ import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.profile.components.DetailRow
 
 @Composable
-fun SignUpPage() {
+fun SignUpPage(
+    onSignUpSuccess: () -> Unit
+) {
     // Remember state for user input
     val username = remember { mutableStateOf("") }
     val fullName = remember { mutableStateOf("") }
@@ -173,7 +175,7 @@ fun SignUpPage() {
 
         //Login Button
         Button(
-            onClick = { },
+            onClick = { onSignUpSuccess() },
             shape = RectangleShape,
             modifier = Modifier
                 .fillMaxWidth()
@@ -187,5 +189,5 @@ fun SignUpPage() {
 @Preview(showBackground = true)
 @Composable
 private fun PrevSignUpPage() {
-    SignUpPage()
+    SignUpPage(onSignUpSuccess = {})
 }

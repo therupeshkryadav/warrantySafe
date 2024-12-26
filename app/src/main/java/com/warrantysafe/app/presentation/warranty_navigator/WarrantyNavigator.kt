@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.warranty_navigator
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
@@ -37,6 +38,7 @@ import com.warrantysafe.app.presentation.notifification.NotificationScreen
 import com.warrantysafe.app.presentation.profile.ProfileScreen
 import com.warrantysafe.app.presentation.profile.edit.EditProfileScreen
 import com.warrantysafe.app.presentation.search.SearchScreen
+import com.warrantysafe.app.presentation.settings.SettingsScreen
 import com.warrantysafe.app.presentation.termsPrivacy.TermsPrivacyScreen
 import com.warrantysafe.app.presentation.upcomingFeatures.UpcomingFeaturesScreen
 import com.warrantysafe.app.presentation.warranty_navigator.components.BottomNavigationItem
@@ -252,7 +254,10 @@ fun WarrantyNavigator(
                         }
 
                         "Settings" -> {
-                            //  Handle Settings navigation
+                            navigateToTab(
+                                navController = navController,
+                                route = Route.SettingsScreen
+                            )//  Handle Settings navigation
                         }
                     }
                 }
@@ -321,6 +326,10 @@ fun WarrantyNavigator(
 
                 composable(Route.UpcomingFeaturesScreen.route) {
                     UpcomingFeaturesScreen()
+                }
+
+                composable(Route.SettingsScreen.route) {
+                    SettingsScreen()
                 }
 
                 composable(Route.NotificationScreen.route) {

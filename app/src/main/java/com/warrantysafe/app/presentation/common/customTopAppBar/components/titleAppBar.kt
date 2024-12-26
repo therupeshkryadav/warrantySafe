@@ -71,6 +71,10 @@ fun titleAppBar(currentRoute: String) {
             "Upcoming Features",
             textAlign = TextAlign.Center
         ), // UpcomingFeaturesScreen
+        Route.SettingsScreen.route to TitleConfig.Title(
+            "Settings",
+            textAlign = TextAlign.Center
+        ), // SettingsScreen
         Route.NotificationScreen.route to TitleConfig.Title(
             "Notifications",
             textAlign = TextAlign.Center
@@ -191,7 +195,7 @@ fun TitleAppBarPreview() {
         )
 
         // Preview for Unknown Route
-        titleAppBar(currentRoute = "unknown_route")
+        titleAppBar(currentRoute = Route.SettingsScreen.route)
     }
 }
 

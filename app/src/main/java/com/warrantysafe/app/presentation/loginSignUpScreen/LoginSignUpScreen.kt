@@ -32,7 +32,10 @@ import com.warrantysafe.app.presentation.loginSignUpScreen.components.SignUpPage
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginSignUpScreen(onLoginSuccess: () -> Unit) {
+fun LoginSignUpScreen(
+    onLoginSuccess: () -> Unit,
+    onSignUpSuccess: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,6 +52,7 @@ fun LoginSignUpScreen(onLoginSuccess: () -> Unit) {
         // Custom TabRow with no click effect
         TabRow(
             selectedTabIndex = pagerState.currentPage,
+            containerColor = colorResource(R.color.transparent),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
@@ -84,21 +88,25 @@ fun LoginSignUpScreen(onLoginSuccess: () -> Unit) {
         // HorizontalPager for the content
         HorizontalPager(
             state = pagerState, // Synchronizes with TabRow
-            modifier = Modifier.fillMaxSize().align(Alignment.CenterHorizontally),
+            modifier = Modifier
+                .fillMaxSize()
+                .align(Alignment.CenterHorizontally),
             verticalAlignment = Alignment.Top
         ) { page ->
             // Content for each page
             when (page) {
-                0 -> LoginPage(onLoginSuccess= onLoginSuccess) // Content for Login Tab
-                1 -> SignUpPage() // Content for SignUp Tab
+                0 -> LoginPage(onLoginSuccess = { onLoginSuccess() }) // Content for Login Tab
+                1 -> SignUpPage(onSignUpSuccess = { onSignUpSuccess() }) // Content for SignUp Tab
             }
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewLoginSignUpScreen() {
     LoginSignUpScreen(
-        onLoginSuccess = { /* Mock navigation logic, e.g., print to log or show a message */ }
+        onLoginSuccess = { /* Mock navigation logic, e.g., print to log or show a message */ },
+        onSignUpSuccess = { }
     )
 }

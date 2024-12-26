@@ -16,6 +16,7 @@ sealed class Route(
     object TermsPrivacyScreen : Route(route = "termsPrivacyScreen")
     object AboutAppScreen : Route(route = "aboutAppScreen")
     object UpcomingFeaturesScreen : Route(route = "upcomingFeaturesScreen")
+    object SettingsScreen : Route(route = "settingsScreen")
 
     object ProductDetailsScreen : Route("productDetailsScreen/{productName}/{purchaseDate}/{expiryDate}/{progress}/{period}") {
         fun createRoute(

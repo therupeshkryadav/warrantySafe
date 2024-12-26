@@ -32,6 +32,9 @@ fun NavGraph() {
                     navController.navigate(Route.BottomNavigation.route) {
                         popUpTo(Route.LoginSignUpScreen.route) { inclusive = true }
                     }
+                },
+                onSignUpSuccess = {
+                    navController.navigate(Route.LoginSignUpScreen.route)
                 }
             )
         }
