@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -50,10 +52,14 @@ fun ProductDetailsScreen(
     val validProgress = progress ?: 0f
     val validPeriod = period ?: "-- years -- months -- days"
 
+    var scrollState= rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 8.dp)
+            .padding(bottom = 16.dp)
+            .verticalScroll(scrollState)
     ) {
         Image(
             painter = painterResource(R.drawable.item_image_placeholder),
@@ -68,11 +74,12 @@ fun ProductDetailsScreen(
         if (productName != null) {
             DetailRow(
                 label = "Product Name",
-                initialValue = validProductName,
-                textColor = colorResource(R.color.purple_500),
+                updatedValue = validProductName,
                 enable = false,
-                icon = null,
+                textColor = colorResource(R.color.purple_500),
                 borderColor = colorResource(R.color.black),
+                icon = null,
+                onValueChange = {  },
             )
         }
         Row(
@@ -127,11 +134,12 @@ fun ProductDetailsScreen(
         if (purchaseDate != null) {
             DetailRow(
                 label = "Purchase Date",
-                initialValue = validPurchaseDate,
-                textColor = colorResource(R.color.purple_500),
+                updatedValue = validPurchaseDate,
                 enable = false,
-                icon = null,
+                textColor = colorResource(R.color.purple_500),
                 borderColor = colorResource(R.color.black),
+                icon = R.drawable.calendar,
+                onValueChange = { },
             )
         }
         Row(

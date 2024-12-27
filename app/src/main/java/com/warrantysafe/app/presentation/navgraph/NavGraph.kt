@@ -5,7 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.presentation.loginSignUpScreen.LoginSignUpScreen
-import com.warrantysafe.app.presentation.splash.SplashSheet
+import com.warrantysafe.app.presentation.splashSheet.SplashSheet
 import com.warrantysafe.app.presentation.warranty_navigator.WarrantyNavigator
 
 @Composable

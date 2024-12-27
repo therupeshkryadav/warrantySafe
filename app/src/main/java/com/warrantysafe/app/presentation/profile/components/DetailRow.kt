@@ -2,7 +2,9 @@ package com.warrantysafe.app.presentation.profile.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
@@ -14,8 +16,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,71 +30,72 @@ import com.warrantysafe.app.R
 @Composable
 fun DetailRow(
     label: String,
-    initialValue: String,
-    enable: Boolean,
     textColor: Color,
+    enable: Boolean,
+    icon: Int? = null,
     borderColor: Color,
-    @DrawableRes icon: Int? = null // Default value is null
+    placeHolder: String = "",
+    updatedValue: String,
+    onValueChange: (String) -> Unit, // New parameter to update the value dynamically
+    onIconClick: (() -> Unit)? = null // Optional callback for icon clicks
 ) {
-    // State to manage the editable value
-    val editableValue = remember { mutableStateOf(initialValue) }
-
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically // Ensures proper alignment of text and field
+            .padding(vertical = 8.dp)
+            .border(1.dp, borderColor, RoundedCornerShape(4.dp))
+            .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
         Text(
-            modifier = Modifier
-                .padding(end = 8.dp), // Padding between label and text field
-            text = "$label:",
-            fontWeight = FontWeight.Bold,
+            text = label,
+            color = textColor,
             fontSize = 16.sp,
-            color = colorResource(R.color.black)
+            fontWeight = FontWeight.Bold
         )
-        Box(
-            modifier = Modifier
-                .border(1.dp, borderColor)
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(horizontal = 8.dp) // Padding inside the box for better visuals
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                TextField(
-                    value = editableValue.value,
-                    onValueChange = { editableValue.value = it },
+            // Optional Icon
+            icon?.let {
+                Icon(
+                    painter = painterResource(id = it),
+                    contentDescription = null,
                     modifier = Modifier
-                        .weight(0.6f)
-                        .wrapContentHeight(),
-                    enabled = enable,
-                    textStyle = LocalTextStyle.current.copy(
-                        color = textColor,
-                        fontSize = 16.sp
-                    ),
-                    visualTransformation = VisualTransformation.None,
-                    singleLine = true,
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                        unfocusedTextColor = textColor,
-                        focusedTextColor = textColor
-                    )
+                        .size(24.dp)
+                        .clickable { onIconClick?.invoke() }
                 )
-                if (icon != null) { // Only render Icon if icon is not null
-                    Icon(
-                        modifier = Modifier
-                            .width(24.dp)
-                            .align(Alignment.CenterVertically),
-                        painter = painterResource(icon),
-                        contentDescription = null
-                    )
-                }
+                Spacer(modifier = Modifier.width(8.dp))
             }
+            // TextField to enter or update value
+            TextField(
+                value = updatedValue,
+                onValueChange = onValueChange, // Update the value dynamically
+                enabled = enable,
+                placeholder = { Text(text = placeHolder) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(8.dp),
+                textStyle = TextStyle(fontSize = 16.sp),
+                singleLine = true,
+                shape = RectangleShape,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.LightGray,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedContainerColor = Color.LightGray,
+                    disabledContainerColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                    unfocusedTextColor = Color.Black,
+                    focusedTextColor = Color.Black,
+                    disabledTextColor = Color.Black
+                )
+            )
+
         }
     }
 }
@@ -100,11 +105,14 @@ fun DetailRow(
 @Composable
 fun DetailRowPreview() {
     DetailRow(
-        label = "Email",
-        initialValue = "example@example.com",
+        label = "Purchase Date",
+        updatedValue = "23/11/2024",
+        enable = true,
         textColor = colorResource(R.color.black),
-        enable = false,
+        placeHolder = "DD/MM/YYYY",
+        borderColor = colorResource(R.color.purple_500),
         icon = R.drawable.calendar,
-        borderColor = colorResource(R.color.purple_500)
+        onIconClick = {  },
+        onValueChange = { }
     )
 }

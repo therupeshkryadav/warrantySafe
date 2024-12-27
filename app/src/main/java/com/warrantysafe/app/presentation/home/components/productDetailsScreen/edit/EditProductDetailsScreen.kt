@@ -21,6 +21,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,9 +49,9 @@ fun EditProductDetailsScreen(
     purchaseDate: String?,
     expiryDate: String?
 ) {
-    val validProductName = productName ?: "Unknown Product"
-    val validPurchaseDate = purchaseDate ?: "Not Available"
-    val validExpiryDate = expiryDate ?: "Not Available"
+    var validProductName by remember { mutableStateOf(productName) }
+    var validPurchaseDate by remember { mutableStateOf(purchaseDate) }
+    var validExpiryDate by remember { mutableStateOf(expiryDate) }
     // Create a ScrollState for vertical scrolling
     val scrollState = rememberScrollState()
 
@@ -69,11 +74,12 @@ fun EditProductDetailsScreen(
         if (productName != null) {
             DetailRow(
                 label = "Product Name",
-                initialValue = validProductName,
-                textColor = colorResource(R.color.purple_500),
+                updatedValue = validProductName!!,
                 enable = true,
-                icon = null,
+                textColor = colorResource(R.color.purple_500),
                 borderColor = colorResource(R.color.black),
+                icon = null,
+                onValueChange = { validProductName = it},
             )
         }
         Row(
@@ -129,21 +135,23 @@ fun EditProductDetailsScreen(
         if (purchaseDate != null) {
             DetailRow(
                 label = "Purchase Date",
-                initialValue = validPurchaseDate,
-                textColor = colorResource(R.color.purple_500),
+                updatedValue = validPurchaseDate!!,
                 enable = true,
-                icon = R.drawable.calendar,
+                textColor = colorResource(R.color.purple_500),
                 borderColor = colorResource(R.color.black),
+                icon = R.drawable.calendar,
+                onValueChange = { validPurchaseDate = it },
             )
         }
         if (expiryDate != null) {
             DetailRow(
                 label = "Expiry Date",
-                initialValue = validExpiryDate,
-                textColor = colorResource(R.color.purple_500),
+                updatedValue = validExpiryDate!!,
                 enable = true,
-                icon = R.drawable.calendar,
+                textColor = colorResource(R.color.purple_500),
                 borderColor = colorResource(R.color.black),
+                icon = R.drawable.calendar,
+                onValueChange = { validExpiryDate = it },
             )
         }
         Row(
