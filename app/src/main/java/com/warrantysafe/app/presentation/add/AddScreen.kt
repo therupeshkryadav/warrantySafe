@@ -169,7 +169,7 @@ fun AddScreen(navController: NavController) {
             borderColor = colorResource(R.color.black),
             placeHolder = "DD/MM/YYYY",
             updatedValue = purchaseDate,
-            onIconClick = {
+            onDetailRowClick = {
                 showDatePicker.value = true
             },
             onValueChange = { purchaseDate = it } // This handles the case where user types in the field (optional)
@@ -184,7 +184,7 @@ fun AddScreen(navController: NavController) {
             borderColor = colorResource(R.color.black),
             placeHolder = "DD/MM/YYYY",
             updatedValue = expiryDate,
-            onIconClick = {
+            onDetailRowClick = {
                 showDatePicker.value = true
             },
             onValueChange = { expiryDate = it } // This handles the case where user types in the field (optional)

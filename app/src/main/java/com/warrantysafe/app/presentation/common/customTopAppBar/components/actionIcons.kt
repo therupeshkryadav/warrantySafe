@@ -157,6 +157,6 @@ fun navigateToEditProductDetails(
 fun ActionsPreview() {
     actionIcons(
         navController = rememberNavController(),
-        currentRoute = Route.HomeScreen.route
+        currentRoute = Route.ProductDetailsScreen.route
     )
 }

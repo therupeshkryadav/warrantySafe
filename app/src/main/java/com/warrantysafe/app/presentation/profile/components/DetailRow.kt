@@ -1,18 +1,14 @@
 package com.warrantysafe.app.presentation.profile.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,7 +17,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,7 +32,7 @@ fun DetailRow(
     placeHolder: String = "",
     updatedValue: String,
     onValueChange: (String) -> Unit, // New parameter to update the value dynamically
-    onIconClick: (() -> Unit)? = null // Optional callback for icon clicks
+    onDetailRowClick: (() -> Unit)? = null // Optional callback for icon clicks
 ) {
     Column(
         modifier = Modifier
@@ -56,7 +51,7 @@ fun DetailRow(
         Spacer(modifier = Modifier.height(4.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().clickable { onDetailRowClick?.invoke() },
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Optional Icon
@@ -66,7 +61,6 @@ fun DetailRow(
                     contentDescription = null,
                     modifier = Modifier
                         .size(24.dp)
-                        .clickable { onIconClick?.invoke() }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
             }
@@ -87,7 +81,7 @@ fun DetailRow(
                     focusedContainerColor = Color.LightGray,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedContainerColor = Color.LightGray,
-                    disabledContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.LightGray,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
                     unfocusedTextColor = Color.Black,
@@ -112,7 +106,7 @@ fun DetailRowPreview() {
         placeHolder = "DD/MM/YYYY",
         borderColor = colorResource(R.color.purple_500),
         icon = R.drawable.calendar,
-        onIconClick = {  },
+        onDetailRowClick = {  },
         onValueChange = { }
     )
 }
