@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,10 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -28,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -41,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.common.categorySection.CategorySection
 import com.warrantysafe.app.presentation.profile.components.DetailRow
 import java.util.Calendar
 
@@ -112,53 +109,7 @@ fun AddScreen(navController: NavController) {
         )
 
         // Category Section
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp)
-        ) {
-            Text(
-                modifier = Modifier
-                    .padding(vertical = 12.dp)
-                    .padding(end = 8.dp),
-                text = "Category :",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.black)
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .clip(shape = RoundedCornerShape(2.dp))
-                    .clickable {  }
-                    .border(width = 1.dp, color = colorResource(R.color.black))
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .background(colorResource(R.color.xtreme)),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(0.9f)
-                            .padding(start = 16.dp),
-                        textAlign = TextAlign.Start,
-                        text = "General",
-                        fontSize = 16.sp
-                    )
-                    Icon(
-                        modifier = Modifier
-                            .width(24.dp)
-                            .fillMaxHeight(1f),
-                        painter = painterResource(R.drawable.drop_down),
-                        contentDescription = null
-                    )
-                }
-            }
-        }
+        CategorySection()
 
         // Purchase Date Field
         DetailRow(

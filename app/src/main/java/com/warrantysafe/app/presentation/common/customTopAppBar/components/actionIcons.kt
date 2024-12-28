@@ -72,9 +72,7 @@ fun actionIcons(
                 ) {
                     DropDownMenuContent(
                         navController = navController,
-                        onItemClicked = {
-
-                        }
+                        onItemClicked = {}
                     )
                 }
 
