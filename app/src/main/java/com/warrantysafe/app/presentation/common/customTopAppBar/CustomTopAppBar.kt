@@ -33,9 +33,10 @@ import com.warrantysafe.app.presentation.navgraph.Route
 fun CustomTopAppBar(
     navController: androidx.navigation.NavHostController,
     currentRoute: String,
-    drawerState: DrawerState
+    drawerState: DrawerState,
+    onEditProductClick: () -> Unit = {}
 ) {
-
+    val isProductDetailRoute = if (currentRoute == Route.ProductDetailsScreen.route) true else false
 
     Column(modifier = Modifier.fillMaxWidth()) {
         CenterAlignedTopAppBar(
@@ -114,7 +115,7 @@ fun SmartCustomTopAppBarPreview() {
         // Unknown Route Preview
         CustomTopAppBar(
             navController = navController,
-            currentRoute = "unknown_route",
+            currentRoute = Route.ProductDetailsScreen.route,
             drawerState = rememberDrawerState(DrawerValue.Closed)
         )
     }

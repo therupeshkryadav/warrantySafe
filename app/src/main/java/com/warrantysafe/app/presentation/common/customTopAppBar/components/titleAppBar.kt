@@ -199,7 +199,7 @@ fun TitleAppBarPreview() {
     }
 }
 
-@Preview(name = "TitleAppBar Previews")
+@Preview(name = "TitleAppBar Previews", showBackground = true)
 @Composable
 fun PreviewTitleAppBar() {
     TitleAppBarPreview()

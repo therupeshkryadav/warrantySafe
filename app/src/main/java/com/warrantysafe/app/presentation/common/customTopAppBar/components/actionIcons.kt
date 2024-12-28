@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.dropDownMenu.DropDownMenuContent
@@ -71,32 +72,29 @@ fun actionIcons(
                 ) {
                     DropDownMenuContent(
                         navController = navController,
-                        onItemClicked = {}
+                        onItemClicked = {
+
+                        }
                     )
                 }
 
             }
 
-            Route.ProductDetailsScreen.route -> {
-                IconButton(onClick = {
-                    if (currentRoute == Route.EditProfileScreen.route) {
-                        navController.popBackStack(currentRoute, inclusive = true)
-                        navController.navigate(Route.EditProfileScreen.route)
-                    } else {
-                        navigateToEditProductDetails(
-                            navController = navController,
-                            productName = productName,
-                            purchaseDate = purchaseDate,
-                            expiryDate = expiryDate
-                        )
-                    }
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = "Edit Icon"
-                    )
-                }
-            }
+//            Route.ProductDetailsScreen.route -> {
+//                IconButton(onClick = {
+//                    if (currentRoute == Route.EditProfileScreen.route) {
+//                        navController.popBackStack(currentRoute, inclusive = true)
+//                        navController.navigate(Route.EditProfileScreen.route)
+//                    } else {
+//
+//                    }
+//                }) {
+//                    Icon(
+//                        imageVector = Icons.Filled.Edit,
+//                        contentDescription = "Edit Icon"
+//                    )
+//                }
+//            }
 
             Route.AddScreen.route, Route.EditProfileScreen.route, Route.EditProductDetailsScreen.route -> {
                 // Add Warranty screen action
@@ -138,21 +136,8 @@ fun actionIcons(
     }
 }
 
-fun navigateToEditProductDetails(
-    navController: NavHostController,
-    productName: String,
-    purchaseDate: String,
-    expiryDate: String
-) {
-    val route=Route.EditProductDetailsScreen.createRoute(
-        productName =productName,
-        purchaseDate = purchaseDate,
-        expiryDate = expiryDate
-    )
-    navController.navigate(route)
-}
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ActionsPreview() {
     actionIcons(

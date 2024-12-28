@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,6 +29,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.profile.components.DetailRow
+import com.warrantysafe.app.presentation.profile.components.PhoneDetailRow
 
 @Composable
 fun EditProfileScreen(
@@ -37,19 +39,20 @@ fun EditProfileScreen(
     emailId: String,
     phoneNumber: String
 ) {
-    var actualfullName by remember { mutableStateOf(fullName) }
+    var actualFullName by remember { mutableStateOf(fullName) }
     var actualUsername by remember { mutableStateOf(userName) }
     var actualEmailId by remember { mutableStateOf(emailId) }
     var actualPhoneNumber by remember { mutableStateOf(phoneNumber) }
+    var actualCountryCode by remember { mutableStateOf("+91") } // Default country code
     var scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 32.dp, start = 8.dp, end = 8.dp)
+            .padding(start = 8.dp, end = 8.dp)
             .verticalScroll(scrollState)
     ) {
-
+        Spacer(modifier = Modifier.size(16.dp))
         // Profile Avatar
         Box(
             modifier = Modifier
@@ -74,12 +77,12 @@ fun EditProfileScreen(
         // Profile Details
         DetailRow(
             "Name",
-            updatedValue = actualfullName,
+            updatedValue = actualFullName,
             enable = true,
             textColor = colorResource(R.color.purple_500),
             borderColor = colorResource(R.color.black),
             icon = null,
-            onValueChange = { actualfullName = it }
+            onValueChange = { actualFullName = it }
         )
         DetailRow(
             "Username",
@@ -99,14 +102,16 @@ fun EditProfileScreen(
             icon = null,
             onValueChange = { actualEmailId = it }
         )
-        DetailRow(
-            "Phone",
-            updatedValue = actualPhoneNumber,
+        // Phone Number DetailRow with Country Code Picker
+        PhoneDetailRow(
+            label = "Phone",
             enable = true,
+            phoneNumber = actualPhoneNumber,
+            countryCode = actualCountryCode,
             textColor = colorResource(R.color.purple_500),
             borderColor = colorResource(R.color.black),
-            icon = null,
-            onValueChange = { actualPhoneNumber = it }
+            onCountryCodeChange = { actualCountryCode = it },
+            onPhoneNumberChange = { actualPhoneNumber = it }
         )
     }
 }

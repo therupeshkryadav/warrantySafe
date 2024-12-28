@@ -17,7 +17,7 @@ import com.warrantysafe.app.presentation.navgraph.Route
 @Composable
 fun DropDownMenuContent(
     navController: NavController, // NavController for navigation
-    onItemClicked: (String) -> Unit // Action on item click
+    onItemClicked: () -> Unit // Action on item click
 ) {
     Column(
         modifier = Modifier
@@ -31,7 +31,7 @@ fun DropDownMenuContent(
                 item = item,
                 onClick = {
                     if (item == "Logout") {
-                        onItemClicked(item) // Perform logout-specific actions
+                        
                     }
                 }
             )

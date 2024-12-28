@@ -3,6 +3,7 @@ package com.warrantysafe.app.presentation.home.components.productDetailsScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,7 +37,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.productList.components.productCard.components.CustomLinearProgressIndicator
+import com.warrantysafe.app.presentation.navgraph.Route
 import com.warrantysafe.app.presentation.profile.components.DetailRow
+import com.warrantysafe.app.presentation.profile.navigateToEditProfile
 
 @Composable
 fun ProductDetailsScreen(
@@ -58,9 +62,24 @@ fun ProductDetailsScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 8.dp)
-            .padding(bottom = 16.dp)
             .verticalScroll(scrollState)
     ) {
+        // Edit Product Detail Icon
+        Box(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+            Icon(
+                modifier = Modifier
+                    .size(24.dp)
+                    .align(Alignment.CenterEnd)
+                    .clickable { navigateToEditProductDetailsScreen(
+                        navController = navController,
+                        productName = productName,
+                        purchaseDate = purchaseDate,
+                        expiryDate = expiryDate,
+                    ) },
+                painter = painterResource(R.drawable.edit),
+                contentDescription = "Edit Profile"
+            )
+        }
         Image(
             painter = painterResource(R.drawable.item_image_placeholder),
             modifier = Modifier
@@ -231,12 +250,13 @@ fun ProductDetailsScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(bottom = 16.dp)
                 .border(1.dp, colorResource(R.color.black))
         ) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(all = 8.dp),
+                    .padding(8.dp),
                 text = "notes would be provided here,if stored!!",
                 textAlign = TextAlign.Start,
                 fontSize = 16.sp,
@@ -244,6 +264,20 @@ fun ProductDetailsScreen(
             )
         }
     }
+}
+
+fun navigateToEditProductDetailsScreen(
+    navController: NavController,
+    productName: String?,
+    purchaseDate: String?,
+    expiryDate: String?
+) {
+    val route = Route.EditProductDetailsScreen.createRoute(
+        productName = productName,
+        purchaseDate = purchaseDate,
+        expiryDate = expiryDate,
+    )
+    navController.navigate(route)
 }
 
 @Preview(showBackground = true)
