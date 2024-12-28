@@ -224,7 +224,7 @@ fun EditProductDetailsScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp)
+                .padding(bottom = 16.dp)
                 .border(1.dp, colorResource(R.color.black))
         ) {
             Text(
@@ -248,7 +248,7 @@ private fun PreviewProductDetailsScreen() {
         navController = rememberNavController(),
         productName = "LG WASHING MACHINE",
         purchaseDate = "11/01/2023",
-        expiryDate = "11/09/2026"
+        expiryDate = "11/09/2024"
     )
 
 }

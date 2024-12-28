@@ -41,7 +41,6 @@ sealed class Product {
         val title: String,
         val purchase: String,
         val expiry: String,
-        val period: String,
         val progress: Float,
         val imageResId: Int
     ) : Product()
@@ -50,7 +49,6 @@ sealed class Product {
         val title: String,
         val purchase: String,
         val expiry: String,
-        val period: String,
         val progress: Float,
         val imageResId: Int
     ) : Product()
@@ -66,88 +64,105 @@ fun HomeScreen(
         Product.Active(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
+            expiry = "30/11/2025",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
+            expiry = "30/11/2025",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
+            expiry = "30/11/2025",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 3 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
+            expiry = "30/11/2025",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
+            expiry = "30/11/2025",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 3 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
+            expiry = "30/11/2025",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
+            expiry = "30/11/2025",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 3 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
+            expiry = "30/11/2025",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
+            expiry = "30/11/2025",
+            progress = 0.7f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 3 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
+            expiry = "30/11/2025",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
+            expiry = "30/11/2025",
             progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         )
@@ -156,108 +171,89 @@ fun HomeScreen(
     val expiredProducts = listOf(
         Product.Expired(
             title = "Rado Watch",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "0 year 0 months 0 days",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
             progress = 1f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
             title = "PS5",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "0 year 0 months 0 days",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
             progress = 1f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
             title = "LG Washing Machine ",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "0 year 0 months 0 days",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            progress = 1f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "Rado Watch",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            progress = 1f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "Rado Watch",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
             progress = 1f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
             title = "PS5",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "0 year 0 months 0 days",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
             progress = 1f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
             title = "LG Washing Machine ",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "0 year 0 months 0 days",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            progress = 1f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "Rado Watch",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            progress = 1f,
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "Rado Watch",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
             progress = 1f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
             title = "PS5",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "0 year 0 months 0 days",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
             progress = 1f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
             title = "LG Washing Machine ",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "0 year 0 months 0 days",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
             progress = 1f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
-            title = "PS5",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "0 year 0 months 0 days",
-            progress = 1f,
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "0 year 0 months 0 days",
-            progress = 1f,
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "PS5",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "0 year 0 months 0 days",
-            progress = 1f,
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "0 year 0 months 0 days",
-            progress = 1f,
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "PS5",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "0 year 0 months 0 days",
-            progress = 1f,
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "0 year 0 months 0 days",
+            title = "Rado Watch",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
             progress = 1f,
             imageResId = R.drawable.item_image_placeholder
         )
+
     )
 
     Column(

@@ -29,11 +29,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.productList.components.productCard.components.CustomLinearProgressIndicator
-import com.warrantysafe.app.presentation.navgraph.Route
+import com.warrantysafe.app.presentation.common.productList.components.productCard.components.periodCalculator
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,13 +42,11 @@ fun ProductCard(
     itemTint: Color,
     progressTint: Color,
     detailsColor: Color,
-    period: String,
     purchase: String,
     expiry: String,
     progress: Float, // Progress value from 0f to 1f
     imageResId: Int // Image resource ID
 ) {
-//    fun onClick(){  }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -100,8 +96,14 @@ fun ProductCard(
                     color = detailsColor.copy(alpha = 0.7f)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
+
+                val periods= periodCalculator(
+                    purchaseDate = purchase,
+                    expiryDate = expiry
+                )
+
                 Text(
-                    text = "Expiry in $period",
+                    text = "Expiry in $periods",
                     style = MaterialTheme.typography.labelSmall,
                     color = detailsColor.copy(alpha = 0.7f)
                 )
@@ -128,10 +130,9 @@ fun ProductCardPreview() {
     ProductCard(
         onClick = {},
         title = "Realme 3 Pro",
-        purchase = "30/11/2024",
-        expiry = "",
-        period = "0 years 0 months 0 days",
-        progress = 0.9f,
+        purchase = "30/11/2023",
+        expiry = "01/12/2024",
+        progress = 1f,
         itemTint = colorResource(R.color.expired),
         progressTint = colorResource(R.color.expired),
         detailsColor = MaterialTheme.colorScheme.inversePrimary,
