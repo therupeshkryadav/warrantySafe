@@ -57,5 +57,5 @@ fun dropDownMenuItem(item: String, onClick: (String) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun dropDownItemPreview() {
-    dropDownMenuItem("Home", onClick = {})
+    dropDownMenuItem("Logout", onClick = {})
 }

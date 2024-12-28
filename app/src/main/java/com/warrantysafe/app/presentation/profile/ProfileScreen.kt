@@ -91,31 +91,39 @@ fun ProfileScreen(navController: NavController) {
         // Profile Details
         DetailRow(
             "Name",
-            fullName,
+            updatedValue = fullName,
             enable = false,
             textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black)
+            borderColor = colorResource(R.color.black),
+            icon = null,
+            onValueChange = { }
         )
         DetailRow(
             "Username",
-            username,
+           updatedValue =  username,
             enable = false,
             textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black)
+            borderColor = colorResource(R.color.black),
+            icon = null,
+            onValueChange = { }
         )
         DetailRow(
             "Email",
-            email,
+            updatedValue = email,
             enable = false,
             textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black)
+            borderColor = colorResource(R.color.black),
+            icon = null,
+            onValueChange = { }
         )
         DetailRow(
             "Phone",
-            phoneNumber,
+            updatedValue = phoneNumber,
             enable = false,
             textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black)
+            borderColor = colorResource(R.color.black),
+            icon = null,
+            onValueChange = { }
         )
 
         // Change Password Button

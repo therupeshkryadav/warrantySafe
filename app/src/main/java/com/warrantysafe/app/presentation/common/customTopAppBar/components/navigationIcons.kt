@@ -44,7 +44,7 @@ fun navigationIcons(
             )
         }
 
-        Route.SearchScreen.route, Route.NotificationScreen.route, Route.ProductDetailsScreen.route, Route.EditProfileScreen.route -> {
+        Route.SearchScreen.route, Route.HelpSupportScreen.route, Route.TermsPrivacyScreen.route, Route.AboutAppScreen.route, Route.UpcomingFeaturesScreen.route, Route.ProductList.route, Route.NotificationScreen.route, Route.ProductDetailsScreen.route, Route.EditProfileScreen.route, Route.EditProductDetailsScreen.route, Route.SettingsScreen.route -> {
             NavigationIconConfig(
                 iconPainter = painterResource(id = R.drawable.arrow_back),
                 contentDescription = "Back",

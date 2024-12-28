@@ -9,11 +9,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.presentation.common.dropDownMenu.components.dropDownMenuItem
+import com.warrantysafe.app.presentation.navgraph.Route
 
 @Composable
 fun DropDownMenuContent(
-    onItemClicked: (String) -> Unit
+    navController: NavController, // NavController for navigation
+    onItemClicked: () -> Unit // Action on item click
 ) {
     Column(
         modifier = Modifier
@@ -23,7 +27,14 @@ fun DropDownMenuContent(
     ) {
         // Navigation Items
         listOf("Logout").forEach { item ->
-            dropDownMenuItem(item = item, onClick = onItemClicked)
+            dropDownMenuItem(
+                item = item,
+                onClick = {
+                    if (item == "Logout") {
+                        
+                    }
+                }
+            )
         }
     }
 }
@@ -31,7 +42,9 @@ fun DropDownMenuContent(
 @Preview(showBackground = true)
 @Composable
 fun PreviewDropDown() {
+    // Preview without real NavController
     DropDownMenuContent(
+        navController = rememberNavController(),
         onItemClicked = {}
     )
 }

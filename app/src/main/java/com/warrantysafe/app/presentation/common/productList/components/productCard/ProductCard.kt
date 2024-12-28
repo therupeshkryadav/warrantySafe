@@ -29,11 +29,10 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.productList.components.productCard.components.CustomLinearProgressIndicator
-import com.warrantysafe.app.presentation.navgraph.Route
+import com.warrantysafe.app.presentation.common.productList.components.productCard.components.calculateProgress
+import com.warrantysafe.app.presentation.common.productList.components.productCard.components.periodCalculator
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,15 +41,18 @@ fun ProductCard(
     onClick: () -> Unit, // Callback to handle click and pass details
     title: String,
     itemTint: Color,
-    progressTint: Color,
     detailsColor: Color,
-    period: String,
     purchase: String,
     expiry: String,
-    progress: Float, // Progress value from 0f to 1f
     imageResId: Int // Image resource ID
 ) {
-//    fun onClick(){  }
+    val period= periodCalculator(
+        purchaseDate = purchase,
+        expiryDate = expiry,
+        currentDate = "28/12/2024"
+    )
+    val progress = calculateProgress(purchase, expiry, "28/12/2024")
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -107,16 +109,21 @@ fun ProductCard(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                CustomLinearProgressIndicator(
-                    progress = progress,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(28.dp),
-                    trackColor = colorResource(R.color.white),
-                    progressColor = progressTint,
-                    strokeWidth = 18f,
-                    gapSize = 0f,
-                )
+                if (progress != null) {
+                    CustomLinearProgressIndicator(
+                        progress = progress,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(28.dp),
+                        trackColor = colorResource(R.color.white),
+                        progressColor = if (progress >= 1f)
+                            colorResource(R.color.noDaysLeft)
+                        else
+                            colorResource(R.color.DaysLeft),
+                        strokeWidth = 18f,
+                        gapSize = 0f,
+                    )
+                }
             }
         }
     }
@@ -128,13 +135,10 @@ fun ProductCardPreview() {
     ProductCard(
         onClick = {},
         title = "Realme 3 Pro",
-        purchase = "30/11/2024",
-        expiry = "",
-        period = "0 years 0 months 0 days",
-        progress = 0.9f,
-        itemTint = colorResource(R.color.expired),
-        progressTint = colorResource(R.color.expired),
-        detailsColor = MaterialTheme.colorScheme.inversePrimary,
+        purchase = "30/11/2023",
+        expiry = "01/12/2024",
+        itemTint = colorResource(R.color.transparent),
+        detailsColor = MaterialTheme.colorScheme.surface,
         imageResId = R.drawable.item_image_placeholder // Replace with your drawable resource
     )
 }

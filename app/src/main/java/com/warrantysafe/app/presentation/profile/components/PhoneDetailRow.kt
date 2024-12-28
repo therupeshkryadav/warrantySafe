@@ -1,10 +1,13 @@
 package com.warrantysafe.app.presentation.profile.components
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -13,27 +16,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.warrantysafe.app.R
 
 @Composable
-fun DetailRow(
-    label: String,
-    textColor: Color,
+fun PhoneDetailRow(
+    label:String,
+    phoneNumber: String,
     enable: Boolean,
-    icon: Int? = null,
+    countryCode: String,
+    textColor: Color,
     borderColor: Color,
-    placeHolder: String = "",
-    updatedValue: String,
-    onValueChange: (String) -> Unit, // New parameter to update the value dynamically
-    onDetailRowClick: (() -> Unit)? = null // Optional callback for icon clicks
+    onCountryCodeChange: (String) -> Unit,
+    onPhoneNumberChange: (String) -> Unit
 ) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -49,32 +47,24 @@ fun DetailRow(
         )
 
         Spacer(modifier = Modifier.height(4.dp))
-
         Row(
-            modifier = Modifier.fillMaxWidth().clickable { onDetailRowClick?.invoke() },
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Optional Icon
-            icon?.let {
-                Icon(
-                    painter = painterResource(id = it),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-            }
-            // TextField to enter or update value
+            // Country Code Picker
+            CountryCodePickerComposable(
+                modifier = Modifier.padding(end = 8.dp),
+                onCountrySelected = onCountryCodeChange
+
+            )
+
+            // Phone Number Input Field
             TextField(
-                value = updatedValue,
-                onValueChange = onValueChange, // Update the value dynamically
+                value = phoneNumber,
                 enabled = enable,
-                placeholder = { Text(text = placeHolder) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(8.dp),
-                textStyle = TextStyle(fontSize = 16.sp),
+                onValueChange = onPhoneNumberChange,
+                modifier = Modifier.weight(1f), // Take up remaining space
+                placeholder = { Text("Enter phone number") },
                 singleLine = true,
                 shape = RectangleShape,
                 colors = TextFieldDefaults.colors(
@@ -89,24 +79,6 @@ fun DetailRow(
                     disabledTextColor = Color.Black
                 )
             )
-
         }
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun DetailRowPreview() {
-    DetailRow(
-        label = "Purchase Date",
-        updatedValue = "23/11/2024",
-        enable = true,
-        textColor = colorResource(R.color.black),
-        placeHolder = "DD/MM/YYYY",
-        borderColor = colorResource(R.color.purple_500),
-        icon = R.drawable.calendar,
-        onDetailRowClick = {  },
-        onValueChange = { }
-    )
 }

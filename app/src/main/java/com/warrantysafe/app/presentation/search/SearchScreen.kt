@@ -41,49 +41,37 @@ fun SearchScreen(navController: NavController) {
             Product.Active(
                 title = "Realme 3 Pro",
                 purchase = "30/11/2024",
-                expiry = "",
-                period = "1 year 0 months 0 days",
-                progress = 0.7f,
+                expiry = "30/11/2025",
                 imageResId = R.drawable.item_image_placeholder
             ),
             Product.Active(
                 title = "Realme 7 Pro",
                 purchase = "30/11/2024",
-                expiry = "",
-                period = "1 year 0 months 0 days",
-                progress = 0.7f,
+                expiry = "30/11/2025",
                 imageResId = R.drawable.item_image_placeholder
             ),
             Product.Active(
                 title = "Redmi Note 10 ",
                 purchase = "30/11/2024",
-                expiry = "",
-                period = "1 year 0 months 0 days",
-                progress = 0.7f,
+                expiry = "30/11/2025",
                 imageResId = R.drawable.item_image_placeholder
             ),
             Product.Expired(
                 title = "Rado Watch",
-                purchase = "30/11/2024",
-                expiry = "",
-                period = "0 year 0 months 0 days",
-                progress = 1f,
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
                 imageResId = R.drawable.item_image_placeholder
             ),
             Product.Expired(
                 title = "PS5",
-                purchase = "30/11/2024",
-                expiry = "",
-                period = "0 year 0 months 0 days",
-                progress = 1f,
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
                 imageResId = R.drawable.item_image_placeholder
             ),
             Product.Expired(
                 title = "LG Washing Machine ",
-                purchase = "30/11/2024",
-                expiry = "",
-                period = "0 year 0 months 0 days",
-                progress = 1f,
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
                 imageResId = R.drawable.item_image_placeholder
             )
         )

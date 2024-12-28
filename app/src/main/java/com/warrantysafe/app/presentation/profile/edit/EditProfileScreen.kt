@@ -5,15 +5,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,6 +29,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.profile.components.DetailRow
+import com.warrantysafe.app.presentation.profile.components.PhoneDetailRow
 
 @Composable
 fun EditProfileScreen(
@@ -35,15 +39,20 @@ fun EditProfileScreen(
     emailId: String,
     phoneNumber: String
 ) {
+    var actualFullName by remember { mutableStateOf(fullName) }
+    var actualUsername by remember { mutableStateOf(userName) }
+    var actualEmailId by remember { mutableStateOf(emailId) }
+    var actualPhoneNumber by remember { mutableStateOf(phoneNumber) }
+    var actualCountryCode by remember { mutableStateOf("+91") } // Default country code
     var scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 32.dp, start = 8.dp, end = 8.dp)
+            .padding(start = 8.dp, end = 8.dp)
             .verticalScroll(scrollState)
     ) {
-
+        Spacer(modifier = Modifier.size(16.dp))
         // Profile Avatar
         Box(
             modifier = Modifier
@@ -68,31 +77,41 @@ fun EditProfileScreen(
         // Profile Details
         DetailRow(
             "Name",
-            fullName,
+            updatedValue = actualFullName,
             enable = true,
             textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black)
+            borderColor = colorResource(R.color.black),
+            icon = null,
+            onValueChange = { actualFullName = it }
         )
         DetailRow(
             "Username",
-            userName,
+            updatedValue = actualUsername,
             enable = true,
             textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black)
+            borderColor = colorResource(R.color.black),
+            icon = null,
+            onValueChange = { actualUsername = it }
         )
         DetailRow(
             "Email",
-            emailId,
+            updatedValue = actualEmailId,
             enable = true,
             textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black)
+            borderColor = colorResource(R.color.black),
+            icon = null,
+            onValueChange = { actualEmailId = it }
         )
-        DetailRow(
-            "Phone",
-            phoneNumber,
+        // Phone Number DetailRow with Country Code Picker
+        PhoneDetailRow(
+            label = "Phone",
             enable = true,
+            phoneNumber = actualPhoneNumber,
+            countryCode = actualCountryCode,
             textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black)
+            borderColor = colorResource(R.color.black),
+            onCountryCodeChange = { actualCountryCode = it },
+            onPhoneNumberChange = { actualPhoneNumber = it }
         )
     }
 }

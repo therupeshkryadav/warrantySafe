@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -87,11 +86,10 @@ fun SideDrawerContent(onItemClicked: (String) -> Unit) {
             item = "Settings",
             fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
-            itemImg = R.drawable.settings
-        ) { }
+            itemImg = R.drawable.settings,
+            onClick = { onItemClicked("Settings") }
+        )
     }
-
-
 }
 
 @Preview

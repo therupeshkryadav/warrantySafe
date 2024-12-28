@@ -38,27 +38,55 @@ fun titleAppBar(currentRoute: String) {
         Route.HomeScreen.route to TitleConfig.Title(
             "Welcome, therupeshkryadav !!",
             textAlign = TextAlign.Start
-        ), // Home screen with empty title
+        ), // HomeScreen
         Route.ProfileScreen.route to TitleConfig.Title(
             "",
             textAlign = TextAlign.Center
-        ), // Profile screen
+        ), // ProfileScreen
         Route.EditProfileScreen.route to TitleConfig.Title(
             "Edit Profile",
             textAlign = TextAlign.Center
-        ), // Profile screen
+        ), // EditProfileScreen
+        Route.EditProductDetailsScreen.route to TitleConfig.Title(
+            "Edit Product Card Details",
+            textAlign = TextAlign.Center
+        ), // EditProductDetailsScreen
+        Route.ProductList.route to TitleConfig.Title(
+            "List of Product Cards",
+            textAlign = TextAlign.Center
+        ), // ProductList
+        Route.HelpSupportScreen.route to TitleConfig.Title(
+            "Help & Support",
+            textAlign = TextAlign.Center
+        ), // HelpSupportScreen
+        Route.TermsPrivacyScreen.route to TitleConfig.Title(
+            "Terms & Privacy",
+            textAlign = TextAlign.Center
+        ), // TermsPrivacyScreen
+        Route.AboutAppScreen.route to TitleConfig.Title(
+            "About the App",
+            textAlign = TextAlign.Center
+        ), // AboutAppScreen
+        Route.UpcomingFeaturesScreen.route to TitleConfig.Title(
+            "Upcoming Features",
+            textAlign = TextAlign.Center
+        ), // UpcomingFeaturesScreen
+        Route.SettingsScreen.route to TitleConfig.Title(
+            "Settings",
+            textAlign = TextAlign.Center
+        ), // SettingsScreen
         Route.NotificationScreen.route to TitleConfig.Title(
             "Notifications",
             textAlign = TextAlign.Center
-        ), // Profile screen
+        ), // NotificationScreen
         Route.ProductDetailsScreen.route to TitleConfig.Title(
             "Product Card Details",
             textAlign = TextAlign.Center
-        ), // Profile screen
+        ), // ProductDetailsScreen
         Route.AddScreen.route to TitleConfig.Title(
             "Add Warranty",
             textAlign = TextAlign.Center
-        ), // Add Warranty screen
+        ), // AddScreen
         Route.SearchScreen.route to TitleConfig.SearchBar // Search screen with a search bar
     )
 
@@ -167,11 +195,11 @@ fun TitleAppBarPreview() {
         )
 
         // Preview for Unknown Route
-        titleAppBar(currentRoute = "unknown_route")
+        titleAppBar(currentRoute = Route.SettingsScreen.route)
     }
 }
 
-@Preview(name = "TitleAppBar Previews")
+@Preview(name = "TitleAppBar Previews", showBackground = true)
 @Composable
 fun PreviewTitleAppBar() {
     TitleAppBarPreview()

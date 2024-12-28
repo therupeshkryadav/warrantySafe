@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.splash
+package com.warrantysafe.app.presentation.splashSheet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

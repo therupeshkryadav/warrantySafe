@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.home.components.productDetailsScreen
+package com.warrantysafe.app.presentation.home.components.productDetailsScreen.edit
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,15 +13,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,32 +40,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.common.productList.components.productCard.components.CustomLinearProgressIndicator
-import com.warrantysafe.app.presentation.common.productList.components.productCard.components.calculateProgress
-import com.warrantysafe.app.presentation.common.productList.components.productCard.components.periodCalculator
-import com.warrantysafe.app.presentation.navgraph.Route
 import com.warrantysafe.app.presentation.profile.components.DetailRow
 
 @Composable
-fun ProductDetailsScreen(
+fun EditProductDetailsScreen(
     navController: NavController,
     productName: String?,
     purchaseDate: String?,
     expiryDate: String?
 ) {
-    val validProductName = productName ?: "Unknown Product"
-    val validPurchaseDate = purchaseDate ?: "Not Available"
-    val validExpiryDate = expiryDate ?: "Not Available"
-
-    val validPeriod = periodCalculator(
-        purchaseDate = validPurchaseDate,
-        expiryDate = validExpiryDate,
-        currentDate = "28/12/2024"
-    )
-    val validProgress = calculateProgress(validPurchaseDate, validExpiryDate, "28/11/2024")
-
-
-    var scrollState = rememberScrollState()
+    var validProductName by remember { mutableStateOf(productName) }
+    var validPurchaseDate by remember { mutableStateOf(purchaseDate) }
+    var validExpiryDate by remember { mutableStateOf(expiryDate) }
+    // Create a ScrollState for vertical scrolling
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
@@ -69,28 +61,6 @@ fun ProductDetailsScreen(
             .padding(horizontal = 8.dp)
             .verticalScroll(scrollState)
     ) {
-        // Edit Product Detail Icon
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        ) {
-            Icon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .align(Alignment.CenterEnd)
-                    .clickable {
-                        navigateToEditProductDetailsScreen(
-                            navController = navController,
-                            productName = productName,
-                            purchaseDate = purchaseDate,
-                            expiryDate = expiryDate
-                        )
-                    },
-                painter = painterResource(R.drawable.edit),
-                contentDescription = "Edit Profile"
-            )
-        }
         Image(
             painter = painterResource(R.drawable.item_image_placeholder),
             modifier = Modifier
@@ -104,12 +74,12 @@ fun ProductDetailsScreen(
         if (productName != null) {
             DetailRow(
                 label = "Product Name",
-                updatedValue = validProductName,
-                enable = false,
+                updatedValue = validProductName!!,
+                enable = true,
                 textColor = colorResource(R.color.purple_500),
                 borderColor = colorResource(R.color.black),
                 icon = null,
-                onValueChange = { },
+                onValueChange = { validProductName = it},
             )
         }
         Row(
@@ -132,6 +102,7 @@ fun ProductDetailsScreen(
                     .fillMaxWidth()
                     .height(48.dp)
                     .clip(shape = RoundedCornerShape(2.dp))
+                    .clickable {  }
                     .border(width = 1.dp, color = colorResource(R.color.black))
 
             ) {
@@ -164,12 +135,23 @@ fun ProductDetailsScreen(
         if (purchaseDate != null) {
             DetailRow(
                 label = "Purchase Date",
-                updatedValue = validPurchaseDate,
-                enable = false,
+                updatedValue = validPurchaseDate!!,
+                enable = true,
                 textColor = colorResource(R.color.purple_500),
                 borderColor = colorResource(R.color.black),
                 icon = R.drawable.calendar,
-                onValueChange = { },
+                onValueChange = { validPurchaseDate = it },
+            )
+        }
+        if (expiryDate != null) {
+            DetailRow(
+                label = "Expiry Date",
+                updatedValue = validExpiryDate!!,
+                enable = true,
+                textColor = colorResource(R.color.purple_500),
+                borderColor = colorResource(R.color.black),
+                icon = R.drawable.calendar,
+                onValueChange = { validExpiryDate = it },
             )
         }
         Row(
@@ -212,7 +194,7 @@ fun ProductDetailsScreen(
             }
             Row(
                 modifier = Modifier
-                    .background(colorResource(R.color.teal_200))
+                    .background(colorResource(R.color.teal_700))
                     .border(
                         width = 1.dp,
                         color = colorResource(R.color.black)
@@ -223,7 +205,8 @@ fun ProductDetailsScreen(
                 Text(
                     modifier = Modifier, // Use weight to distribute space equally
                     textAlign = TextAlign.End,
-                    text = "Download",
+                    text = "Edit",
+                    color = colorResource(R.color.white),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1
@@ -232,34 +215,11 @@ fun ProductDetailsScreen(
                     modifier = Modifier
                         .padding(start = 8.dp)
                         .fillMaxHeight(1f),
-                    painter = painterResource(R.drawable.download_receipt),
+                    tint = colorResource(R.color.white),
+                    painter = painterResource(R.drawable.edit),
                     contentDescription = null
                 )
             }
-        }
-        Text(
-            modifier = Modifier.padding(top = 8.dp),
-            text = "Expiry in $validPeriod",
-            style = MaterialTheme.typography.labelSmall,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            color = colorResource(R.color.black)
-        )
-        if (validProgress != null) {
-            CustomLinearProgressIndicator(
-                progress = validProgress,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(all = 8.dp)
-                    .height(28.dp),
-                trackColor = colorResource(R.color.xtreme),
-                progressColor = if (validProgress > 0.99f)
-                    colorResource(R.color.noDaysLeft)
-                else
-                    colorResource(R.color.DaysLeft),
-                strokeWidth = 18f,
-                gapSize = 0f,
-            )
         }
         Box(
             modifier = Modifier
@@ -270,7 +230,8 @@ fun ProductDetailsScreen(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .wrapContentHeight()
+                    .padding(all = 8.dp),
                 text = "notes would be provided here,if stored!!",
                 textAlign = TextAlign.Start,
                 fontSize = 16.sp,
@@ -280,24 +241,10 @@ fun ProductDetailsScreen(
     }
 }
 
-fun navigateToEditProductDetailsScreen(
-    navController: NavController,
-    productName: String?,
-    purchaseDate: String?,
-    expiryDate: String?
-) {
-    val route = Route.EditProductDetailsScreen.createRoute(
-        productName = productName,
-        purchaseDate = purchaseDate,
-        expiryDate = expiryDate,
-    )
-    navController.navigate(route)
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun PreviewProductDetailsScreen() {
-    ProductDetailsScreen(
+    EditProductDetailsScreen(
         navController = rememberNavController(),
         productName = "LG WASHING MACHINE",
         purchaseDate = "11/01/2023",

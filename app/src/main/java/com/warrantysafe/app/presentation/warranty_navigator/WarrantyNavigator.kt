@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.warranty_navigator
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
@@ -11,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -21,16 +23,24 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.aboutApp.AboutAppScreen
 import com.warrantysafe.app.presentation.add.AddScreen
 import com.warrantysafe.app.presentation.common.customTopAppBar.CustomTopAppBar
+import com.warrantysafe.app.presentation.common.productList.ProductList
 import com.warrantysafe.app.presentation.common.sideDrawer.SideDrawerContent
+import com.warrantysafe.app.presentation.helpSupport.HelpSupportScreen
 import com.warrantysafe.app.presentation.home.HomeScreen
+import com.warrantysafe.app.presentation.home.Product
 import com.warrantysafe.app.presentation.home.components.productDetailsScreen.ProductDetailsScreen
+import com.warrantysafe.app.presentation.home.components.productDetailsScreen.edit.EditProductDetailsScreen
 import com.warrantysafe.app.presentation.navgraph.Route
 import com.warrantysafe.app.presentation.notifification.NotificationScreen
 import com.warrantysafe.app.presentation.profile.ProfileScreen
 import com.warrantysafe.app.presentation.profile.edit.EditProfileScreen
 import com.warrantysafe.app.presentation.search.SearchScreen
+import com.warrantysafe.app.presentation.settings.SettingsScreen
+import com.warrantysafe.app.presentation.termsPrivacy.TermsPrivacyScreen
+import com.warrantysafe.app.presentation.upcomingFeatures.UpcomingFeaturesScreen
 import com.warrantysafe.app.presentation.warranty_navigator.components.BottomNavigationItem
 import com.warrantysafe.app.presentation.warranty_navigator.components.WarrantyBottomNavigation
 import com.warrantysafe.app.utils.toRoute
@@ -43,7 +53,6 @@ fun WarrantyNavigator(
 ) {
 
     val backStackState = navController.currentBackStackEntryAsState().value
-
 
     // Show bottom navigation for specific routes
     val isBottomBarVisible = backStackState?.destination?.route in listOf(
@@ -77,8 +86,80 @@ fun WarrantyNavigator(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
-    // State to manage the visibility of the dropdown menu
-    val isMenuExpanded by remember { mutableStateOf(false) }
+    val productList = listOf(
+        Product.Active(
+            title = "Realme 3 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 7 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Redmi Note 10 ",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 3 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 7 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Redmi Note 10 ",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 3 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 7 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Redmi Note 10 ",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "Rado Watch",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "PS5",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "LG Washing Machine ",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            imageResId = R.drawable.item_image_placeholder
+        )
+    )
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -88,25 +169,64 @@ fun WarrantyNavigator(
                     coroutineScope.launch { drawerState.close() }
                     // Perform navigation or actions based on the clicked item
                     when (item) {
-                        "Home" -> {
-                            // Handle Home navigation
+                        "List of Product Cards" -> {
+                            navigateToTab(
+
+                                navController = navController,
+                                route = Route.ProductList
+                            ) // Handle List of Product navigation
                         }
 
-                        "Profile" -> {
-                            // Handle Profile navigation
+                        "Help & Support" -> {
+                            navigateToTab(
+                                navController = navController,
+                                route = Route.HelpSupportScreen
+                            ) // Handle Help & Support navigation
+                        }
+
+                        "Rate and Review" -> {
+                            // Handle Rate and Review navigation
+                        }
+
+                        "Share with Friends" -> {
+                            // Handle Share with Friends navigation
+                        }
+
+                        "Terms & Privacy" -> {
+                            navigateToTab(
+                                navController = navController,
+                                route = Route.TermsPrivacyScreen
+                            )// Handle Terms & Privacy navigation
+                        }
+
+                        "About the App" -> {
+                            navigateToTab(
+                                navController = navController,
+                                route = Route.AboutAppScreen
+                            )// Handle About the App navigation
+                        }
+
+                        "Upcoming Features" -> {
+                            navigateToTab(
+                                navController = navController,
+                                route = Route.UpcomingFeaturesScreen
+                            )// Handle Upcoming Features navigation
                         }
 
                         "Settings" -> {
-                            // Handle Settings navigation
-                        }
-
-                        "Logout" -> {
-                            // Handle Logout
+                            navigateToTab(
+                                navController = navController,
+                                route = Route.SettingsScreen
+                            )//  Handle Settings navigation
                         }
                     }
                 }
             )
-        }
+        },
+        gesturesEnabled = currentRoute in listOf(
+            Route.HomeScreen.route,
+            Route.ProfileScreen.route
+        ) // Enable gestures only for specific routes
     ) {
         Scaffold(
             topBar = {
@@ -144,33 +264,77 @@ fun WarrantyNavigator(
                 composable(Route.AddScreen.route) {
                     AddScreen(navController = navController)
                 }
+
+                composable(Route.ProductList.route) {
+                    ProductList(
+                        navController = navController,
+                        productType = productList
+                    )
+                }
+
+                composable(Route.HelpSupportScreen.route) {
+                    HelpSupportScreen()
+                }
+
+                composable(Route.TermsPrivacyScreen.route) {
+                    TermsPrivacyScreen()
+                }
+
+                composable(Route.AboutAppScreen.route) {
+                    AboutAppScreen()
+                }
+
+                composable(Route.UpcomingFeaturesScreen.route) {
+                    UpcomingFeaturesScreen()
+                }
+
+                composable(Route.SettingsScreen.route) {
+                    SettingsScreen()
+                }
+
                 composable(Route.NotificationScreen.route) {
                     NotificationScreen(navController = navController)
                 }
+
                 composable(
-                    route = "productDetailsScreen/{productName}/{purchaseDate}/{expiryDate}/{progress}/{period}",
+                    route = "productDetailsScreen/{productName}/{purchaseDate}/{expiryDate}",
                     arguments = listOf(
                         navArgument("productName") { type = NavType.StringType },
                         navArgument("purchaseDate") { type = NavType.StringType },
                         navArgument("expiryDate") { type = NavType.StringType },
-                        navArgument("progress") { type = NavType.FloatType },
-                        navArgument("period") { type = NavType.StringType }
                     )
                 ) {
                     val productName = it.arguments?.getString("productName") ?: "Unknown"
                     val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
                     val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
-                    val progress = it.arguments?.getFloat("progress") ?: 0f
-                    val period = it.arguments?.getString("period") ?: "N/A"
 
                     //Navigate to ProductDetailsScreen -->
                     ProductDetailsScreen(
                         navController = navController,
                         productName = productName,
                         purchaseDate = purchaseDate,
+                        expiryDate = expiryDate
+                    )
+                }
+
+                composable(
+                    route = "editProductDetailsScreen/{productName}/{purchaseDate}/{expiryDate}",
+                    arguments = listOf(
+                        navArgument("productName") { type = NavType.StringType },
+                        navArgument("purchaseDate") { type = NavType.StringType },
+                        navArgument("expiryDate") { type = NavType.StringType }
+                    )
+                ) {
+                    val productName = it.arguments?.getString("productName") ?: "Unknown"
+                    val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
+                    val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
+
+                    //Navigate to EditProductDetailsScreen -->
+                    EditProductDetailsScreen(
+                        navController = navController,
+                        productName = productName,
+                        purchaseDate = purchaseDate,
                         expiryDate = expiryDate,
-                        progress = progress,
-                        period = period
                     )
                 }
 
@@ -213,7 +377,6 @@ fun WarrantyNavigator(
 private fun navigateToTab(navController: NavController, route: Route) {
     navController.navigate(route.route) {
         popUpTo(navController.graph.startDestinationId) {
-            inclusive = (route == Route.ProfileScreen) // Apply inclusive only for ProfileScreen
             saveState = true // Save state for tabs
         }
         launchSingleTop = true // Avoid multiple instances of the same destination
