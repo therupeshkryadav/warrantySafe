@@ -37,6 +37,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.productList.components.productCard.components.CustomLinearProgressIndicator
+import com.warrantysafe.app.presentation.common.productList.components.productCard.components.calculateProgress
+import com.warrantysafe.app.presentation.common.productList.components.productCard.components.periodCalculator
 import com.warrantysafe.app.presentation.navgraph.Route
 import com.warrantysafe.app.presentation.profile.components.DetailRow
 import com.warrantysafe.app.presentation.profile.navigateToEditProfile
@@ -46,15 +48,19 @@ fun ProductDetailsScreen(
     navController: NavController,
     productName: String?,
     purchaseDate: String?,
-    expiryDate: String?,
-    progress: Float?,
-    period: String?,
+    expiryDate: String?
 ) {
     val validProductName = productName ?: "Unknown Product"
     val validPurchaseDate = purchaseDate ?: "Not Available"
     val validExpiryDate = expiryDate ?: "Not Available"
-    val validProgress = progress ?: 0f
-    val validPeriod = period ?: "-- years -- months -- days"
+
+    val validPeriod= periodCalculator(
+        purchaseDate = validPurchaseDate,
+        expiryDate = validExpiryDate,
+        currentDate = "28/12/2024"
+    )
+    val validProgress = calculateProgress(validPurchaseDate, validExpiryDate, "28/11/2024")
+
 
     var scrollState= rememberScrollState()
 
@@ -74,7 +80,7 @@ fun ProductDetailsScreen(
                         navController = navController,
                         productName = productName,
                         purchaseDate = purchaseDate,
-                        expiryDate = expiryDate,
+                        expiryDate = expiryDate
                     ) },
                 painter = painterResource(R.drawable.edit),
                 contentDescription = "Edit Profile"
@@ -234,7 +240,7 @@ fun ProductDetailsScreen(
             fontWeight = FontWeight.Bold,
             color = colorResource(R.color.black)
         )
-        if (progress != null) {
+        if (validProgress != null) {
             CustomLinearProgressIndicator(
                 progress = validProgress,
                 modifier = Modifier
@@ -287,9 +293,7 @@ private fun PreviewProductDetailsScreen() {
         navController = rememberNavController(),
         productName = "LG WASHING MACHINE",
         purchaseDate = "11/01/2023",
-        expiryDate = "11/09/2026",
-        progress = 0.4f,
-        period = "0 years 8 months 28 days"
+        expiryDate = "11/09/2026"
     )
 
 }

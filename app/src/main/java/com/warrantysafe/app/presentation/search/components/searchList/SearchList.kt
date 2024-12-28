@@ -75,7 +75,6 @@ fun SearchList(
                     title = product.title,
                     purchase = product.purchase,
                     expiry = product.expiry,
-                    progress = product.progress,
                     imageResId = product.imageResId,
                     progressTint = colorResource(R.color.DaysLeft),
                     itemTint = colorResource(R.color.transparent),
@@ -91,7 +90,6 @@ fun SearchList(
                     title = product.title,
                     purchase = product.purchase,
                     expiry = product.expiry,
-                    progress = product.progress,
                     imageResId = product.imageResId,
                     progressTint = colorResource(R.color.noDaysLeft),
                     itemTint = colorResource(R.color.expired),
@@ -111,16 +109,12 @@ private fun navigateToDetails(product: Product, navController: NavController) {
             productName = product.title,  // Correct property name
             purchaseDate = product.purchase,
             expiryDate = product.expiry, // Placeholder for expiry logic
-            progress = product.progress,
-            period = product.period
         )
 
         is Product.Expired -> Route.ProductDetailsScreen.createRoute(
             productName = product.title,  // Correct property name
             purchaseDate = product.purchase,
             expiryDate = product.expiry, // Placeholder for expiry logic
-            progress = product.progress,
-            period = product.period
         )
     }
     Log.d("fatal", "Navigating to route: $route")

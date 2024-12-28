@@ -18,21 +18,17 @@ sealed class Route(
     object UpcomingFeaturesScreen : Route(route = "upcomingFeaturesScreen")
     object SettingsScreen : Route(route = "settingsScreen")
 
-    object ProductDetailsScreen : Route("productDetailsScreen/{productName}/{purchaseDate}/{expiryDate}/{progress}/{period}") {
+    object ProductDetailsScreen : Route("productDetailsScreen/{productName}/{purchaseDate}/{expiryDate}") {
         fun createRoute(
             productName: String?,
             purchaseDate: String?,
-            expiryDate: String?,
-            progress: Float?,
-            period: String?
+            expiryDate: String?
         ) :String{
             // Provide safe defaults and encode the values
             val safeProductName = Uri.encode(productName ?: "Unknown")
             val safePurchaseDate = Uri.encode(purchaseDate ?: "N/A")
             val safeExpiryDate = Uri.encode(expiryDate ?: "N/A")
-            val safeProgress = progress?.toString() ?: "0.0"
-            val safePeriod = Uri.encode(period ?: "N/A")
-            return "productDetailsScreen/$safeProductName/$safePurchaseDate/$safeExpiryDate/$safeProgress/$safePeriod"}
+            return "productDetailsScreen/$safeProductName/$safePurchaseDate/$safeExpiryDate"}
     }
 
     object EditProfileScreen : Route("editProfileScreen/{fullName}/{userName}/{emailId}/{phone}") {

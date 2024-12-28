@@ -91,96 +91,72 @@ fun WarrantyNavigator(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
             title = "Rado Watch",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
-            period = "0 year 0 months 0 days",
-            progress = 1f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
             title = "PS5",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
-            period = "0 year 0 months 0 days",
-            progress = 1f,
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
             title = "LG Washing Machine ",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
-            period = "0 year 0 months 0 days",
-            progress = 1f,
             imageResId = R.drawable.item_image_placeholder
         )
     )
@@ -321,29 +297,23 @@ fun WarrantyNavigator(
                 }
 
                 composable(
-                    route = "productDetailsScreen/{productName}/{purchaseDate}/{expiryDate}/{progress}/{period}",
+                    route = "productDetailsScreen/{productName}/{purchaseDate}/{expiryDate}",
                     arguments = listOf(
                         navArgument("productName") { type = NavType.StringType },
                         navArgument("purchaseDate") { type = NavType.StringType },
                         navArgument("expiryDate") { type = NavType.StringType },
-                        navArgument("progress") { type = NavType.FloatType },
-                        navArgument("period") { type = NavType.StringType }
                     )
                 ) {
                     val productName = it.arguments?.getString("productName") ?: "Unknown"
                     val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
                     val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
-                    val progress = it.arguments?.getFloat("progress") ?: 0f
-                    val period = it.arguments?.getString("period") ?: "N/A"
 
                     //Navigate to ProductDetailsScreen -->
                     ProductDetailsScreen(
                         navController = navController,
                         productName = productName,
                         purchaseDate = purchaseDate,
-                        expiryDate = expiryDate,
-                        progress = progress,
-                        period = period
+                        expiryDate = expiryDate
                     )
                 }
 

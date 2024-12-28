@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.productList.components.productCard.components.CustomLinearProgressIndicator
+import com.warrantysafe.app.presentation.common.productList.components.productCard.components.calculateProgress
 import com.warrantysafe.app.presentation.common.productList.components.productCard.components.periodCalculator
 
 
@@ -44,9 +45,15 @@ fun ProductCard(
     detailsColor: Color,
     purchase: String,
     expiry: String,
-    progress: Float, // Progress value from 0f to 1f
     imageResId: Int // Image resource ID
 ) {
+    val period= periodCalculator(
+        purchaseDate = purchase,
+        expiryDate = expiry,
+        currentDate = "28/12/2024"
+    )
+    val progress = calculateProgress(purchase, expiry, "28/12/2024")
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -96,29 +103,25 @@ fun ProductCard(
                     color = detailsColor.copy(alpha = 0.7f)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-
-                val periods= periodCalculator(
-                    purchaseDate = purchase,
-                    expiryDate = expiry
-                )
-
                 Text(
-                    text = "Expiry in $periods",
+                    text = "Expiry in $period",
                     style = MaterialTheme.typography.labelSmall,
                     color = detailsColor.copy(alpha = 0.7f)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                CustomLinearProgressIndicator(
-                    progress = progress,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(28.dp),
-                    trackColor = colorResource(R.color.white),
-                    progressColor = progressTint,
-                    strokeWidth = 18f,
-                    gapSize = 0f,
-                )
+                if (progress != null) {
+                    CustomLinearProgressIndicator(
+                        progress = progress,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(28.dp),
+                        trackColor = colorResource(R.color.white),
+                        progressColor = progressTint,
+                        strokeWidth = 18f,
+                        gapSize = 0f,
+                    )
+                }
             }
         }
     }
@@ -131,11 +134,10 @@ fun ProductCardPreview() {
         onClick = {},
         title = "Realme 3 Pro",
         purchase = "30/11/2023",
-        expiry = "01/12/2024",
-        progress = 1f,
-        itemTint = colorResource(R.color.expired),
-        progressTint = colorResource(R.color.expired),
-        detailsColor = MaterialTheme.colorScheme.inversePrimary,
+        expiry = "01/12/2025",
+        itemTint = colorResource(R.color.transparent),
+        progressTint = colorResource(R.color.DaysLeft),
+        detailsColor = MaterialTheme.colorScheme.surface,
         imageResId = R.drawable.item_image_placeholder // Replace with your drawable resource
     )
 }

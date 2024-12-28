@@ -49,89 +49,55 @@ private fun PrevActive() {
         Product.Active(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
+            expiry = "30/11/2025",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
+            expiry = "30/11/2025",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
+            expiry = "30/11/2025",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 3 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
+            expiry = "30/11/2025",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
+            expiry = "30/11/2025",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 3 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
+            expiry = "30/11/2025",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Realme 7 Pro",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Redmi Note 10 ",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Realme 7 Pro",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Redmi Note 10 ",
-            purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
+            expiry = "30/11/2025",
             imageResId = R.drawable.item_image_placeholder
         )
     )

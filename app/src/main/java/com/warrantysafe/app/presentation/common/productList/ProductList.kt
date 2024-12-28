@@ -115,7 +115,6 @@ fun ProductList(
                             title = product.title,
                             purchase = product.purchase,
                             expiry = product.expiry,
-                            progress = product.progress,
                             imageResId = product.imageResId,
                             progressTint = colorResource(R.color.DaysLeft),
                             itemTint = colorResource(R.color.transparent),
@@ -129,7 +128,6 @@ fun ProductList(
                             title = product.title,
                             purchase = product.purchase,
                             expiry = product.expiry,
-                            progress = product.progress,
                             progressTint = colorResource(R.color.noDaysLeft),
                             imageResId = product.imageResId,
                             itemTint = colorResource(R.color.expired),
@@ -150,16 +148,12 @@ private fun navigateToDetails(product: Product, navController: NavController) {
             productName = product.title,  // Correct property name
             purchaseDate = product.purchase,
             expiryDate = product.expiry, // Placeholder for expiry logic
-            progress = product.progress,
-            period = product.period
         )
 
         is Product.Expired -> Route.ProductDetailsScreen.createRoute(
             productName = product.title,  // Correct property name
             purchaseDate = product.purchase,
             expiryDate = product.expiry, // Placeholder for expiry logic
-            progress = product.progress,
-            period = product.period
         )
     }
     Log.d("fatal", "Navigating to route: $route")
@@ -174,25 +168,19 @@ fun PreviewProductList() {
         Product.Active(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
+            expiry = "30/11/2025",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
+            expiry = "30/11/2025",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
-            expiry = "",
-            period = "1 year 0 months 0 days",
-            progress = 0.7f,
+            expiry = "30/11/2025",
             imageResId = R.drawable.item_image_placeholder
         )
     )
