@@ -41,7 +41,6 @@ import com.warrantysafe.app.presentation.common.productList.components.productCa
 import com.warrantysafe.app.presentation.common.productList.components.productCard.components.periodCalculator
 import com.warrantysafe.app.presentation.navgraph.Route
 import com.warrantysafe.app.presentation.profile.components.DetailRow
-import com.warrantysafe.app.presentation.profile.navigateToEditProfile
 
 @Composable
 fun ProductDetailsScreen(
@@ -54,7 +53,7 @@ fun ProductDetailsScreen(
     val validPurchaseDate = purchaseDate ?: "Not Available"
     val validExpiryDate = expiryDate ?: "Not Available"
 
-    val validPeriod= periodCalculator(
+    val validPeriod = periodCalculator(
         purchaseDate = validPurchaseDate,
         expiryDate = validExpiryDate,
         currentDate = "28/12/2024"
@@ -62,7 +61,7 @@ fun ProductDetailsScreen(
     val validProgress = calculateProgress(validPurchaseDate, validExpiryDate, "28/11/2024")
 
 
-    var scrollState= rememberScrollState()
+    var scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
@@ -71,17 +70,23 @@ fun ProductDetailsScreen(
             .verticalScroll(scrollState)
     ) {
         // Edit Product Detail Icon
-        Box(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
             Icon(
                 modifier = Modifier
                     .size(24.dp)
                     .align(Alignment.CenterEnd)
-                    .clickable { navigateToEditProductDetailsScreen(
-                        navController = navController,
-                        productName = productName,
-                        purchaseDate = purchaseDate,
-                        expiryDate = expiryDate
-                    ) },
+                    .clickable {
+                        navigateToEditProductDetailsScreen(
+                            navController = navController,
+                            productName = productName,
+                            purchaseDate = purchaseDate,
+                            expiryDate = expiryDate
+                        )
+                    },
                 painter = painterResource(R.drawable.edit),
                 contentDescription = "Edit Profile"
             )
@@ -104,7 +109,7 @@ fun ProductDetailsScreen(
                 textColor = colorResource(R.color.purple_500),
                 borderColor = colorResource(R.color.black),
                 icon = null,
-                onValueChange = {  },
+                onValueChange = { },
             )
         }
         Row(
@@ -248,7 +253,10 @@ fun ProductDetailsScreen(
                     .padding(all = 8.dp)
                     .height(28.dp),
                 trackColor = colorResource(R.color.xtreme),
-                progressColor = colorResource(R.color.DaysLeft),
+                progressColor = if (validProgress > 0.99f)
+                    colorResource(R.color.noDaysLeft)
+                else
+                    colorResource(R.color.DaysLeft),
                 strokeWidth = 18f,
                 gapSize = 0f,
             )
@@ -293,7 +301,7 @@ private fun PreviewProductDetailsScreen() {
         navController = rememberNavController(),
         productName = "LG WASHING MACHINE",
         purchaseDate = "11/01/2023",
-        expiryDate = "11/09/2026"
+        expiryDate = "11/09/2024"
     )
 
 }

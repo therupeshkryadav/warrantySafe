@@ -41,7 +41,6 @@ fun ProductCard(
     onClick: () -> Unit, // Callback to handle click and pass details
     title: String,
     itemTint: Color,
-    progressTint: Color,
     detailsColor: Color,
     purchase: String,
     expiry: String,
@@ -117,7 +116,10 @@ fun ProductCard(
                             .fillMaxWidth()
                             .height(28.dp),
                         trackColor = colorResource(R.color.white),
-                        progressColor = progressTint,
+                        progressColor = if (progress >= 1f)
+                            colorResource(R.color.noDaysLeft)
+                        else
+                            colorResource(R.color.DaysLeft),
                         strokeWidth = 18f,
                         gapSize = 0f,
                     )
@@ -134,9 +136,8 @@ fun ProductCardPreview() {
         onClick = {},
         title = "Realme 3 Pro",
         purchase = "30/11/2023",
-        expiry = "01/12/2025",
+        expiry = "01/12/2024",
         itemTint = colorResource(R.color.transparent),
-        progressTint = colorResource(R.color.DaysLeft),
         detailsColor = MaterialTheme.colorScheme.surface,
         imageResId = R.drawable.item_image_placeholder // Replace with your drawable resource
     )

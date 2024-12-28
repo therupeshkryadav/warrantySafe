@@ -76,7 +76,6 @@ fun SearchList(
                     purchase = product.purchase,
                     expiry = product.expiry,
                     imageResId = product.imageResId,
-                    progressTint = colorResource(R.color.DaysLeft),
                     itemTint = colorResource(R.color.transparent),
                     detailsColor = MaterialTheme.colorScheme.onSurface,
                     onClick = { navigateToDetails(product, navController) }
@@ -91,7 +90,6 @@ fun SearchList(
                     purchase = product.purchase,
                     expiry = product.expiry,
                     imageResId = product.imageResId,
-                    progressTint = colorResource(R.color.noDaysLeft),
                     itemTint = colorResource(R.color.expired),
                     detailsColor = MaterialTheme.colorScheme.inversePrimary,
                     onClick = { navigateToDetails(product, navController) }

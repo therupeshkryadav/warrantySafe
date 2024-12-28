@@ -1,13 +1,11 @@
 package com.warrantysafe.app.presentation.common.productList.components.productCard.components
 
 import android.annotation.SuppressLint
-import androidx.compose.runtime.Composable
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 @SuppressLint("NewApi")
-@Composable
 fun periodCalculator(
     purchaseDate: String,
     expiryDate: String,
