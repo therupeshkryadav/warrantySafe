@@ -116,7 +116,7 @@ fun ProductDetailsScreen(
             )
         }
         // Category Section
-        CategorySection(selectedCategory = category, enabled = false)
+        CategorySection(selectCategory = category, enabled = false)
 
         if (purchaseDate != null) {
             DetailRow(

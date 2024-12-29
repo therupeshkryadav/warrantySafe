@@ -37,7 +37,7 @@ fun dropDownMenuItem(
     onClick: () -> Unit = {}) {
 
     Row(
-        modifier = Modifier.wrapContentHeight().padding( horizontal = 4.dp)
+        modifier = Modifier.wrapContentHeight().padding( horizontal = 4.dp).clickable { onClick() }
     ) {
         if(item == "Logout"){
         Icon(
@@ -47,6 +47,7 @@ fun dropDownMenuItem(
             modifier = Modifier.size(21.dp)
         )
         }
+
         Text(
             modifier = Modifier.wrapContentWidth(),
             text = item,

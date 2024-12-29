@@ -34,20 +34,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.dropDownMenu.DropDownMenuContent
+import com.warrantysafe.app.presentation.common.dropDownMenu.components.dropDownMenuItem
 
 @SuppressLint("UseOfNonLambdaOffsetOverload")
 @Composable
 fun CategorySection(
-    selectedCategory:String?="General",
+    selectCategory: String? = "General",
     enabled: Boolean
 ) {
     // List of categories
-    val categories = listOf("General", "Electronics", "Furniture", "Appliances", "Others")
+    val categories = listOf(
+        "General",
+        "Electronics",
+        "Vehicles",
+        "Furniture",
+        "Home Appliances",
+        "Kitchen Appliances",
+        "Gadgets & Accessories",
+        "Personal & Lifestyle Products",
+        "Tools & Equipment",
+        "Health & Medical Devices",
+        "Wearables",
+        "Others"
+    )
 
     // State for dropdown menu
     var expanded by remember { mutableStateOf(false) }
-    var selectedCategory by remember { mutableStateOf(selectedCategory) }
-
+    var selectedCategory by remember { mutableStateOf(selectCategory ?: "General") } // Fallback to "General" if null
 
     // Category Section Layout
     Column(
@@ -63,12 +76,12 @@ fun CategorySection(
             text = "Category",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = colorResource(R.color.purple_500)// Replace with colorResource if needed
+            color = colorResource(R.color.purple_500) // Replace with colorResource if needed
         )
 
-        Box( // General Box
+        Box(
             modifier = Modifier
-                .fillMaxWidth(1f)
+                .fillMaxWidth()
                 .height(48.dp)
                 .padding(bottom = 8.dp)
                 .clip(RoundedCornerShape(2.dp))
@@ -86,14 +99,14 @@ fun CategorySection(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth(0.9f),
-                    text = selectedCategory!!,
+                    text = selectedCategory,
                     fontSize = 16.sp,
                     textAlign = TextAlign.Start
                 )
                 Icon(
                     modifier = Modifier
                         .width(24.dp)
-                        .fillMaxHeight(1f),
+                        .fillMaxHeight(),
                     painter = painterResource(id = R.drawable.drop_down), // Replace with your dropdown icon
                     contentDescription = null
                 )
@@ -107,13 +120,19 @@ fun CategorySection(
             containerColor = Color.LightGray,
             modifier = Modifier.fillMaxWidth()
         ) {
-            DropDownMenuContent(
-                dropDownList = categories,
-                onItemClicked = {}
-            )
+            categories.forEach { category ->
+                dropDownMenuItem(
+                    onClick = {
+                        selectedCategory = category // Update selected category
+                        expanded = false // Close dropdown menu
+                    },
+                    item = category
+                )
+            }
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
