@@ -109,7 +109,7 @@ fun AddScreen(navController: NavController) {
         )
 
         // Category Section
-        CategorySection()
+        CategorySection(enabled = true)
 
         // Purchase Date Field
         DetailRow(

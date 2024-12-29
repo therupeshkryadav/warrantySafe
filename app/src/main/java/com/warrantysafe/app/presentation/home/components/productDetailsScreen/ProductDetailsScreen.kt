@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.common.categorySection.CategorySection
 import com.warrantysafe.app.presentation.common.productList.components.productCard.components.CustomLinearProgressIndicator
 import com.warrantysafe.app.presentation.common.productList.components.productCard.components.calculateProgress
 import com.warrantysafe.app.presentation.common.productList.components.productCard.components.periodCalculator
@@ -112,55 +113,9 @@ fun ProductDetailsScreen(
                 onValueChange = { },
             )
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp)
-        ) {
-            Text(
-                modifier = Modifier
-                    .padding(vertical = 12.dp)
-                    .padding(end = 8.dp),
-                text = "Category :",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.black)
-            )
+        // Category Section
+        CategorySection(enabled = false)
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .clip(shape = RoundedCornerShape(2.dp))
-                    .border(width = 1.dp, color = colorResource(R.color.black))
-
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .background(colorResource(R.color.xtreme)), // Set a fixed height to align items properly
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(0.9f) // Use weight to distribute space equally
-                            .padding(start = 16.dp),
-                        textAlign = TextAlign.Start,
-                        text = "General",
-                        fontSize = 16.sp
-                    )
-                    Icon(
-                        modifier = Modifier
-                            .width(24.dp)
-                            .fillMaxHeight(1f),
-                        painter = painterResource(R.drawable.drop_down),
-                        contentDescription = null
-                    )
-                }
-            }
-
-        }
         if (purchaseDate != null) {
             DetailRow(
                 label = "Purchase Date",

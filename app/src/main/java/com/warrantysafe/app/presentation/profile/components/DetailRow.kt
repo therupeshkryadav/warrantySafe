@@ -81,7 +81,7 @@ fun DetailRow(
                     focusedContainerColor = Color.LightGray,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedContainerColor = Color.LightGray,
-                    disabledContainerColor = Color.LightGray,
+                    disabledContainerColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
                     unfocusedTextColor = Color.Black,
@@ -101,7 +101,7 @@ fun DetailRowPreview() {
     DetailRow(
         label = "Purchase Date",
         updatedValue = "23/11/2024",
-        enable = true,
+        enable = false,
         textColor = colorResource(R.color.black),
         placeHolder = "DD/MM/YYYY",
         borderColor = colorResource(R.color.purple_500),
