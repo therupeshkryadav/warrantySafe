@@ -91,72 +91,168 @@ fun WarrantyNavigator(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 3 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Realme 7 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Active(
+            title = "Redmi Note 10 ",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
             title = "Rado Watch",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
             title = "PS5",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
             title = "LG Washing Machine ",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "Rado Watch",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "PS5",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "LG Washing Machine ",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "Rado Watch",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "PS5",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "LG Washing Machine ",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "Rado Watch",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "PS5",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "LG Washing Machine ",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         )
     )
@@ -297,43 +393,49 @@ fun WarrantyNavigator(
                 }
 
                 composable(
-                    route = "productDetailsScreen/{productName}/{purchaseDate}/{expiryDate}",
+                    route = "productDetailsScreen/{productName}/{purchaseDate}/{category}/{expiryDate}",
                     arguments = listOf(
                         navArgument("productName") { type = NavType.StringType },
                         navArgument("purchaseDate") { type = NavType.StringType },
                         navArgument("expiryDate") { type = NavType.StringType },
+                        navArgument("category") { type = NavType.StringType },
                     )
                 ) {
                     val productName = it.arguments?.getString("productName") ?: "Unknown"
                     val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
                     val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
+                    val category = it.arguments?.getString("category") ?: "N/A"
 
                     //Navigate to ProductDetailsScreen -->
                     ProductDetailsScreen(
                         navController = navController,
                         productName = productName,
                         purchaseDate = purchaseDate,
+                        category = category,
                         expiryDate = expiryDate
                     )
                 }
 
                 composable(
-                    route = "editProductDetailsScreen/{productName}/{purchaseDate}/{expiryDate}",
+                    route = "editProductDetailsScreen/{productName}/{purchaseDate}/{category}/{expiryDate}",
                     arguments = listOf(
                         navArgument("productName") { type = NavType.StringType },
                         navArgument("purchaseDate") { type = NavType.StringType },
-                        navArgument("expiryDate") { type = NavType.StringType }
+                        navArgument("expiryDate") { type = NavType.StringType },
+                        navArgument("category") { type = NavType.StringType }
                     )
                 ) {
                     val productName = it.arguments?.getString("productName") ?: "Unknown"
                     val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
                     val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
+                    val category = it.arguments?.getString("category") ?: "N/A"
 
                     //Navigate to EditProductDetailsScreen -->
                     EditProductDetailsScreen(
                         navController = navController,
                         productName = productName,
                         purchaseDate = purchaseDate,
+                        category=category,
                         expiryDate = expiryDate,
                     )
                 }

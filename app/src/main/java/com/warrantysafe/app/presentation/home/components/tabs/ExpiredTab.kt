@@ -50,18 +50,84 @@ fun onPreview() {
             title = "Rado Watch",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
             title = "PS5",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Expired(
             title = "LG Washing Machine ",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "Rado Watch",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "PS5",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "LG Washing Machine ",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "Rado Watch",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "PS5",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "LG Washing Machine ",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "Rado Watch",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "PS5",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
+            imageResId = R.drawable.item_image_placeholder
+        ),
+        Product.Expired(
+            title = "LG Washing Machine ",
+            purchase = "30/11/2023",
+            expiry = "01/12/2024",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         )
     )

@@ -48,6 +48,7 @@ fun EditProductDetailsScreen(
     navController: NavController,
     productName: String?,
     purchaseDate: String?,
+    category: String?,
     expiryDate: String?
 ) {
     var validProductName by remember { mutableStateOf(productName) }
@@ -84,7 +85,7 @@ fun EditProductDetailsScreen(
             )
         }
         // Category Section
-        CategorySection(enabled = true)
+        CategorySection(selectedCategory = category, enabled = true)
 
         if (purchaseDate != null) {
             DetailRow(
@@ -202,6 +203,7 @@ private fun PreviewProductDetailsScreen() {
         navController = rememberNavController(),
         productName = "LG WASHING MACHINE",
         purchaseDate = "11/01/2023",
+        category = "Electronics",
         expiryDate = "11/09/2024"
     )
 

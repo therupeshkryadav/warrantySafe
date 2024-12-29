@@ -48,6 +48,7 @@ fun ProductDetailsScreen(
     navController: NavController,
     productName: String?,
     purchaseDate: String?,
+    category: String?,
     expiryDate: String?
 ) {
     val validProductName = productName ?: "Unknown Product"
@@ -85,6 +86,7 @@ fun ProductDetailsScreen(
                             navController = navController,
                             productName = productName,
                             purchaseDate = purchaseDate,
+                            category = category,
                             expiryDate = expiryDate
                         )
                     },
@@ -114,7 +116,7 @@ fun ProductDetailsScreen(
             )
         }
         // Category Section
-        CategorySection(enabled = false)
+        CategorySection(selectedCategory = category, enabled = false)
 
         if (purchaseDate != null) {
             DetailRow(
@@ -239,11 +241,13 @@ fun navigateToEditProductDetailsScreen(
     navController: NavController,
     productName: String?,
     purchaseDate: String?,
+    category: String?,
     expiryDate: String?
 ) {
     val route = Route.EditProductDetailsScreen.createRoute(
         productName = productName,
         purchaseDate = purchaseDate,
+        category = category,
         expiryDate = expiryDate,
     )
     navController.navigate(route)
@@ -256,6 +260,7 @@ private fun PreviewProductDetailsScreen() {
         navController = rememberNavController(),
         productName = "LG WASHING MACHINE",
         purchaseDate = "11/01/2023",
+        category = "Electronics",
         expiryDate = "11/09/2024"
     )
 

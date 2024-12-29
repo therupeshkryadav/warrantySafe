@@ -115,6 +115,7 @@ fun ProductList(
                             title = product.title,
                             purchase = product.purchase,
                             expiry = product.expiry,
+                            category = product.category,
                             imageResId = product.imageResId,
                             itemTint = colorResource(R.color.transparent),
                             detailsColor = MaterialTheme.colorScheme.onSurface,
@@ -127,6 +128,7 @@ fun ProductList(
                             title = product.title,
                             purchase = product.purchase,
                             expiry = product.expiry,
+                            category = product.category,
                             imageResId = product.imageResId,
                             itemTint = colorResource(R.color.expired),
                             detailsColor = MaterialTheme.colorScheme.inversePrimary,
@@ -145,12 +147,14 @@ private fun navigateToDetails(product: Product, navController: NavController) {
         is Product.Active -> Route.ProductDetailsScreen.createRoute(
             productName = product.title,  // Correct property name
             purchaseDate = product.purchase,
+            category = product.category,
             expiryDate = product.expiry, // Placeholder for expiry logic
         )
 
         is Product.Expired -> Route.ProductDetailsScreen.createRoute(
             productName = product.title,  // Correct property name
             purchaseDate = product.purchase,
+            category = product.category,
             expiryDate = product.expiry, // Placeholder for expiry logic
         )
     }
@@ -167,18 +171,21 @@ fun PreviewProductList() {
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product.Active(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
+            category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         )
     )

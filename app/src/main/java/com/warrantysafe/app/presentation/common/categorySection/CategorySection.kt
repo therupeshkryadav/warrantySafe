@@ -38,6 +38,7 @@ import com.warrantysafe.app.presentation.common.dropDownMenu.DropDownMenuContent
 @SuppressLint("UseOfNonLambdaOffsetOverload")
 @Composable
 fun CategorySection(
+    selectedCategory:String?="General",
     enabled: Boolean
 ) {
     // List of categories
@@ -45,7 +46,7 @@ fun CategorySection(
 
     // State for dropdown menu
     var expanded by remember { mutableStateOf(false) }
-    var selectedCategory by remember { mutableStateOf("General") }
+    var selectedCategory by remember { mutableStateOf(selectedCategory) }
 
 
     // Category Section Layout
@@ -85,7 +86,7 @@ fun CategorySection(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth(0.9f),
-                    text = selectedCategory,
+                    text = selectedCategory!!,
                     fontSize = 16.sp,
                     textAlign = TextAlign.Start
                 )

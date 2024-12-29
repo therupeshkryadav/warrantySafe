@@ -75,6 +75,7 @@ fun SearchList(
                     title = product.title,
                     purchase = product.purchase,
                     expiry = product.expiry,
+                    category = product.category,
                     imageResId = product.imageResId,
                     itemTint = colorResource(R.color.transparent),
                     detailsColor = MaterialTheme.colorScheme.onSurface,
@@ -89,6 +90,7 @@ fun SearchList(
                     title = product.title,
                     purchase = product.purchase,
                     expiry = product.expiry,
+                    category = product.category,
                     imageResId = product.imageResId,
                     itemTint = colorResource(R.color.expired),
                     detailsColor = MaterialTheme.colorScheme.inversePrimary,
@@ -106,12 +108,14 @@ private fun navigateToDetails(product: Product, navController: NavController) {
         is Product.Active -> Route.ProductDetailsScreen.createRoute(
             productName = product.title,  // Correct property name
             purchaseDate = product.purchase,
+            category = product.category,
             expiryDate = product.expiry, // Placeholder for expiry logic
         )
 
         is Product.Expired -> Route.ProductDetailsScreen.createRoute(
             productName = product.title,  // Correct property name
             purchaseDate = product.purchase,
+            category = product.category,
             expiryDate = product.expiry, // Placeholder for expiry logic
         )
     }
