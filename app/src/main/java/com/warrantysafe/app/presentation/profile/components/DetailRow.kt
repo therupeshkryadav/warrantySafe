@@ -2,6 +2,7 @@ package com.warrantysafe.app.presentation.profile.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -9,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,7 +53,14 @@ fun DetailRow(
         Spacer(modifier = Modifier.height(4.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth().clickable { onDetailRowClick?.invoke() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null // Disables ripple effect
+                ) {
+                    onDetailRowClick?.invoke()
+                },
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Optional Icon
@@ -106,7 +115,7 @@ fun DetailRowPreview() {
         placeHolder = "DD/MM/YYYY",
         borderColor = colorResource(R.color.purple_500),
         icon = R.drawable.calendar,
-        onDetailRowClick = {  },
+        onDetailRowClick = { },
         onValueChange = { }
     )
 }

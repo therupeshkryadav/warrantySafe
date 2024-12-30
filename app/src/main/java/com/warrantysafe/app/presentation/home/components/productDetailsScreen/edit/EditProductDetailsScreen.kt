@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.home.components.productDetailsScreen.edit
 
+import android.app.DatePickerDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,13 +44,14 @@ import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.common.categorySection.CategorySection
 import com.warrantysafe.app.presentation.profile.components.DetailRow
+import java.util.Calendar
 
 @Composable
 fun EditProductDetailsScreen(
     navController: NavController,
-    productName: String?,
+    productName: String?=null,
     purchaseDate: String?,
-    category: String?,
+    category: String?=null,
     expiryDate: String?
 ) {
     var validProductName by remember { mutableStateOf(productName) }
@@ -56,6 +59,50 @@ fun EditProductDetailsScreen(
     var validExpiryDate by remember { mutableStateOf(expiryDate) }
     // Create a ScrollState for vertical scrolling
     val scrollState = rememberScrollState()
+
+    // Create a DatePickerDialog callback inside the composable context
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+
+    // State for showing the date picker
+    val showPurchaseDatePicker = remember { mutableStateOf(false) }
+    val showExpiryDatePicker = remember { mutableStateOf(false) }
+
+    if (showPurchaseDatePicker.value) {
+        DatePickerDialog(
+            context,
+            { _, year, month, dayOfMonth ->
+                val formattedDate = "$dayOfMonth/${month + 1}/$year"
+                validPurchaseDate = formattedDate // Update the purchase date
+                showPurchaseDatePicker.value = false
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).apply {
+            setOnCancelListener {
+                showPurchaseDatePicker.value = false // Dismiss dialog without updating date
+            }
+        }.show()
+    }
+
+    if (showExpiryDatePicker.value) {
+        DatePickerDialog(
+            context,
+            { _, year, month, dayOfMonth ->
+                val formattedDate = "$dayOfMonth/${month + 1}/$year"
+                validExpiryDate = formattedDate // Update the expiry date
+                showExpiryDatePicker.value = false
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).apply {
+            setOnCancelListener {
+                showExpiryDatePicker.value = false // Dismiss dialog without updating date
+            }
+        }.show()
+    }
 
     Column(
         modifier = Modifier
@@ -73,7 +120,7 @@ fun EditProductDetailsScreen(
             contentScale = ContentScale.Crop,
             contentDescription = null
         )
-        if (productName != null) {
+
             DetailRow(
                 label = "Product Name",
                 updatedValue = validProductName!!,
@@ -83,30 +130,40 @@ fun EditProductDetailsScreen(
                 icon = null,
                 onValueChange = { validProductName = it},
             )
-        }
+
         // Category Section
         CategorySection(selectCategory = category, enabled = true)
 
         if (purchaseDate != null) {
+            // Purchase Date Field
             DetailRow(
                 label = "Purchase Date",
-                updatedValue = validPurchaseDate!!,
-                enable = true,
                 textColor = colorResource(R.color.purple_500),
-                borderColor = colorResource(R.color.black),
+                enable = false,
                 icon = R.drawable.calendar,
-                onValueChange = { validPurchaseDate = it },
+                borderColor = colorResource(R.color.black),
+                placeHolder = "DD/MM/YYYY",
+                updatedValue = validPurchaseDate!!,
+                onDetailRowClick = {
+                    showPurchaseDatePicker.value = true
+                },
+                onValueChange = { validPurchaseDate = it } // This handles the case where user types in the field (optional)
             )
         }
         if (expiryDate != null) {
+            // Expiry Date Field
             DetailRow(
                 label = "Expiry Date",
-                updatedValue = validExpiryDate!!,
-                enable = true,
                 textColor = colorResource(R.color.purple_500),
-                borderColor = colorResource(R.color.black),
+                enable = false,
                 icon = R.drawable.calendar,
-                onValueChange = { validExpiryDate = it },
+                borderColor = colorResource(R.color.black),
+                placeHolder = "DD/MM/YYYY",
+                updatedValue = validExpiryDate!!,
+                onDetailRowClick = {
+                    showExpiryDatePicker.value = true
+                },
+                onValueChange = { validExpiryDate = it } // This handles the case where user types in the field (optional)
             )
         }
         Row(
