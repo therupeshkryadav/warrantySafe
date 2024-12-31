@@ -58,8 +58,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.ccp) // Add CountryCodePicker here
-    implementation(libs.koin.android) // Koin for Android
-    implementation(libs.koin.core)   // Koin core for non-Android modules
-    implementation(libs.androidx.lifecycle.viewmodel.ktx) // ViewModel for Koin injection
-    implementation(libs.androidx.lifecycle.livedata.ktx) // LiveData
+
+    // Koin Core
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.android.v350)
+
+    // Optional: Koin for testing (if you plan to write tests)
+    testImplementation(libs.koin.test)
+    testImplementation(libs.koin.test.junit4)
 }
