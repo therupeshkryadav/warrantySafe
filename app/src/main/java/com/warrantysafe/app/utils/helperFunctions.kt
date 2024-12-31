@@ -1,6 +1,6 @@
 package com.warrantysafe.app.utils
 
-import com.warrantysafe.app.presentation.navgraph.Route
+import com.warrantysafe.app.presentation.ui.navgraph.Route
 
 // Extension function to convert String? to Route?
 fun String?.toRoute(): Route? {
