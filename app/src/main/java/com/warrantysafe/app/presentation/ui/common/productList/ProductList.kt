@@ -35,7 +35,7 @@ import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.ui.common.dropDownMenu.components.dropDownMenuItem
 import com.warrantysafe.app.presentation.ui.common.productList.components.productCard.ProductCard
 import com.warrantysafe.app.presentation.ui.home.Product
-import com.warrantysafe.app.presentation.ui.navgraph.Route
+import com.warrantysafe.app.presentation.navigation.Route
 
 
 @Composable

@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.ui.navgraph
+package com.warrantysafe.app.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost

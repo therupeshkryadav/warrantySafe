@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.ui.navgraph.Route
+import com.warrantysafe.app.presentation.navigation.Route
 import kotlinx.coroutines.launch
 
 @SuppressLint("ComposableNaming")

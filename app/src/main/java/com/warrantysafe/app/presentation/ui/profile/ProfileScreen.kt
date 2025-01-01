@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.ui.navgraph.Route
+import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.profile.components.DetailRow
 
 

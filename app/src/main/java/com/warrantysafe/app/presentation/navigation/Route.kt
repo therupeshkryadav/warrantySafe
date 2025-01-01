@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.ui.navgraph
+package com.warrantysafe.app.presentation.navigation
 
 import android.net.Uri
 

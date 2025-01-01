@@ -22,7 +22,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.ui.common.dropDownMenu.DropDownMenuContent
-import com.warrantysafe.app.presentation.ui.navgraph.Route
+import com.warrantysafe.app.presentation.navigation.Route
 
 @SuppressLint("ComposableNaming")
 @Composable

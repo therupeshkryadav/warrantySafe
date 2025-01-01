@@ -19,7 +19,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.ui.navgraph.Route
+import com.warrantysafe.app.presentation.navigation.Route
 
 data class BottomNavigationItem(
     @DrawableRes val icon: Int,

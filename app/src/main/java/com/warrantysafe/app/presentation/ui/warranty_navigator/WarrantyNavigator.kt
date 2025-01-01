@@ -1,18 +1,14 @@
 package com.warrantysafe.app.presentation.ui.warranty_navigator
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -33,7 +29,7 @@ import com.warrantysafe.app.presentation.ui.home.HomeScreen
 import com.warrantysafe.app.presentation.ui.home.Product
 import com.warrantysafe.app.presentation.ui.home.components.productDetailsScreen.ProductDetailsScreen
 import com.warrantysafe.app.presentation.ui.home.components.productDetailsScreen.edit.EditProductDetailsScreen
-import com.warrantysafe.app.presentation.ui.navgraph.Route
+import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.notifification.NotificationScreen
 import com.warrantysafe.app.presentation.ui.profile.ProfileScreen
 import com.warrantysafe.app.presentation.ui.profile.edit.EditProfileScreen

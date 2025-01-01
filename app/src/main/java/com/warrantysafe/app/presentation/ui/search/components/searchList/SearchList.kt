@@ -24,7 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.ui.common.productList.components.productCard.ProductCard
 import com.warrantysafe.app.presentation.ui.home.Product
-import com.warrantysafe.app.presentation.ui.navgraph.Route
+import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.search.components.searchList.components.recentSearches.Recent
 import com.warrantysafe.app.presentation.ui.search.components.searchList.components.recentSearches.RecentSearches
 

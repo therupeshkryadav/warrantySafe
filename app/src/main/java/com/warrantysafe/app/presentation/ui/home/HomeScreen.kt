@@ -32,7 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.ui.home.components.tabs.ActiveTab
 import com.warrantysafe.app.presentation.ui.home.components.tabs.ExpiredTab
-import com.warrantysafe.app.presentation.ui.navgraph.Route
+import com.warrantysafe.app.presentation.navigation.Route
 import kotlinx.coroutines.launch
 
 
