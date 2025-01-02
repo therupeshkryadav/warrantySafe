@@ -1,4 +1,4 @@
-package com.warrantysafe.app.di
+package com.warrantysafe.app.di.modules
 
 import org.koin.dsl.module
 
