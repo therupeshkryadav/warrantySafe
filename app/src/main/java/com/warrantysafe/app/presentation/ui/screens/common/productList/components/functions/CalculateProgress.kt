@@ -1,8 +1,6 @@
-package com.warrantysafe.app.presentation.ui.screens.common.productList.components.productCard.components
+package com.warrantysafe.app.presentation.ui.screens.common.productList.components.functions
 
 import android.annotation.SuppressLint
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit

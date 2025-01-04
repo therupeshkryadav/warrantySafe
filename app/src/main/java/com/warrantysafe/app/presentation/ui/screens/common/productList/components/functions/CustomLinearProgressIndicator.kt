@@ -1,7 +1,6 @@
-package com.warrantysafe.app.presentation.ui.screens.common.productList.components.productCard.components
+package com.warrantysafe.app.presentation.ui.screens.common.productList.components.functions
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset

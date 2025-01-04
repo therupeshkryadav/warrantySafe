@@ -34,7 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.ui.screens.common.dropDownMenu.components.dropDownMenuItem
-import com.warrantysafe.app.presentation.ui.screens.common.productList.components.productCard.ProductCard
+import com.warrantysafe.app.presentation.ui.screens.common.productList.components.ProductCard
 import com.warrantysafe.app.presentation.navigation.Route
 
 
