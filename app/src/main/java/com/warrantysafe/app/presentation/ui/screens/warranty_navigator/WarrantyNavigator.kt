@@ -90,6 +90,8 @@ fun WarrantyNavigator(
     // Trigger `loadProducts` when the AppNavGraph is initialized
     LaunchedEffect(Unit) {
         productViewModel.loadProducts()
+        productViewModel.loadActiveProducts()
+        productViewModel.loadExpiredProducts()
     }
 
     ModalNavigationDrawer(
@@ -189,7 +191,11 @@ fun WarrantyNavigator(
                 modifier = Modifier.padding(paddingValues)
             ) {
                 composable(Route.HomeScreen.route) {
-                    HomeScreen(navController = navController)
+                    HomeScreen(
+                        navController = navController,
+                        activeProducts = productViewModel.activeProducts.value,
+                        expiredProducts = productViewModel.expiredProducts.value
+                    )
                 }
                 composable(Route.AddScreen.route) {
                     AddScreen(navController = navController)

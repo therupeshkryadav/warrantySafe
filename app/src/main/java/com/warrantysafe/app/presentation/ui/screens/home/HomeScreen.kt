@@ -38,85 +38,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
+    activeProducts: List<Product>,
+    expiredProducts: List<Product>,
     navController: NavController
 ) {
-    val activeProducts = listOf(
-        Product(
-            title = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Water Geyser",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Home Appliances",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Honda Sp 125 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Vehicles",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Titan Watch",
-            purchase = "01/10/2024",
-            expiry = "01/10/2025",
-            category = "Wearables",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Water Geyser",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Home Appliances",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Honda Sp 125 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Vehicles",
-            imageResId = R.drawable.item_image_placeholder
-        )
-
-    )
-
-    val expiredProducts = listOf(
-        Product(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Wearables",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Gadgets & Accessories",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Home Appliances",
-            imageResId = R.drawable.item_image_placeholder
-        )
-    )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -230,8 +155,180 @@ fun HomeScreen(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    val homeNavController = rememberNavController()
     HomeScreen(
-        homeNavController
+        navController = rememberNavController(),
+        activeProducts = listOf(
+            Product(
+                title = "Realme 3 Pro",
+                purchase = "30/11/2024",
+                expiry = "30/11/2025",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "Realme 7 Pro",
+                purchase = "30/11/2024",
+                expiry = "30/11/2025",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "Redmi Note 10 ",
+                purchase = "30/11/2024",
+                expiry = "30/11/2025",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "Realme 3 Pro",
+                purchase = "30/11/2024",
+                expiry = "30/11/2025",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "Realme 7 Pro",
+                purchase = "30/11/2024",
+                expiry = "30/11/2025",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "Redmi Note 10 ",
+                purchase = "30/11/2024",
+                expiry = "30/11/2025",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "Realme 3 Pro",
+                purchase = "30/11/2024",
+                expiry = "30/11/2025",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "Realme 7 Pro",
+                purchase = "30/11/2024",
+                expiry = "30/11/2025",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "Redmi Note 10 ",
+                purchase = "30/11/2024",
+                expiry = "30/11/2025",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "Realme 3 Pro",
+                purchase = "30/11/2024",
+                expiry = "30/11/2025",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "Realme 7 Pro",
+                purchase = "30/11/2024",
+                expiry = "30/11/2025",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "Redmi Note 10 ",
+                purchase = "30/11/2024",
+                expiry = "30/11/2025",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            )
+
+        ),
+        expiredProducts = listOf(
+            Product(
+                title = "Rado Watch",
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "PS5",
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "LG Washing Machine ",
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "Rado Watch",
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "PS5",
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "LG Washing Machine ",
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "Rado Watch",
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "PS5",
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "LG Washing Machine ",
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "Rado Watch",
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "PS5",
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            ),
+            Product(
+                title = "LG Washing Machine ",
+                purchase = "30/11/2023",
+                expiry = "01/12/2024",
+                category = "Electronics",
+                imageResId = R.drawable.item_image_placeholder
+            )
+        )
     )
 }

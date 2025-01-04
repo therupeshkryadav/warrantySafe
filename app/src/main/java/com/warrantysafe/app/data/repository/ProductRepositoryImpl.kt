@@ -4,7 +4,7 @@ import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.domain.repository.ProductRepository
 
-class ProductRepositoryImpl: ProductRepository {
+class ProductRepositoryImpl : ProductRepository {
 
     private val productsList = mutableListOf<Product>(
         Product(
@@ -36,24 +36,20 @@ class ProductRepositoryImpl: ProductRepository {
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),Product(
             title = "Rado Watch",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
-        ),Product(
+        ),
+        Product(
             title = "PS5",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
-        ),Product(
+        ),
+        Product(
             title = "LG Washing Machine ",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
@@ -61,7 +57,6 @@ class ProductRepositoryImpl: ProductRepository {
             imageResId = R.drawable.item_image_placeholder
         )
     )
-       // from where this list should come according to clean architecture
 
     override suspend fun getProducts(): List<Product> {
         return productsList
