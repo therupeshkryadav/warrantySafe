@@ -39,6 +39,7 @@ import com.warrantysafe.app.presentation.ui.screens.termsPrivacy.TermsPrivacyScr
 import com.warrantysafe.app.presentation.ui.screens.upcomingFeatures.UpcomingFeaturesScreen
 import com.warrantysafe.app.presentation.ui.screens.warranty_navigator.components.BottomNavigationItem
 import com.warrantysafe.app.presentation.ui.screens.warranty_navigator.components.WarrantyBottomNavigation
+import com.warrantysafe.app.presentation.viewModel.NotificationViewModel
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import com.warrantysafe.app.utils.toRoute
 import kotlinx.coroutines.launch
@@ -84,14 +85,16 @@ fun WarrantyNavigator(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
-    // Use Koin to inject GreetingViewModel
+    // Use Koin to inject ViewModels
     val productViewModel: ProductViewModel = koinViewModel()
+    val notificationViewModel: NotificationViewModel = koinViewModel()
 
-    // Trigger `loadProducts` when the AppNavGraph is initialized
+    // Trigger `loadProducts`,'loadActiveProducts','loadExpiredProducts','loadNotifications' when the AppNavGraph is initialized
     LaunchedEffect(Unit) {
         productViewModel.loadProducts()
         productViewModel.loadActiveProducts()
         productViewModel.loadExpiredProducts()
+        notificationViewModel.loadNotifications()
     }
 
     ModalNavigationDrawer(
@@ -229,7 +232,10 @@ fun WarrantyNavigator(
                 }
 
                 composable(Route.NotificationScreen.route) {
-                    NotificationScreen(navController = navController)
+                    NotificationScreen(
+                        navController = navController,
+                        notificationList = notificationViewModel.notifications.value
+                    )
                 }
 
                 composable(

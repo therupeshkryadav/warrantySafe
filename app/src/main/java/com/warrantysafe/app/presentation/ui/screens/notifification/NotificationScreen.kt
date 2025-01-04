@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.warrantysafe.app.domain.model.Notification
 import com.warrantysafe.app.presentation.ui.screens.notifification.components.notificationList.NotificationList
 
 data class Notifications(
@@ -15,40 +16,35 @@ data class Notifications(
 )
 
 @Composable
-fun NotificationScreen(navController: NavController) {
+fun NotificationScreen(
+    notificationList: List<Notification>,
+    navController: NavController
+) {
 // Content under the TopAppBar
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val notificationsList = listOf(
-            Notifications(
-                isRead = true,
-                notification = "I have read the notification -->"
-            ),
-            Notifications(
-                isRead = false,
-                notification = "The notification is unread!! -->"
-            ),
-            Notifications(
-                isRead = true,
-                notification = "I have read the notification -->"
-            ),
-            Notifications(
-                isRead = false,
-                notification = "The Notification is unread!! -->"
-            ),
-            Notifications(
-                isRead = true,
-                notification = "I have read the notification -->"
-            )
-        )
-        NotificationList(notifications = notificationsList)
+        NotificationList(notifications = notificationList)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewNotify(){
-    NotificationScreen(navController = rememberNavController())
+    NotificationScreen(
+        navController = rememberNavController(),
+        notificationList = listOf(
+            Notification(notification = "This is my First Notification!!"),
+            Notification(notification = "This is my First Notification!!"),
+            Notification(notification = "This is my First Notification!!"),
+            Notification(notification = "This is my First Notification!!"),
+            Notification(notification = "This is my First Notification!!"),
+            Notification(notification = "This is my First Notification!!"),
+            Notification(notification = "This is my First Notification!!"),
+            Notification(notification = "This is my First Notification!!"),
+            Notification(notification = "This is my First Notification!!"),
+            Notification(notification = "This is my First Notification!!")
+        )
+    )
 }

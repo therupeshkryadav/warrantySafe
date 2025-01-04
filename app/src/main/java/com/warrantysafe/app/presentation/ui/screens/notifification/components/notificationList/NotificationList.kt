@@ -1,7 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.notifification.components.notificationList
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,18 +14,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warrantysafe.app.R
+import com.warrantysafe.app.domain.model.Notification
 import com.warrantysafe.app.presentation.ui.screens.notifification.Notifications
 import com.warrantysafe.app.presentation.ui.screens.notifification.components.NotificationItem
 
 @Composable
 fun NotificationList(
-    notifications: List<Notifications> = emptyList() // Default to an empty list and Changed to a flat list of products
+    notifications: List<Notification> = emptyList() // Default to an empty list and Changed to a flat list of products
 ) {
     if (notifications.isEmpty()) {
         // Display the "no notifications" image
@@ -55,7 +54,6 @@ fun NotificationList(
         ) {
             items(notifications) { notification ->
                 NotificationItem(
-                    isRead = notification.isRead,
                     notification = notification.notification
                 )
             }
@@ -66,7 +64,7 @@ fun NotificationList(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewNotificationsList() {
-    val notificationsList = emptyList<Notifications>()
+    val notificationsList = emptyList<Notification>()
     NotificationList(notifications = notificationsList)
 
 }
