@@ -30,231 +30,85 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.domain.model.Product
+import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.home.components.tabs.ActiveTab
 import com.warrantysafe.app.presentation.ui.screens.home.components.tabs.ExpiredTab
-import com.warrantysafe.app.presentation.navigation.Route
 import kotlinx.coroutines.launch
-
-
-sealed class Product {
-    data class Active(
-        val title: String,
-        val purchase: String,
-        val expiry: String,
-        val category: String,
-        val imageResId: Int
-    ) : Product()
-
-    data class Expired(
-        val title: String,
-        val purchase: String,
-        val expiry: String,
-        val category: String,
-        val imageResId: Int
-    ) : Product()
-}
-
 
 @Composable
 fun HomeScreen(
     navController: NavController
 ) {
-
     val activeProducts = listOf(
-        Product.Active(
+        Product(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
-        Product.Active(
+        Product(
             title = "Water Geyser",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Home Appliances",
             imageResId = R.drawable.item_image_placeholder
         ),
-        Product.Active(
+        Product(
             title = "Honda Sp 125 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Vehicles",
             imageResId = R.drawable.item_image_placeholder
         ),
-        Product.Active(
+        Product(
             title = "Titan Watch",
             purchase = "01/10/2024",
             expiry = "01/10/2025",
             category = "Wearables",
             imageResId = R.drawable.item_image_placeholder
         ),
-        Product.Active(
+        Product(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
-        Product.Active(
+        Product(
             title = "Water Geyser",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Home Appliances",
             imageResId = R.drawable.item_image_placeholder
         ),
-        Product.Active(
+        Product(
             title = "Honda Sp 125 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Vehicles",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Titan Watch",
-            purchase = "01/10/2024",
-            expiry = "01/10/2025",
-            category = "Wearables",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Water Geyser",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Home Appliances",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Honda Sp 125 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Vehicles",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Titan Watch",
-            purchase = "01/10/2024",
-            expiry = "01/10/2025",
-            category = "Wearables",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Water Geyser",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Home Appliances",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Honda Sp 125 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Vehicles",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Titan Watch",
-            purchase = "01/10/2024",
-            expiry = "01/10/2025",
-            category = "Wearables",
             imageResId = R.drawable.item_image_placeholder
         )
 
     )
 
     val expiredProducts = listOf(
-        Product.Expired(
+        Product(
             title = "Rado Watch",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Wearables",
             imageResId = R.drawable.item_image_placeholder
         ),
-        Product.Expired(
+        Product(
             title = "PS5",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Gadgets & Accessories",
             imageResId = R.drawable.item_image_placeholder
         ),
-        Product.Expired(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Home Appliances",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Wearables",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Gadgets & Accessories",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Home Appliances",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Wearables",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Gadgets & Accessories",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Home Appliances",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Wearables",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Gadgets & Accessories",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
+        Product(
             title = "LG Washing Machine ",
             purchase = "30/11/2023",
             expiry = "01/12/2024",

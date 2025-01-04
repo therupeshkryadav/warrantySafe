@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.ui.screens.home.Product
+import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.ui.screens.search.components.searchList.SearchList
 
 @Composable
@@ -38,42 +38,42 @@ fun SearchScreen(navController: NavController) {
     ) {
 
         val matchedList = listOf(
-            Product.Active(
+            Product(
                 title = "Realme 3 Pro",
                 purchase = "30/11/2024",
                 expiry = "30/11/2025",
                 category = "Electronics",
                 imageResId = R.drawable.item_image_placeholder
             ),
-            Product.Active(
+            Product(
                 title = "Realme 7 Pro",
                 purchase = "30/11/2024",
                 expiry = "30/11/2025",
                 category = "Electronics",
                 imageResId = R.drawable.item_image_placeholder
             ),
-            Product.Active(
+            Product(
                 title = "Redmi Note 10 ",
                 purchase = "30/11/2024",
                 expiry = "30/11/2025",
                 category = "Electronics",
                 imageResId = R.drawable.item_image_placeholder
             ),
-            Product.Expired(
+            Product(
                 title = "Rado Watch",
                 purchase = "30/11/2023",
                 expiry = "01/12/2024",
                 category = "Electronics",
                 imageResId = R.drawable.item_image_placeholder
             ),
-            Product.Expired(
+            Product(
                 title = "PS5",
                 purchase = "30/11/2023",
                 expiry = "01/12/2024",
                 category = "Electronics",
                 imageResId = R.drawable.item_image_placeholder
             ),
-            Product.Expired(
+            Product(
                 title = "LG Washing Machine ",
                 purchase = "30/11/2023",
                 expiry = "01/12/2024",

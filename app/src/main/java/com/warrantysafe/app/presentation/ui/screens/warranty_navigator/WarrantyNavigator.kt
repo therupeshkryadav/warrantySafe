@@ -6,6 +6,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -26,7 +27,6 @@ import com.warrantysafe.app.presentation.ui.screens.common.productList.ProductLi
 import com.warrantysafe.app.presentation.ui.screens.common.sideDrawer.SideDrawerContent
 import com.warrantysafe.app.presentation.ui.screens.helpSupport.HelpSupportScreen
 import com.warrantysafe.app.presentation.ui.screens.home.HomeScreen
-import com.warrantysafe.app.presentation.ui.screens.home.Product
 import com.warrantysafe.app.presentation.ui.screens.home.components.productDetailsScreen.ProductDetailsScreen
 import com.warrantysafe.app.presentation.ui.screens.home.components.productDetailsScreen.edit.EditProductDetailsScreen
 import com.warrantysafe.app.presentation.navigation.Route
@@ -39,8 +39,10 @@ import com.warrantysafe.app.presentation.ui.screens.termsPrivacy.TermsPrivacyScr
 import com.warrantysafe.app.presentation.ui.screens.upcomingFeatures.UpcomingFeaturesScreen
 import com.warrantysafe.app.presentation.ui.screens.warranty_navigator.components.BottomNavigationItem
 import com.warrantysafe.app.presentation.ui.screens.warranty_navigator.components.WarrantyBottomNavigation
+import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import com.warrantysafe.app.utils.toRoute
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun WarrantyNavigator(
@@ -82,176 +84,13 @@ fun WarrantyNavigator(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
-    val productList = listOf(
-        Product.Active(
-            title = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Realme 7 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Redmi Note 10 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Realme 7 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Redmi Note 10 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Realme 7 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Redmi Note 10 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Realme 7 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Active(
-            title = "Redmi Note 10 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product.Expired(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        )
-    )
+    // Use Koin to inject GreetingViewModel
+    val productViewModel: ProductViewModel = koinViewModel()
+
+    // Trigger `loadProducts` when the AppNavGraph is initialized
+    LaunchedEffect(Unit) {
+        productViewModel.loadProducts()
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -263,7 +102,6 @@ fun WarrantyNavigator(
                     when (item) {
                         "List of Product Cards" -> {
                             navigateToTab(
-
                                 navController = navController,
                                 route = Route.ProductList
                             ) // Handle List of Product navigation
@@ -360,7 +198,7 @@ fun WarrantyNavigator(
                 composable(Route.ProductList.route) {
                     ProductList(
                         navController = navController,
-                        productType = productList
+                        productList = productViewModel.products.value
                     )
                 }
 

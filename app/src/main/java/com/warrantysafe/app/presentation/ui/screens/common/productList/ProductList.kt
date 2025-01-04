@@ -32,16 +32,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.ui.screens.common.dropDownMenu.components.dropDownMenuItem
 import com.warrantysafe.app.presentation.ui.screens.common.productList.components.productCard.ProductCard
-import com.warrantysafe.app.presentation.ui.screens.home.Product
 import com.warrantysafe.app.presentation.navigation.Route
 
 
 @Composable
 fun ProductList(
     navController: NavController,
-    productType: List<Product> // Changed to a flat list of products
+    productList: List<Product> // Changed to a flat list of products
 ) {
     val sortOptions = listOf(
         "Old to Recent",
@@ -94,7 +94,7 @@ fun ProductList(
                             onClick = {
                                 selectedSortOption.value = option
                                 expandedSort.value = false
-                                applySorting(option, productType) // Sorting logic
+                                applySorting(option, productList) // Sorting logic
                             }
                         )
                     }
@@ -106,34 +106,17 @@ fun ProductList(
                 .fillMaxSize()
                 .padding(horizontal = 8.dp)
         ) {
-            items(productType) { product ->
-                when (product) {
-                    is Product.Active -> {
-                        ProductCard(
-                            title = product.title,
-                            purchase = product.purchase,
-                            expiry = product.expiry,
-                            category = product.category,
-                            imageResId = product.imageResId,
-                            itemTint = colorResource(R.color.transparent),
-                            detailsColor = MaterialTheme.colorScheme.onSurface,
-                            onClick = { navigateToDetails(product, navController) }
-                        )
-                    }
-
-                    is Product.Expired -> {
-                        ProductCard(
-                            title = product.title,
-                            purchase = product.purchase,
-                            expiry = product.expiry,
-                            category = product.category,
-                            imageResId = product.imageResId,
-                            itemTint = colorResource(R.color.expired),
-                            detailsColor = MaterialTheme.colorScheme.inversePrimary,
-                            onClick = { navigateToDetails(product, navController) }
-                        )
-                    }
-                }
+            items(productList) { product ->
+                ProductCard(
+                    title = product.title,
+                    purchase = product.purchase,
+                    expiry = product.expiry,
+                    category = product.category,
+                    imageResId = product.imageResId,
+                    itemTint = colorResource(R.color.transparent),
+                    detailsColor = MaterialTheme.colorScheme.onSurface,
+                    onClick = { navigateToDetails(product, navController) }
+                )
             }
         }
     }
@@ -158,21 +141,11 @@ fun applySorting(option: String, products: List<Product>) {
 
 private fun navigateToDetails(product: Product, navController: NavController) {
 
-    val route = when (product) {
-        is Product.Active -> Route.ProductDetailsScreen.createRoute(
-            productName = product.title,  // Correct property name
-            purchaseDate = product.purchase,
-            category = product.category,
-            expiryDate = product.expiry, // Placeholder for expiry logic
-        )
-
-        is Product.Expired -> Route.ProductDetailsScreen.createRoute(
-            productName = product.title,  // Correct property name
-            purchaseDate = product.purchase,
-            category = product.category,
-            expiryDate = product.expiry, // Placeholder for expiry logic
-        )
-    }
+    val route = Route.ProductDetailsScreen.createRoute(
+        productName = product.title,  // Correct property name
+        purchaseDate = product.purchase,
+        category = product.category,
+        expiryDate = product.expiry) // Placeholder for expiry logic
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)
 }
@@ -182,21 +155,21 @@ private fun navigateToDetails(product: Product, navController: NavController) {
 @Composable
 fun PreviewProductList() {
     val activeProducts = listOf(
-        Product.Active(
+        Product(
             title = "Realme 3 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
-        Product.Active(
+        Product(
             title = "Realme 7 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
-        Product.Active(
+        Product(
             title = "Redmi Note 10 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
@@ -207,6 +180,6 @@ fun PreviewProductList() {
 
     ProductList(
         navController = rememberNavController(),
-        productType = activeProducts
+        productList = activeProducts
     )
 }

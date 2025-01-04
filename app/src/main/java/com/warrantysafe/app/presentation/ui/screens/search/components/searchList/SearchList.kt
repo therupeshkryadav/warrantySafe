@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.ui.screens.common.productList.components.productCard.ProductCard
-import com.warrantysafe.app.presentation.ui.screens.home.Product
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.search.components.searchList.components.recentSearches.Recent
 import com.warrantysafe.app.presentation.ui.screens.search.components.searchList.components.recentSearches.RecentSearches
@@ -64,13 +64,9 @@ fun SearchList(
             contentPadding = PaddingValues(top = 8.dp, start = 8.dp, end = 8.dp)
         ) {
 
-            // Dynamically filter the input list for Active and Expired products
-            val activeList = matchedList.filterIsInstance<Product.Active>()
-            val expiredList = matchedList.filterIsInstance<Product.Expired>()
-
-            // Display Active Products
-            items(activeList.size) { index ->
-                val product = activeList[index]
+            // Display Products
+            items(matchedList.size) { index ->
+                val product = matchedList[index]
                 ProductCard(
                     title = product.title,
                     purchase = product.purchase,
@@ -82,21 +78,6 @@ fun SearchList(
                     onClick = { navigateToDetails(product, navController) }
                 )
             }
-
-            // Display Expired Products
-            items(expiredList.size) { index ->
-                val product = expiredList[index]
-                ProductCard(
-                    title = product.title,
-                    purchase = product.purchase,
-                    expiry = product.expiry,
-                    category = product.category,
-                    imageResId = product.imageResId,
-                    itemTint = colorResource(R.color.expired),
-                    detailsColor = MaterialTheme.colorScheme.inversePrimary,
-                    onClick = { navigateToDetails(product, navController) }
-                )
-            }
         }
     }
 }
@@ -104,21 +85,12 @@ fun SearchList(
 
 private fun navigateToDetails(product: Product, navController: NavController) {
 
-    val route = when (product) {
-        is Product.Active -> Route.ProductDetailsScreen.createRoute(
-            productName = product.title,  // Correct property name
-            purchaseDate = product.purchase,
-            category = product.category,
-            expiryDate = product.expiry, // Placeholder for expiry logic
-        )
-
-        is Product.Expired -> Route.ProductDetailsScreen.createRoute(
-            productName = product.title,  // Correct property name
-            purchaseDate = product.purchase,
-            category = product.category,
-            expiryDate = product.expiry, // Placeholder for expiry logic
-        )
-    }
+    val route = Route.ProductDetailsScreen.createRoute(
+        productName = product.title,  // Correct property name
+        purchaseDate = product.purchase,
+        category = product.category,
+        expiryDate = product.expiry, // Placeholder for expiry logic
+    )
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)
 }

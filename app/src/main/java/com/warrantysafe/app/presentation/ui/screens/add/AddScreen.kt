@@ -38,6 +38,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.ui.screens.common.categorySection.CategorySection
+import com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.profile.components.DetailRow
 import java.util.Calendar
 
