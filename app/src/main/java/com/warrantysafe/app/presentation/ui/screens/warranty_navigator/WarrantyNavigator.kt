@@ -20,6 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.aboutApp.AboutAppScreen
 import com.warrantysafe.app.presentation.ui.screens.add.AddScreen
 import com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar.CustomTopAppBar
@@ -29,7 +30,6 @@ import com.warrantysafe.app.presentation.ui.screens.helpSupport.HelpSupportScree
 import com.warrantysafe.app.presentation.ui.screens.home.HomeScreen
 import com.warrantysafe.app.presentation.ui.screens.home.components.productDetailsScreen.ProductDetailsScreen
 import com.warrantysafe.app.presentation.ui.screens.home.components.productDetailsScreen.edit.EditProductDetailsScreen
-import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.notifification.NotificationScreen
 import com.warrantysafe.app.presentation.ui.screens.profile.ProfileScreen
 import com.warrantysafe.app.presentation.ui.screens.profile.edit.EditProfileScreen
@@ -179,9 +179,7 @@ fun WarrantyNavigator(
                         items = bottomNavigationItems,
                         currentRoute = currentRoute.toRoute()!!,
                         onItemClick = { route ->
-                            route?.let {
-                                navigateToTab(navController, it)
-                            }
+                            navigateToTab(navController, route)
                         }
                     )
                 }
@@ -233,8 +231,7 @@ fun WarrantyNavigator(
 
                 composable(Route.NotificationScreen.route) {
                     NotificationScreen(
-                        navController = navController,
-                        notificationList = notificationViewModel.notifications.value
+                        notificationList =notificationViewModel.notifications.value
                     )
                 }
 

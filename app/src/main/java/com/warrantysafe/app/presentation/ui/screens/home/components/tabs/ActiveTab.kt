@@ -25,7 +25,7 @@ fun ActiveTab(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun PrevActive() {
     val activeProducts = listOf(
