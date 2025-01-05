@@ -23,7 +23,7 @@ import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.aboutApp.AboutAppScreen
 import com.warrantysafe.app.presentation.ui.screens.add.AddScreen
-import com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar.CustomTopAppBar
+import com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar.TopAppBar
 import com.warrantysafe.app.presentation.ui.screens.common.productList.ProductList
 import com.warrantysafe.app.presentation.ui.screens.common.sideDrawer.SideDrawerContent
 import com.warrantysafe.app.presentation.ui.screens.helpSupport.HelpSupportScreen
@@ -169,7 +169,7 @@ fun WarrantyNavigator(
         Scaffold(
             topBar = {
                 currentRoute?.let {
-                    CustomTopAppBar(
+                    TopAppBar(
                         navController = navController,
                         currentRoute = it,
                         drawerState = drawerState

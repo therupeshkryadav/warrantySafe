@@ -37,9 +37,7 @@ fun actionIcons(
         when (currentRoute) {
             Route.HomeScreen.route, Route.ProfileScreen.route -> {
                 // Home or Profile screen actions
-                IconButton(onClick = {
-                    navController.navigate(route = Route.NotificationScreen.route)
-                }) {
+                IconButton(onClick = { navController.navigate(route = Route.NotificationScreen.route) }) {
                     Icon(
                         imageVector = Icons.Filled.Notifications,
                         contentDescription = "Notifications"

@@ -5,52 +5,61 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar.components.actionIcons
-import com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar.components.navigationIcons
-import com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar.components.titleAppBar
 import com.warrantysafe.app.presentation.navigation.Route
+import com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar.components.NavigationIconConfig
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTopAppBar(
-    navController: androidx.navigation.NavHostController,
-    currentRoute: String,
-    drawerState: DrawerState,
-    onEditProductClick: () -> Unit = {}
+    title: String,
+    navigationIcon: @Composable () -> Unit,
+    actions: @Composable () -> Unit,
+    titleTextAlign: TextAlign? = null
 ) {
-    val isProductDetailRoute = if (currentRoute == Route.ProductDetailsScreen.route) true else false
-
     Column(modifier = Modifier.fillMaxWidth()) {
         CenterAlignedTopAppBar(
-            title = {
-                titleAppBar(currentRoute = currentRoute)
+            title ={
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = titleTextAlign,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,  // Handling overflow text
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                )
             },
             navigationIcon = {
-                navigationIcons(
-                    navController = navController,
-                    currentRoute = currentRoute,
-                    drawerState = drawerState
-                )
+                navigationIcon()
             },
             actions = {
-                actionIcons(
-                    navController = navController,
-                    currentRoute = currentRoute
-                )
+                actions()
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = MaterialTheme.colorScheme.surface,
@@ -66,53 +75,35 @@ fun CustomTopAppBar(
     }
 }
 
-@Preview(showBackground = true, name = "SmartCustomTopAppBar Previews")
+@Preview(showBackground = true)
 @Composable
-fun SmartCustomTopAppBarPreview() {
-    val navController = rememberNavController()
-
-    Column {
-        // Home Screen Preview
-        CustomTopAppBar(
-            navController = navController,
-            currentRoute = Route.HomeScreen.route,
-            drawerState = rememberDrawerState(DrawerValue.Closed)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Profile Screen Preview
-        CustomTopAppBar(
-            navController = navController,
-            currentRoute = Route.ProfileScreen.route,
-            drawerState = rememberDrawerState(DrawerValue.Closed)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Add Warranty Screen Preview
-        CustomTopAppBar(
-            navController = navController,
-            currentRoute = Route.AddScreen.route,
-            drawerState = rememberDrawerState(DrawerValue.Closed)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Search Screen Preview
-        CustomTopAppBar(
-            navController = navController,
-            currentRoute = Route.SearchScreen.route,
-            drawerState = rememberDrawerState(DrawerValue.Closed)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Unknown Route Preview
-        CustomTopAppBar(
-            navController = navController,
-            currentRoute = Route.ProductDetailsScreen.route,
-            drawerState = rememberDrawerState(DrawerValue.Closed)
-        )
-    }
+fun CustomTopAppBarPreview() {
+    CustomTopAppBar(
+        title = "Sample Title",
+        titleTextAlign = TextAlign.Center,
+        navigationIcon = {
+            IconButton(
+                onClick = {}
+            ){
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Menu"
+                )
+            }
+        },
+        actions = {
+            IconButton(onClick = { }) {
+                Icon(
+                    imageVector = Icons.Filled.Notifications,
+                    contentDescription = "Notifications"
+                )
+            }
+            IconButton(onClick = {}) {
+                Icon(
+                    imageVector = Icons.Filled.MoreVert,
+                    contentDescription = "More Options"
+                )
+            }
+        }
+    )
 }
