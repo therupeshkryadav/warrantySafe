@@ -40,7 +40,7 @@ fun CustomTopAppBar(
 ) {
     Column(modifier = Modifier.wrapContentHeight()) {
         CenterAlignedTopAppBar(
-            modifier = Modifier.fillMaxWidth().background(Color.Yellow),
+            modifier = Modifier.fillMaxWidth(),
             title ={
                 title()
             },

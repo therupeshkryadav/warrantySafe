@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.ui.screens.common.productList
+package com.warrantysafe.app.presentation.ui.screens.common.productCardList
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -17,9 +17,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,24 +33,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.common.dropDownMenu.components.dropDownMenuItem
-import com.warrantysafe.app.presentation.ui.screens.common.productList.components.ProductCard
-import kotlinx.coroutines.launch
+import com.warrantysafe.app.presentation.ui.screens.common.productCardList.components.ProductCard
 
 @Composable
-fun ProductList(
+fun ProductCardList(
     navController: NavController,
     productList: List<Product> // Changed to a flat list of products
-) {
+){
     val sortOptions = listOf(
         "Old to Recent",
         "Recent to Old"
@@ -61,8 +55,34 @@ fun ProductList(
     val expandedSort = remember { mutableStateOf(false) }
     val selectedSortOption = remember { mutableStateOf("Sort By") }
 
-
     Column(modifier = Modifier.fillMaxSize()) {
+        CustomTopAppBar(
+            title = {
+                Text(
+                    text = "List of Product Cards",
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,  // Handling overflow text
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                )
+            },
+            navigationIcon = {
+                IconButton(
+                    onClick = { navController.popBackStack() }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+            },
+            actions = {}
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -159,38 +179,4 @@ private fun navigateToDetails(product: Product, navController: NavController) {
         expiryDate = product.expiry) // Placeholder for expiry logic
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewProductList() {
-    val activeProducts = listOf(
-        Product(
-            title = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Realme 7 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Redmi Note 10 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        )
-    )
-
-    ProductList(
-        navController = rememberNavController(),
-        productList = activeProducts
-    )
 }

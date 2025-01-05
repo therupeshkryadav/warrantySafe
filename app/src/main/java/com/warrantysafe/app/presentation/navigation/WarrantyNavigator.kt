@@ -7,12 +7,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.warrantysafe.app.presentation.ui.screens.aboutApp.AboutAppScreen
 import com.warrantysafe.app.presentation.ui.screens.add.AddScreen
-import com.warrantysafe.app.presentation.ui.screens.common.productList.ProductCardList
+import com.warrantysafe.app.presentation.ui.screens.common.productCardList.ProductCardList
 import com.warrantysafe.app.presentation.ui.screens.helpSupport.HelpSupportScreen
 import com.warrantysafe.app.presentation.ui.screens.home.HomeScreen
 import com.warrantysafe.app.presentation.ui.screens.home.components.productDetailsScreen.ProductDetailsScreen
@@ -92,6 +91,7 @@ fun WarrantyNavigator(
 
         composable(Route.NotificationScreen.route) {
             NotificationScreen(
+                navController = navController,
                 notificationList =notificationViewModel.notifications.value
             )
         }

@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,8 +30,11 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,6 +54,7 @@ import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar.CustomTopAppBar
+import com.warrantysafe.app.presentation.ui.screens.common.dropDownMenu.DropDownMenuContent
 import com.warrantysafe.app.presentation.ui.screens.common.sideDrawer.SideDrawerContent
 import com.warrantysafe.app.presentation.ui.screens.home.components.tabs.ActiveTab
 import com.warrantysafe.app.presentation.ui.screens.home.components.tabs.ExpiredTab
@@ -66,6 +71,8 @@ fun HomeScreen(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
+    // State to manage the visibility of the dropdown menu
+    var isMenuExpanded by remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -90,7 +97,6 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.LightGray)
             ) {
                 // Custom Top App Bar
                 CustomTopAppBar(
@@ -119,16 +125,28 @@ fun HomeScreen(
                         }
                     },
                     actions = {
-                        IconButton(onClick = { }) {
+                        IconButton(onClick = { navController.navigate(route = Route.NotificationScreen.route) }) {
                             Icon(
                                 imageVector = Icons.Filled.Notifications,
                                 contentDescription = "Notifications"
                             )
                         }
-                        IconButton(onClick = {}) {
+                        IconButton(onClick = {isMenuExpanded = !isMenuExpanded}) {
                             Icon(
                                 imageVector = Icons.Filled.MoreVert,
                                 contentDescription = "More Options"
+                            )
+                        }
+                        // Dropdown Menu
+                        DropdownMenu(
+                            expanded = isMenuExpanded,
+                            containerColor = Color.LightGray,
+                            onDismissRequest = { isMenuExpanded = false }
+                        ) {
+                            DropDownMenuContent(
+                                navController = navController,
+                                dropDownList = listOf("Logout"),
+                                onItemClicked = {}
                             )
                         }
                     }
@@ -142,6 +160,7 @@ fun HomeScreen(
                 // TabRow and Pager
                 TabRow(
                     selectedTabIndex = pagerState.currentPage,
+                    containerColor = colorResource(R.color.transparent),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
@@ -152,6 +171,7 @@ fun HomeScreen(
                                 .weight(1f)
                                 .padding(4.dp)
                                 .clip(RoundedCornerShape(8.dp))
+                                .background(Color.Transparent)
                                 .clickable {
                                     scope.launch { pagerState.animateScrollToPage(index) }
                                 }
