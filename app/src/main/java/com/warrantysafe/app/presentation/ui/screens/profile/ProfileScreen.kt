@@ -33,18 +33,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.profile.components.DetailRow
 
-
 @Composable
-fun ProfileScreen(navController: NavController) {
-    val fullName = "Rupesh Kumar Yadav"
-    val username = "therupeshkryadav"
-    val email = "rupesh.official484@gmail.com"
-    val phoneNumber = "7233966649"
+fun ProfileScreen(
+    navController: NavController,
+    user: User
+) {
 
-    var scrollState = rememberScrollState()
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
@@ -60,10 +59,10 @@ fun ProfileScreen(navController: NavController) {
                     .align(Alignment.CenterEnd)
                     .clickable { navigateToEditProfile(
                         navController = navController,
-                        fullName = fullName,
-                        userName = username,
-                        emailId = email,
-                        phone = phoneNumber,
+                        fullName = user.fullName,
+                        userName = user.userName,
+                        emailId = user.emailId,
+                        phone = user.phone,
                     ) },
                 painter = painterResource(R.drawable.edit),
                 contentDescription = "Edit Profile"
@@ -91,7 +90,7 @@ fun ProfileScreen(navController: NavController) {
         // Profile Details
         DetailRow(
             "Name",
-            updatedValue = fullName,
+            updatedValue = user.fullName,
             enable = false,
             textColor = colorResource(R.color.purple_500),
             borderColor = colorResource(R.color.black),
@@ -100,7 +99,7 @@ fun ProfileScreen(navController: NavController) {
         )
         DetailRow(
             "Username",
-           updatedValue =  username,
+           updatedValue =  user.userName,
             enable = false,
             textColor = colorResource(R.color.purple_500),
             borderColor = colorResource(R.color.black),
@@ -109,7 +108,7 @@ fun ProfileScreen(navController: NavController) {
         )
         DetailRow(
             "Email",
-            updatedValue = email,
+            updatedValue = user.emailId,
             enable = false,
             textColor = colorResource(R.color.purple_500),
             borderColor = colorResource(R.color.black),
@@ -118,7 +117,7 @@ fun ProfileScreen(navController: NavController) {
         )
         DetailRow(
             "Phone",
-            updatedValue = phoneNumber,
+            updatedValue = user.phone,
             enable = false,
             textColor = colorResource(R.color.purple_500),
             borderColor = colorResource(R.color.black),
@@ -182,5 +181,13 @@ fun navigateToEditProfile(
 @Preview(showBackground = true)
 @Composable
 fun ProfilePreview() {
-    ProfileScreen(rememberNavController())
+    ProfileScreen(
+        rememberNavController(),
+        user = User(
+            "Rupesh Kumar Yadav",
+            "therupeshkryadav",
+            "rupesh.official484@gmail.com",
+            "7233966649",
+        )
+    )
 }

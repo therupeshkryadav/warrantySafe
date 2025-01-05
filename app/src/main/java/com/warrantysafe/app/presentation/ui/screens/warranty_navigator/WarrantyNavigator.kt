@@ -41,6 +41,7 @@ import com.warrantysafe.app.presentation.ui.screens.warranty_navigator.component
 import com.warrantysafe.app.presentation.ui.screens.warranty_navigator.components.WarrantyBottomNavigation
 import com.warrantysafe.app.presentation.viewModel.NotificationViewModel
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
+import com.warrantysafe.app.presentation.viewModel.UserViewModel
 import com.warrantysafe.app.utils.toRoute
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -88,13 +89,15 @@ fun WarrantyNavigator(
     // Use Koin to inject ViewModels
     val productViewModel: ProductViewModel = koinViewModel()
     val notificationViewModel: NotificationViewModel = koinViewModel()
+    val userViewModel: UserViewModel = koinViewModel()
 
-    // Trigger `loadProducts`,'loadActiveProducts','loadExpiredProducts','loadNotifications' when the AppNavGraph is initialized
+    // Trigger `loadProducts`,'loadActiveProducts','loadExpiredProducts','loadNotifications','loadUserDetails' when the AppNavGraph is initialized
     LaunchedEffect(Unit) {
         productViewModel.loadProducts()
         productViewModel.loadActiveProducts()
         productViewModel.loadExpiredProducts()
         notificationViewModel.loadNotifications()
+        userViewModel.loadUserDetails()
     }
 
     ModalNavigationDrawer(
@@ -308,7 +311,10 @@ fun WarrantyNavigator(
                 }
 
                 composable(Route.ProfileScreen.route) {
-                    ProfileScreen(navController = navController)
+                    ProfileScreen(
+                        navController = navController,
+                        user = userViewModel.user.value
+                    )
                 }
                 // Search Flow (Search Screen)
                 composable(Route.SearchScreen.route) {
