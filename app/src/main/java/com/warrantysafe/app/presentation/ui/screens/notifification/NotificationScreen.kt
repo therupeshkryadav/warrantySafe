@@ -20,8 +20,6 @@ import com.warrantysafe.app.presentation.ui.screens.notifification.components.No
 fun NotificationScreen(
     notificationList: List<Notification>
 ) {
-    // State to track the selected notification item by its unique ID
-    val selectedNotificationId: MutableState<String?> = remember { mutableStateOf(null) }
 
     // Content under the TopAppBar
     Column(
@@ -30,12 +28,10 @@ fun NotificationScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(notificationList) { notification ->
-                // Determine if the notification is selected
-                val isSelected = selectedNotificationId.value == notification.notification
+            items(notificationList) { notifications ->
 
                 NotificationItem(
-                    notification = notification.notification
+                    notification = notifications.notification
                 )
             }
         }
