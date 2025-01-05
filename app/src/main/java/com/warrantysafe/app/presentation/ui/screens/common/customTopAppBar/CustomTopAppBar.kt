@@ -3,6 +3,8 @@ package com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -19,41 +21,28 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.navigation.Route
-import com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar.components.NavigationIconConfig
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTopAppBar(
-    title: String,
+    title: @Composable () -> Unit,
     navigationIcon: @Composable () -> Unit,
-    actions: @Composable () -> Unit,
-    titleTextAlign: TextAlign? = null
+    actions: @Composable () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.wrapContentHeight()) {
         CenterAlignedTopAppBar(
+            modifier = Modifier.fillMaxWidth().background(Color.Yellow),
             title ={
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = titleTextAlign,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,  // Handling overflow text
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                )
+                title()
             },
             navigationIcon = {
                 navigationIcon()
@@ -62,7 +51,7 @@ fun CustomTopAppBar(
                 actions()
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surface,
+                containerColor = Color.Transparent,
                 titleContentColor = colorResource(R.color.black)
             )
         )
@@ -79,8 +68,20 @@ fun CustomTopAppBar(
 @Composable
 fun CustomTopAppBarPreview() {
     CustomTopAppBar(
-        title = "Sample Title",
-        titleTextAlign = TextAlign.Center,
+        title = {
+            Text(
+                text = "Sample Title",
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,  // Handling overflow text
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            )
+        },
         navigationIcon = {
             IconButton(
                 onClick = {}

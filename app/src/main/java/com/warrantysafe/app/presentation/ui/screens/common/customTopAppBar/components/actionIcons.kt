@@ -35,7 +35,7 @@ fun actionIcons(
 
     Row {
         when (currentRoute) {
-            Route.HomeScreen.route, Route.ProfileScreen.route -> {
+            Route.ProfileScreen.route -> {
                 // Home or Profile screen actions
                 IconButton(onClick = { navController.navigate(route = Route.NotificationScreen.route) }) {
                     Icon(

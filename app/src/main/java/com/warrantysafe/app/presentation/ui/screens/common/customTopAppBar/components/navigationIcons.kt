@@ -4,11 +4,8 @@ import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.painterResource
@@ -17,22 +14,20 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
-import kotlinx.coroutines.launch
 
 @SuppressLint("ComposableNaming")
 @Composable
 fun navigationIcons(
     navController: NavHostController,
-    currentRoute: String,
-    drawerState: DrawerState
+    currentRoute: String
 ) {
     val navigationIcon = when (currentRoute) {
-        Route.HomeScreen.route, Route.ProfileScreen.route -> {
+        Route.ProfileScreen.route -> {
             val coroutineScope = rememberCoroutineScope()
             NavigationIconConfig(
                 icon = Icons.Filled.Menu,
                 contentDescription = "Menu",
-                onClick = { coroutineScope.launch { drawerState.open() } }
+                onClick = {  }
             )
         }
 
@@ -44,7 +39,7 @@ fun navigationIcons(
             )
         }
 
-        Route.SearchScreen.route, Route.HelpSupportScreen.route, Route.TermsPrivacyScreen.route, Route.AboutAppScreen.route, Route.UpcomingFeaturesScreen.route, Route.ProductList.route, Route.NotificationScreen.route, Route.ProductDetailsScreen.route, Route.EditProfileScreen.route, Route.EditProductDetailsScreen.route, Route.SettingsScreen.route -> {
+        Route.SearchScreen.route, Route.HelpSupportScreen.route, Route.TermsPrivacyScreen.route, Route.AboutAppScreen.route, Route.UpcomingFeaturesScreen.route, Route.ProductCardList.route, Route.NotificationScreen.route, Route.ProductDetailsScreen.route, Route.EditProfileScreen.route, Route.EditProductDetailsScreen.route, Route.SettingsScreen.route -> {
             NavigationIconConfig(
                 iconPainter = painterResource(id = R.drawable.arrow_back),
                 contentDescription = "Back",
@@ -82,7 +77,6 @@ data class NavigationIconConfig(
 fun NavigationIconsPreview() {
     navigationIcons(
         navController = rememberNavController(),
-        currentRoute = Route.HomeScreen.route,
-        drawerState = rememberDrawerState(DrawerValue.Closed)
+        currentRoute = Route.HomeScreen.route
     )
 }

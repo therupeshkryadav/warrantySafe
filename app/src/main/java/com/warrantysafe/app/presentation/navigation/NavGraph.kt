@@ -6,7 +6,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.presentation.ui.screens.loginSignUpScreen.LoginSignUpScreen
 import com.warrantysafe.app.presentation.ui.screens.splashSheet.SplashSheet
-import com.warrantysafe.app.presentation.ui.screens.warranty_navigator.WarrantyNavigator
 
 @Composable
 fun NavGraph() {

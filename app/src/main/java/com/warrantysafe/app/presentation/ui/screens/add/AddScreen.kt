@@ -16,7 +16,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,13 +39,16 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.common.categorySection.CategorySection
+import com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.profile.components.DetailRow
 import java.util.Calendar
 
@@ -86,6 +97,45 @@ fun AddScreen(navController: NavController) {
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
+        CustomTopAppBar(
+            title = {
+                Text(
+                    text = "Add Product",
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,  // Handling overflow text
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                )
+            },
+            navigationIcon = {
+                IconButton(
+                    onClick = {}
+                ){
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "Close"
+                    )
+                }
+            },
+            actions = {
+                IconButton(onClick = {
+                    // Clear back stack of Route.AddScreen.route
+                    navController.popBackStack(this, inclusive = true)
+
+                    navController.navigate(Route.HomeScreen.route)
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = "Check Icon"
+                    )
+                }
+            }
+        )
         Image(
             painter = painterResource(R.drawable.item_image_placeholder),
             modifier = Modifier

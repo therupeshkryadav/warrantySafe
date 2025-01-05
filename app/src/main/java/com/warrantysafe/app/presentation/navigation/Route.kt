@@ -11,7 +11,7 @@ sealed class Route(
     object SearchScreen : Route(route = "search_screen")
     object AddScreen : Route(route = "addScreen")
     object ProfileScreen : Route(route = "profileScreen")
-    object ProductList : Route(route = "productList")
+    object ProductCardList : Route(route = "productCardList")
     object HelpSupportScreen : Route(route = "helpSupportScreen")
     object TermsPrivacyScreen : Route(route = "termsPrivacyScreen")
     object AboutAppScreen : Route(route = "aboutAppScreen")

@@ -29,12 +29,13 @@ data class BottomNavigationItem(
 
 @Composable
 fun WarrantyBottomNavigation(
+    modifier: Modifier,
     items: List<BottomNavigationItem>,
     currentRoute: Route,
     onItemClick: (Route) -> Unit
 ) {
     NavigationBar(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
         tonalElevation = 10.dp
     ) {

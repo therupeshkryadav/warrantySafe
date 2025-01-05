@@ -34,10 +34,6 @@ import com.warrantysafe.app.presentation.navigation.Route
 fun titleAppBar(currentRoute: String) {
     // Define route-to-title mapping
     val titleConfig = mapOf(
-        Route.HomeScreen.route to TitleConfig.Title(
-            "Welcome, therupeshkryadav !!",
-            textAlign = TextAlign.Start
-        ), // HomeScreen
         Route.ProfileScreen.route to TitleConfig.Title(
             "",
             textAlign = TextAlign.Center
@@ -50,7 +46,7 @@ fun titleAppBar(currentRoute: String) {
             "Edit Product Card Details",
             textAlign = TextAlign.Center
         ), // EditProductDetailsScreen
-        Route.ProductList.route to TitleConfig.Title(
+        Route.ProductCardList.route to TitleConfig.Title(
             "List of Product Cards",
             textAlign = TextAlign.Center
         ), // ProductList
@@ -90,10 +86,7 @@ fun titleAppBar(currentRoute: String) {
     )
 
     // Determine the title configuration based on the route
-    val titleConfigForRoute = titleConfig[currentRoute] ?: TitleConfig.Title(
-        "Unknown Screen",
-        textAlign = TextAlign.Center
-    )
+    val titleConfigForRoute = titleConfig[currentRoute]
 
     // Render the appropriate UI
     when (titleConfigForRoute) {
@@ -141,6 +134,8 @@ fun titleAppBar(currentRoute: String) {
                 )
             )
         }
+
+        else -> {}
     }
 }
 
