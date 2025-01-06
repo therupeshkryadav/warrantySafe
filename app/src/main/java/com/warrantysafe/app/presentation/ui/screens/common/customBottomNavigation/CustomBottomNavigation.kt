@@ -1,9 +1,8 @@
-package com.warrantysafe.app.presentation.ui.screens.warranty_navigator.components
+package com.warrantysafe.app.presentation.ui.screens.common.customBottomNavigation
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -28,7 +27,7 @@ data class BottomNavigationItem(
 )
 
 @Composable
-fun WarrantyBottomNavigation(
+fun CustomBottomNavigation(
     modifier: Modifier,
     items: List<BottomNavigationItem>,
     currentRoute: Route,

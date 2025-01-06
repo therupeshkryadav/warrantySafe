@@ -1,7 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -59,8 +58,8 @@ import com.warrantysafe.app.presentation.ui.screens.common.dropDownMenu.DropDown
 import com.warrantysafe.app.presentation.ui.screens.common.sideDrawer.SideDrawerContent
 import com.warrantysafe.app.presentation.ui.screens.home.components.tabs.ActiveTab
 import com.warrantysafe.app.presentation.ui.screens.home.components.tabs.ExpiredTab
-import com.warrantysafe.app.presentation.ui.screens.warranty_navigator.components.BottomNavigationItem
-import com.warrantysafe.app.presentation.ui.screens.warranty_navigator.components.WarrantyBottomNavigation
+import com.warrantysafe.app.presentation.ui.screens.common.customBottomNavigation.BottomNavigationItem
+import com.warrantysafe.app.presentation.ui.screens.common.customBottomNavigation.CustomBottomNavigation
 import kotlinx.coroutines.launch
 
 @Composable
@@ -249,7 +248,7 @@ fun HomeScreen(
             }
 
             // Bottom Navigation fixed at the bottom
-            WarrantyBottomNavigation(
+            CustomBottomNavigation(
                 items = listOf(
                     BottomNavigationItem(
                         icon = R.drawable.home_warranty,

@@ -59,8 +59,8 @@ import com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar.Custo
 import com.warrantysafe.app.presentation.ui.screens.common.dropDownMenu.DropDownMenuContent
 import com.warrantysafe.app.presentation.ui.screens.common.sideDrawer.SideDrawerContent
 import com.warrantysafe.app.presentation.ui.screens.profile.components.DetailRow
-import com.warrantysafe.app.presentation.ui.screens.warranty_navigator.components.BottomNavigationItem
-import com.warrantysafe.app.presentation.ui.screens.warranty_navigator.components.WarrantyBottomNavigation
+import com.warrantysafe.app.presentation.ui.screens.common.customBottomNavigation.BottomNavigationItem
+import com.warrantysafe.app.presentation.ui.screens.common.customBottomNavigation.CustomBottomNavigation
 import kotlinx.coroutines.launch
 
 @Composable
@@ -308,7 +308,7 @@ fun ProfileScreen(
                     }
                 }}
             // Bottom Navigation fixed at the bottom
-            WarrantyBottomNavigation(
+            CustomBottomNavigation(
                 items = listOf(
                     BottomNavigationItem(
                         icon = R.drawable.home_warranty,
