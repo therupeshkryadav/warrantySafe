@@ -20,6 +20,7 @@ import com.warrantysafe.app.presentation.ui.screens.notifification.NotificationS
 import com.warrantysafe.app.presentation.ui.screens.profile.ProfileScreen
 import com.warrantysafe.app.presentation.ui.screens.profile.edit.EditProfileScreen
 import com.warrantysafe.app.presentation.ui.screens.search.SearchScreen
+import com.warrantysafe.app.presentation.ui.screens.search.components.RecentItem
 import com.warrantysafe.app.presentation.ui.screens.settings.SettingsScreen
 import com.warrantysafe.app.presentation.ui.screens.termsPrivacy.TermsPrivacyScreen
 import com.warrantysafe.app.presentation.ui.screens.upcomingFeatures.UpcomingFeaturesScreen
@@ -176,7 +177,10 @@ fun WarrantyNavigator(
         }
         // Search Flow (Search Screen)
         composable(Route.SearchScreen.route) {
-            SearchScreen(navController = navController)
+            SearchScreen(
+                navController = navController,
+                recentSearches = listOf("recent1", "recent2", "recent3", "recent4")
+            )
         }
     }
 }

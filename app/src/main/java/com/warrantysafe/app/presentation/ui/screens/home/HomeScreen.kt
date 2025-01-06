@@ -1,17 +1,18 @@
 package com.warrantysafe.app.presentation.ui.screens.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -151,6 +152,48 @@ fun HomeScreen(
                         }
                     }
                 )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(50))
+                            .background(Color.LightGray) // Soft background for better aesthetics
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null // Disables ripple effect
+                            ) {
+                                navController.navigate(route = Route.SearchScreen.route)
+                            }
+                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.search_warranty),
+                                contentDescription = null,
+                                tint = Color.DarkGray, // Subtle color for the icon
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp)) // Space between icon and text
+                            Text(
+                                text = "Search ",
+                                fontSize = 18.sp,
+                                color = Color.DarkGray, // Subtle text color
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+                }
+
+
+
 
                 // Main Content
                 val tabTitles = listOf("Active", "Expired")

@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.ui.screens.search.components.searchList.components.recentSearches.components
+package com.warrantysafe.app.presentation.ui.screens.search.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
