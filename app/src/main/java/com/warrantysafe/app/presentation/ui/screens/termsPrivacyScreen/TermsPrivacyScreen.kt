@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.ui.screens.aboutApp
+package com.warrantysafe.app.presentation.ui.screens.termsPrivacyScreen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -18,11 +18,11 @@ import androidx.navigation.NavController
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
 
 @Composable
-fun AboutAppScreen(navController: NavController) {
+fun TermsPrivacyScreen(navController: NavController) {
     CustomTopAppBar(
         title =  {
             Text(
-                text = "About the App",
+                text = "Terms & Privacy",
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,

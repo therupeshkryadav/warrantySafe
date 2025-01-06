@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.ui.screens.aboutApp
+package com.warrantysafe.app.presentation.ui.screens.helpSupportScreen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -18,11 +18,11 @@ import androidx.navigation.NavController
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
 
 @Composable
-fun AboutAppScreen(navController: NavController) {
+fun HelpSupportScreen(navController: NavController) {
     CustomTopAppBar(
         title =  {
             Text(
-                text = "About the App",
+                text = "Help & Support",
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,

@@ -10,20 +10,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.warrantysafe.app.presentation.ui.screens.aboutApp.AboutAppScreen
-import com.warrantysafe.app.presentation.ui.screens.add.AddScreen
-import com.warrantysafe.app.presentation.ui.screens.common.productCardList.ProductCardList
-import com.warrantysafe.app.presentation.ui.screens.helpSupport.HelpSupportScreen
-import com.warrantysafe.app.presentation.ui.screens.home.HomeScreen
-import com.warrantysafe.app.presentation.ui.screens.home.components.productDetailsScreen.ProductDetailsScreen
-import com.warrantysafe.app.presentation.ui.screens.home.components.productDetailsScreen.edit.EditProductDetailsScreen
-import com.warrantysafe.app.presentation.ui.screens.notifification.NotificationScreen
-import com.warrantysafe.app.presentation.ui.screens.profile.ProfileScreen
-import com.warrantysafe.app.presentation.ui.screens.profile.edit.EditProfileScreen
-import com.warrantysafe.app.presentation.ui.screens.search.SearchScreen
-import com.warrantysafe.app.presentation.ui.screens.search.components.RecentItem
-import com.warrantysafe.app.presentation.ui.screens.settings.SettingsScreen
-import com.warrantysafe.app.presentation.ui.screens.termsPrivacy.TermsPrivacyScreen
-import com.warrantysafe.app.presentation.ui.screens.upcomingFeatures.UpcomingFeaturesScreen
+import com.warrantysafe.app.presentation.ui.screens.addScreen.AddScreen
+import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.ProductCardList
+import com.warrantysafe.app.presentation.ui.screens.helpSupportScreen.HelpSupportScreen
+import com.warrantysafe.app.presentation.ui.screens.homeScreen.HomeScreen
+import com.warrantysafe.app.presentation.ui.screens.homeScreen.components.productDetailScreen.ProductDetailScreen
+import com.warrantysafe.app.presentation.ui.screens.homeScreen.components.productDetailScreen.editProductDetailScreen.EditProductDetailScreen
+import com.warrantysafe.app.presentation.ui.screens.notifificationScreen.NotificationScreen
+import com.warrantysafe.app.presentation.ui.screens.profileScreen.ProfileScreen
+import com.warrantysafe.app.presentation.ui.screens.profileScreen.editProfileScreen.EditProfileScreen
+import com.warrantysafe.app.presentation.ui.screens.searchScreen.SearchScreen
+import com.warrantysafe.app.presentation.ui.screens.settingsScreen.SettingsScreen
+import com.warrantysafe.app.presentation.ui.screens.termsPrivacyScreen.TermsPrivacyScreen
+import com.warrantysafe.app.presentation.ui.screens.upcomingFeaturesScreen.UpcomingFeaturesScreen
 import com.warrantysafe.app.presentation.viewModel.NotificationViewModel
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
@@ -112,7 +111,7 @@ fun WarrantyNavigator(
             val category = it.arguments?.getString("category") ?: "N/A"
 
             //Navigate to ProductDetailsScreen -->
-            ProductDetailsScreen(
+            ProductDetailScreen(
                 navController = navController,
                 productName = productName,
                 purchaseDate = purchaseDate,
@@ -136,7 +135,7 @@ fun WarrantyNavigator(
             val category = it.arguments?.getString("category") ?: "N/A"
 
             //Navigate to EditProductDetailsScreen -->
-            EditProductDetailsScreen(
+            EditProductDetailScreen(
                 navController = navController,
                 productName = productName,
                 purchaseDate = purchaseDate,

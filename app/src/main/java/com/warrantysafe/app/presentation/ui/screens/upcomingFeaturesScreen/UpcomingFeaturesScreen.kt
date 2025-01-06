@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.ui.screens.aboutApp
+package com.warrantysafe.app.presentation.ui.screens.upcomingFeaturesScreen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -18,11 +18,11 @@ import androidx.navigation.NavController
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
 
 @Composable
-fun AboutAppScreen(navController: NavController) {
+fun UpcomingFeaturesScreen(navController: NavController) {
     CustomTopAppBar(
         title =  {
             Text(
-                text = "About the App",
+                text = "Upcoming Features",
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
