@@ -10,8 +10,8 @@ import com.warrantysafe.app.presentation.ui.screens.aboutApp.AboutAppScreen
 import com.warrantysafe.app.presentation.ui.screens.addScreen.AddScreen
 import com.warrantysafe.app.presentation.ui.screens.helpSupportScreen.HelpSupportScreen
 import com.warrantysafe.app.presentation.ui.screens.homeScreen.HomeScreen
-import com.warrantysafe.app.presentation.ui.screens.homeScreen.components.productDetailScreen.ProductDetailScreen
-import com.warrantysafe.app.presentation.ui.screens.homeScreen.components.productDetailScreen.editProductDetailScreen.EditProductDetailScreen
+import com.warrantysafe.app.presentation.ui.screens.utils.productDetailScreen.ProductDetailScreen
+import com.warrantysafe.app.presentation.ui.screens.utils.productDetailScreen.editProductDetailScreen.EditProductDetailScreen
 import com.warrantysafe.app.presentation.ui.screens.loginSignUpScreen.LoginSignUpScreen
 import com.warrantysafe.app.presentation.ui.screens.notifificationScreen.NotificationScreen
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.ProfileScreen
@@ -96,25 +96,28 @@ fun AppNavGraph() {
 
         // ProductDetailScreen with arguments
         composable(
-            route = "productDetailsScreen/{productName}/{purchaseDate}/{category}/{expiryDate}",
+            route = "productDetailsScreen/{productName}/{purchaseDate}/{category}/{expiryDate}/{notes}",
             arguments = listOf(
                 navArgument("productName") { type = NavType.StringType },
                 navArgument("purchaseDate") { type = NavType.StringType },
                 navArgument("expiryDate") { type = NavType.StringType },
                 navArgument("category") { type = NavType.StringType },
+                navArgument("notes") { type = NavType.StringType }
             )
         ) {
             val productName = it.arguments?.getString("productName") ?: "Unknown"
             val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
             val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
             val category = it.arguments?.getString("category") ?: "N/A"
+            val notes = it.arguments?.getString("notes") ?: "N/A"
 
             ProductDetailScreen(
                 navController = navController,
                 productName = productName,
                 purchaseDate = purchaseDate,
                 category = category,
-                expiryDate = expiryDate
+                expiryDate = expiryDate,
+                notes = notes
             )
         }
 
@@ -125,13 +128,15 @@ fun AppNavGraph() {
                 navArgument("productName") { type = NavType.StringType },
                 navArgument("purchaseDate") { type = NavType.StringType },
                 navArgument("expiryDate") { type = NavType.StringType },
-                navArgument("category") { type = NavType.StringType }
+                navArgument("category") { type = NavType.StringType },
+                navArgument("notes") { type = NavType.StringType }
             )
         ) {
             val productName = it.arguments?.getString("productName") ?: "Unknown"
             val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
             val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
             val category = it.arguments?.getString("category") ?: "N/A"
+            val notes = it.arguments?.getString("notes") ?: "N/A"
 
             EditProductDetailScreen(
                 navController = navController,
@@ -139,6 +144,7 @@ fun AppNavGraph() {
                 purchaseDate = purchaseDate,
                 category = category,
                 expiryDate = expiryDate,
+                notes = notes
             )
         }
 

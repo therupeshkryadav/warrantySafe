@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.ui.screens.homeScreen.components.tabs
+package com.warrantysafe.app.presentation.ui.screens.homeScreen.tabs
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DropdownMenu
@@ -39,13 +42,14 @@ import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.applyS
 import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.components.ProductCard
 
 @Composable
-fun ExpiredTab(
+fun ActiveTab(
     navController: NavController,
-    expiredProducts: List<Product>
-) {val sortOptions = listOf(
-    "Old to Recent",
-    "Recent to Old"
-)
+    activeProducts: List<Product>
+) {
+    val sortOptions = listOf(
+        "Old to Recent",
+        "Recent to Old"
+    )
     val expandedSort = remember { mutableStateOf(false) }
     val selectedSortOption = remember { mutableStateOf("Sort By") }
     Column(modifier = Modifier.fillMaxSize()) {
@@ -91,29 +95,32 @@ fun ExpiredTab(
                             onClick = {
                                 selectedSortOption.value = option
                                 expandedSort.value = false
-                                applySorting(option, expiredProducts) // Sorting logic
+                                applySorting(option, activeProducts) // Sorting logic
                             }
                         )
                     }
                 }
             }
         }
-    //Tab Values
-    LazyColumn(modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp)) {
-        items(expiredProducts) { product ->
-            ProductCard(
-                title = product.title,
-                purchase = product.purchase,
-                expiry = product.expiry,
-                category = product.category,
-                imageResId = product.imageResId,
-                itemTint = colorResource(R.color.transparent),
-                detailsColor = MaterialTheme.colorScheme.onSurface,
-                onClick = { navigateToDetails(product, navController) }
-            )
+        //Tab Values
+        LazyColumn(modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp)) {
+            items(activeProducts) { product ->
+                ProductCard(
+                    title = product.title,
+                    purchase = product.purchase,
+                    expiry = product.expiry,
+                    category = product.category,
+                    imageResId = product.imageResId,
+                    itemTint = colorResource(R.color.transparent),
+                    detailsColor = MaterialTheme.colorScheme.onSurface,
+                    onClick = { navigateToDetails(product, navController) }
+                )
+            }
         }
+
     }
-}
 }
 
 private fun navigateToDetails(product: Product, navController: NavController) {
@@ -122,99 +129,67 @@ private fun navigateToDetails(product: Product, navController: NavController) {
         productName = product.title,  // Correct property name
         purchaseDate = product.purchase,
         category = product.category,
-        expiryDate = product.expiry) // Placeholder for expiry logic
+        expiryDate = product.expiry,
+        notes = product.notes
+    ) // Placeholder for expiry logic
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)
 }
 
+
 @Preview(showBackground = true)
 @Composable
-fun onPreview() {
-    val expiredProducts = listOf(
+private fun PrevActive() {
+    val activeProducts = listOf(
         Product(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
+            title = "Realme 3 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
+            title = "Realme 7 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
+            title = "Redmi Note 10 ",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
+            title = "Realme 3 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
+            title = "Realme 7 Pro",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
+            title = "Redmi Note 10 ",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
+            title = "Last",
+            purchase = "30/11/2024",
+            expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         )
     )
-    ExpiredTab(navController = rememberNavController(), expiredProducts = expiredProducts)
+    ActiveTab(navController = rememberNavController(), activeProducts = activeProducts)
 }

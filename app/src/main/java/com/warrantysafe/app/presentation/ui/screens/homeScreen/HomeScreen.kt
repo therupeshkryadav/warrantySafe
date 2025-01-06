@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -52,8 +53,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
-import com.warrantysafe.app.presentation.ui.screens.homeScreen.components.tabs.ActiveTab
-import com.warrantysafe.app.presentation.ui.screens.homeScreen.components.tabs.ExpiredTab
+import com.warrantysafe.app.presentation.ui.screens.homeScreen.tabs.ActiveTab
+import com.warrantysafe.app.presentation.ui.screens.homeScreen.tabs.ExpiredTab
 import com.warrantysafe.app.presentation.ui.screens.utils.customBottomNavigation.BottomNavigationItem
 import com.warrantysafe.app.presentation.ui.screens.utils.customBottomNavigation.CustomBottomNavigation
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
@@ -247,7 +248,7 @@ fun HomeScreen(
 
                 HorizontalPager(
                     state = pagerState,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxHeight(0.84f)
                 ) { page ->
                     when (page) {
                         0 ->

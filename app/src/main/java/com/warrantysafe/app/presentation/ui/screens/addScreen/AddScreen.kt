@@ -44,9 +44,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
+import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.utils.categorySection.CategorySection
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
-import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
 import java.util.Calendar
 
 @Composable
@@ -65,32 +65,48 @@ fun AddScreen(navController: NavController) {
     val calendar = Calendar.getInstance()
 
     // State for showing the date picker
-    val showDatePicker = remember { mutableStateOf(false) }
-    val selectedDate = remember { mutableStateOf("") }
+    val showPurchaseDatePicker = remember { mutableStateOf(false) }
+    val showExpiryDatePicker = remember { mutableStateOf(false) }
 
-    if (showDatePicker.value) {
+    if (showPurchaseDatePicker.value) {
         DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
                 val formattedDate = "$dayOfMonth/${month + 1}/$year"
-                selectedDate.value = formattedDate
-                showDatePicker.value = false
-                // Update the selected date to the respective field
-                if (purchaseDate.isEmpty()) {
-                    purchaseDate = formattedDate
-                } else {
-                    expiryDate = formattedDate
-                }
+                purchaseDate = formattedDate // Update the purchase date
+                showPurchaseDatePicker.value = false
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
-        ).show()
+        ).apply {
+            setOnCancelListener {
+                showPurchaseDatePicker.value = false // Dismiss dialog without updating date
+            }
+        }.show()
+    }
+
+    if (showExpiryDatePicker.value) {
+        DatePickerDialog(
+            context,
+            { _, year, month, dayOfMonth ->
+                val formattedDate = "$dayOfMonth/${month + 1}/$year"
+                expiryDate = formattedDate // Update the expiry date
+                showExpiryDatePicker.value = false
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).apply {
+            setOnCancelListener {
+                showExpiryDatePicker.value = false // Dismiss dialog without updating date
+            }
+        }.show()
     }
 
     Column(
         modifier = Modifier
-            .padding(start = 8.dp, end = 8.dp, bottom = 16.dp)
+            .padding(start = 8.dp, end = 8.dp)
             .fillMaxSize()
     ) {
         CustomTopAppBar(
@@ -137,7 +153,7 @@ fun AddScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .height(280.dp)
-                .padding(top = 8.dp, bottom = 8.dp)
+                .padding(8.dp)
                 .border(width = 2.dp, color = colorResource(R.color.black)),
             contentScale = ContentScale.Crop,
             contentDescription = null
@@ -145,7 +161,7 @@ fun AddScreen(navController: NavController) {
 
         Column(
             modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp, bottom = 16.dp)
+                .padding(horizontal =  8.dp)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
@@ -161,7 +177,7 @@ fun AddScreen(navController: NavController) {
             )
 
             // Category Section
-            CategorySection(enabled = true)
+            CategorySection()
 
             // Purchase Date Field
             DetailRow(
@@ -173,7 +189,7 @@ fun AddScreen(navController: NavController) {
                 placeHolder = "DD/MM/YYYY",
                 updatedValue = purchaseDate,
                 onDetailRowClick = {
-                    showDatePicker.value = true
+                    showPurchaseDatePicker.value = true
                 },
                 onValueChange = { purchaseDate = it } // This handles the case where user types in the field (optional)
             )
@@ -188,7 +204,7 @@ fun AddScreen(navController: NavController) {
                 placeHolder = "DD/MM/YYYY",
                 updatedValue = expiryDate,
                 onDetailRowClick = {
-                    showDatePicker.value = true
+                    showExpiryDatePicker.value = true
                 },
                 onValueChange = { expiryDate = it } // This handles the case where user types in the field (optional)
             )
@@ -226,7 +242,7 @@ fun AddScreen(navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp)
+                    .padding(top = 8.dp, bottom = 32.dp)
                     .border(1.dp, colorResource(R.color.black))
             ) {
                 Text(

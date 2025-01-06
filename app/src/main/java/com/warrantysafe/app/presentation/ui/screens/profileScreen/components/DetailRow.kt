@@ -82,15 +82,16 @@ fun DetailRow(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(8.dp),
+                    .padding(8.dp)
+                    .border(width = 1.dp, color = Color.LightGray),
                 textStyle = TextStyle(fontSize = 16.sp),
                 singleLine = true,
                 shape = RectangleShape,
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.LightGray,
+                    focusedContainerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
-                    unfocusedContainerColor = Color.LightGray,
-                    disabledContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.White,
+                    disabledContainerColor = Color.White,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
                     unfocusedTextColor = Color.Black,

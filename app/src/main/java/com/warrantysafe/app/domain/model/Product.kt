@@ -5,5 +5,6 @@ data class Product(
     val purchase: String,
     val expiry: String,
     val category: String,
-    val imageResId: Int
+    val imageResId: Int,
+    val notes: String? = null
 )

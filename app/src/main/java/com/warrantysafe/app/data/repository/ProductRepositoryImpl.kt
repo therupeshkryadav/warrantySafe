@@ -12,6 +12,7 @@ class ProductRepositoryImpl : ProductRepository {
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Electronics",
+            notes = "First Notes served!!",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(

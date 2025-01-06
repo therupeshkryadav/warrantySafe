@@ -6,8 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -65,7 +67,6 @@ fun EditProfileScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(start = 8.dp, end = 8.dp)
-            .verticalScroll(scrollState)
     ) {
         CustomTopAppBar(
             title = {
@@ -124,45 +125,52 @@ fun EditProfileScreen(
                 contentScale = ContentScale.Crop
             )
         }
-        // Profile Details
-        DetailRow(
-            "Name",
-            updatedValue = actualFullName,
-            enable = true,
-            textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black),
-            icon = null,
-            onValueChange = { actualFullName = it }
-        )
-        DetailRow(
-            "Username",
-            updatedValue = actualUsername,
-            enable = true,
-            textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black),
-            icon = null,
-            onValueChange = { actualUsername = it }
-        )
-        DetailRow(
-            "Email",
-            updatedValue = actualEmailId,
-            enable = true,
-            textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black),
-            icon = null,
-            onValueChange = { actualEmailId = it }
-        )
-        // Phone Number DetailRow with Country Code Picker
-        PhoneDetailRow(
-            label = "Phone",
-            enable = true,
-            phoneNumber = actualPhoneNumber,
-            countryCode = actualCountryCode,
-            textColor = colorResource(R.color.purple_500),
-            borderColor = colorResource(R.color.black),
-            onCountryCodeChange = { actualCountryCode = it },
-            onPhoneNumberChange = { actualPhoneNumber = it }
-        )
+        Column(
+            modifier = Modifier.fillMaxSize()
+            .padding(top = 8.dp, start = 8.dp, end = 8.dp)
+            .verticalScroll(scrollState)
+        ) {
+            // Profile Details
+            DetailRow(
+                "Name",
+                updatedValue = actualFullName,
+                enable = true,
+                textColor = colorResource(R.color.purple_500),
+                borderColor = colorResource(R.color.black),
+                icon = null,
+                onValueChange = { actualFullName = it }
+            )
+            DetailRow(
+                "Username",
+                updatedValue = actualUsername,
+                enable = true,
+                textColor = colorResource(R.color.purple_500),
+                borderColor = colorResource(R.color.black),
+                icon = null,
+                onValueChange = { actualUsername = it }
+            )
+            DetailRow(
+                "Email",
+                updatedValue = actualEmailId,
+                enable = true,
+                textColor = colorResource(R.color.purple_500),
+                borderColor = colorResource(R.color.black),
+                icon = null,
+                onValueChange = { actualEmailId = it }
+            )
+            // Phone Number DetailRow with Country Code Picker
+            PhoneDetailRow(
+                label = "Phone",
+                enable = true,
+                phoneNumber = actualPhoneNumber,
+                countryCode = actualCountryCode,
+                textColor = colorResource(R.color.purple_500),
+                borderColor = colorResource(R.color.black),
+                onCountryCodeChange = { actualCountryCode = it },
+                onPhoneNumberChange = { actualPhoneNumber = it }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
     }
 }
 

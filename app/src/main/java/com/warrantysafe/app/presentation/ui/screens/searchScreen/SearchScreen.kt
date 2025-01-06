@@ -35,9 +35,9 @@ import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.navigation.Route
+import com.warrantysafe.app.presentation.ui.screens.searchScreen.components.RecentItem
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.components.ProductCard
-import com.warrantysafe.app.presentation.ui.screens.searchScreen.components.RecentItem
 
 @Composable
 fun SearchScreen(
@@ -144,6 +144,7 @@ private fun navigateToDetails(product: Product, navController: NavController) {
         purchaseDate = product.purchase,
         category = product.category,
         expiryDate = product.expiry, // Placeholder for expiry logic
+        notes = product.notes
     )
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)

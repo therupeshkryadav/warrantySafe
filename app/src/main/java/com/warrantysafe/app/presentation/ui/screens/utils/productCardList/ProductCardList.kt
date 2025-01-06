@@ -142,6 +142,7 @@ fun ProductCardList(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(bottom = 16.dp)
                 .padding(horizontal = 8.dp)
         ) {
             items(productList) { product ->
@@ -183,7 +184,8 @@ private fun navigateToDetails(product: Product, navController: NavController) {
         productName = product.title,  // Correct property name
         purchaseDate = product.purchase,
         category = product.category,
-        expiryDate = product.expiry) // Placeholder for expiry logic
+        expiryDate = product.expiry,
+        notes = product.notes) // Placeholder for expiry logic
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)
 }

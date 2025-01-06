@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
@@ -54,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.utils.customBottomNavigation.BottomNavigationItem
@@ -144,7 +147,7 @@ fun ProfileScreen(
         gesturesEnabled = true
     ){
         Box(modifier = Modifier.fillMaxSize()) {
-            Column {
+            Column(modifier = Modifier.fillMaxSize()) {
                 CustomTopAppBar(
                     title = {
                         Text(
@@ -197,24 +200,7 @@ fun ProfileScreen(
                         }
                     }
                 )
-                // Edit Profile Icon
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Icon(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .align(Alignment.CenterEnd)
-                            .clickable { navigateToEditProfile(
-                                navController = navController,
-                                fullName = user.fullName,
-                                userName = user.userName,
-                                emailId = user.emailId,
-                                phone = user.phone,
-                            ) },
-                        painter = painterResource(R.drawable.edit),
-                        contentDescription = "Edit Profile"
-                    )
-                }
-
+                Spacer(modifier = Modifier.size(16.dp))
                 // Profile Avatar
                 Box(
                     modifier = Modifier
@@ -236,8 +222,8 @@ fun ProfileScreen(
 
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 8.dp, start = 8.dp, end = 8.dp)
+                        .fillMaxHeight(0.84f)
+                        .padding(top = 8.dp, start = 8.dp, end = 8.dp, bottom = 16.dp)
                         .verticalScroll(scrollState)
                 ) {
 
@@ -312,6 +298,40 @@ fun ProfileScreen(
                             )
                         }
                     }
+                    // Edit Profile Button
+                    Box(
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .fillMaxWidth()
+                            .clickable { navigateToEditProfile(navController = navController,user= user ) }
+                            .border(1.dp, colorResource(R.color.purple_500))
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp)
+                                .background(color = colorResource(R.color.purple_700)),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .padding(vertical = 11.dp),
+                                text = "Edit Profile",
+                                fontSize = 18.sp,
+                                color = colorResource(R.color.white)
+                            )
+                            Icon(
+                                modifier = Modifier
+                                    .width(24.dp)
+                                    .fillMaxHeight()
+                                    .padding(vertical = 9.dp),
+                                imageVector = Icons.Filled.Edit,
+                                tint = colorResource(R.color.white),
+                                contentDescription = "Edit Profile"
+                            )
+                        }
+                    }
                 }}
             // Bottom Navigation fixed at the bottom
             CustomBottomNavigation(
@@ -344,16 +364,13 @@ fun ProfileScreen(
 
 fun navigateToEditProfile(
     navController: NavController,
-    fullName: String,
-    userName: String,
-    emailId: String,
-    phone: String
+    user: User
 ) {
     val route = Route.EditProfileScreen.createRoute(
-        fullName = fullName,
-        userName = userName,
-        emailId = emailId,
-        phone = phone
+        fullName = user.fullName,
+        userName = user.userName,
+        emailId = user.emailId,
+        phone = user.phone
     )
     navController.navigate(route)
 }
