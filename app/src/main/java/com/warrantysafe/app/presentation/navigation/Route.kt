@@ -64,6 +64,5 @@ sealed class Route(
     }
 
     object NotificationScreen : Route(route = "notificationScreen")
-    object MainNavigation : Route(route = "mainNavigation")
 
 }

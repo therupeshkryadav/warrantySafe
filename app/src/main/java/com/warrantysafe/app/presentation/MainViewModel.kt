@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.viewModel
+package com.warrantysafe.app.presentation
 
 
 import androidx.lifecycle.ViewModel
