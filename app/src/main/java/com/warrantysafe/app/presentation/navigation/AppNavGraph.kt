@@ -1,8 +1,6 @@
 package com.warrantysafe.app.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,21 +25,12 @@ import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.Produc
 
 @Composable
 fun AppNavGraph() {
-    // Remember the NavController and tie it with a ViewModelStoreOwner
     val navController = rememberNavController()
 
-    // Get the context and ensure that it is a ViewModelStoreOwner
-    val context = LocalContext.current
-    val viewModelStoreOwner = context as? ViewModelStoreOwner
-
-    // Set the ViewModelStore for the NavController, only if ViewModelStoreOwner is available
-    viewModelStoreOwner?.let {
-        navController.setViewModelStore(it.viewModelStore)
-    }
-
-    // App Start Flow (SplashScreen to MainNavigationFlow)
-    NavHost(navController, startDestination = Route.SplashScreen.route) {
-
+    NavHost(
+        navController = navController,
+        startDestination = Route.SplashScreen.route
+    ) {
         // SplashScreen
         composable(Route.SplashScreen.route) {
             SplashScreen(
@@ -57,7 +46,7 @@ fun AppNavGraph() {
         composable(Route.LoginSignUpScreen.route) {
             LoginSignUpScreen(
                 onLoginSuccess = {
-                    navController.navigate(Route.MainNavigation.route) {
+                    navController.navigate(Route.HomeScreen.route) {
                         popUpTo(Route.LoginSignUpScreen.route) { inclusive = true }
                     }
                 },
@@ -67,131 +56,125 @@ fun AppNavGraph() {
             )
         }
 
-        // MainNavigation Flow
-        composable(Route.MainNavigation.route) {
-            NavHost(
-                navController = rememberNavController(),
-                startDestination = Route.HomeScreen.route
-            ) {
-                composable(Route.HomeScreen.route) {
-                    HomeScreen(navController = navController)
-                }
+        // HomeScreen
+        composable(Route.HomeScreen.route) {
+            HomeScreen(navController = navController)
+        }
 
-                composable(Route.AddScreen.route) {
-                    AddScreen(navController = navController)
-                }
+        // Other screens
+        composable(Route.AddScreen.route) {
+            AddScreen(navController = navController)
+        }
 
-                composable(Route.ProductCardList.route) {
-                    ProductCardList(navController = navController)
-                }
+        composable(Route.ProductCardList.route) {
+            ProductCardList(navController = navController)
+        }
 
-                composable(Route.HelpSupportScreen.route) {
-                    HelpSupportScreen(navController = navController)
-                }
+        composable(Route.HelpSupportScreen.route) {
+            HelpSupportScreen(navController = navController)
+        }
 
-                composable(Route.TermsPrivacyScreen.route) {
-                    TermsPrivacyScreen(navController = navController)
-                }
+        composable(Route.TermsPrivacyScreen.route) {
+            TermsPrivacyScreen(navController = navController)
+        }
 
-                composable(Route.AboutAppScreen.route) {
-                    AboutAppScreen(navController = navController)
-                }
+        composable(Route.AboutAppScreen.route) {
+            AboutAppScreen(navController = navController)
+        }
 
-                composable(Route.UpcomingFeaturesScreen.route) {
-                    UpcomingFeaturesScreen(navController = navController)
-                }
+        composable(Route.UpcomingFeaturesScreen.route) {
+            UpcomingFeaturesScreen(navController = navController)
+        }
 
-                composable(Route.SettingsScreen.route) {
-                    SettingsScreen(navController = navController)
-                }
+        composable(Route.SettingsScreen.route) {
+            SettingsScreen(navController = navController)
+        }
 
-                composable(Route.NotificationScreen.route) {
-                    NotificationScreen(navController = navController)
-                }
+        composable(Route.NotificationScreen.route) {
+            NotificationScreen(navController = navController)
+        }
 
-                // ProductDetailScreen with arguments
-                composable(
-                    route = "productDetailsScreen/{productName}/{purchaseDate}/{category}/{expiryDate}",
-                    arguments = listOf(
-                        navArgument("productName") { type = NavType.StringType },
-                        navArgument("purchaseDate") { type = NavType.StringType },
-                        navArgument("expiryDate") { type = NavType.StringType },
-                        navArgument("category") { type = NavType.StringType },
-                    )
-                ) {
-                    val productName = it.arguments?.getString("productName") ?: "Unknown"
-                    val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
-                    val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
-                    val category = it.arguments?.getString("category") ?: "N/A"
+        // ProductDetailScreen with arguments
+        composable(
+            route = "productDetailsScreen/{productName}/{purchaseDate}/{category}/{expiryDate}",
+            arguments = listOf(
+                navArgument("productName") { type = NavType.StringType },
+                navArgument("purchaseDate") { type = NavType.StringType },
+                navArgument("expiryDate") { type = NavType.StringType },
+                navArgument("category") { type = NavType.StringType },
+            )
+        ) {
+            val productName = it.arguments?.getString("productName") ?: "Unknown"
+            val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
+            val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
+            val category = it.arguments?.getString("category") ?: "N/A"
 
-                    ProductDetailScreen(
-                        navController = navController,
-                        productName = productName,
-                        purchaseDate = purchaseDate,
-                        category = category,
-                        expiryDate = expiryDate
-                    )
-                }
+            ProductDetailScreen(
+                navController = navController,
+                productName = productName,
+                purchaseDate = purchaseDate,
+                category = category,
+                expiryDate = expiryDate
+            )
+        }
 
-                // EditProductDetailScreen with arguments
-                composable(
-                    route = "editProductDetailsScreen/{productName}/{purchaseDate}/{category}/{expiryDate}",
-                    arguments = listOf(
-                        navArgument("productName") { type = NavType.StringType },
-                        navArgument("purchaseDate") { type = NavType.StringType },
-                        navArgument("expiryDate") { type = NavType.StringType },
-                        navArgument("category") { type = NavType.StringType }
-                    )
-                ) {
-                    val productName = it.arguments?.getString("productName") ?: "Unknown"
-                    val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
-                    val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
-                    val category = it.arguments?.getString("category") ?: "N/A"
+        // EditProductDetailScreen with arguments
+        composable(
+            route = "editProductDetailsScreen/{productName}/{purchaseDate}/{category}/{expiryDate}",
+            arguments = listOf(
+                navArgument("productName") { type = NavType.StringType },
+                navArgument("purchaseDate") { type = NavType.StringType },
+                navArgument("expiryDate") { type = NavType.StringType },
+                navArgument("category") { type = NavType.StringType }
+            )
+        ) {
+            val productName = it.arguments?.getString("productName") ?: "Unknown"
+            val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
+            val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
+            val category = it.arguments?.getString("category") ?: "N/A"
 
-                    EditProductDetailScreen(
-                        navController = navController,
-                        productName = productName,
-                        purchaseDate = purchaseDate,
-                        category = category,
-                        expiryDate = expiryDate,
-                    )
-                }
+            EditProductDetailScreen(
+                navController = navController,
+                productName = productName,
+                purchaseDate = purchaseDate,
+                category = category,
+                expiryDate = expiryDate,
+            )
+        }
 
-                // EditProfileScreen with arguments
-                composable(
-                    route = "editProfileScreen/{fullName}/{userName}/{emailId}/{phone}",
-                    arguments = listOf(
-                        navArgument("fullName") { type = NavType.StringType },
-                        navArgument("userName") { type = NavType.StringType },
-                        navArgument("emailId") { type = NavType.StringType },
-                        navArgument("phone") { type = NavType.StringType }
-                    )
-                ) {
-                    val fullName = it.arguments?.getString("fullName") ?: "----"
-                    val userName = it.arguments?.getString("userName") ?: "----"
-                    val emailId = it.arguments?.getString("emailId") ?: "----"
-                    val phone = it.arguments?.getString("phone") ?: "----"
+        // EditProfileScreen with arguments
+        composable(
+            route = "editProfileScreen/{fullName}/{userName}/{emailId}/{phone}",
+            arguments = listOf(
+                navArgument("fullName") { type = NavType.StringType },
+                navArgument("userName") { type = NavType.StringType },
+                navArgument("emailId") { type = NavType.StringType },
+                navArgument("phone") { type = NavType.StringType }
+            )
+        ) {
+            val fullName = it.arguments?.getString("fullName") ?: "----"
+            val userName = it.arguments?.getString("userName") ?: "----"
+            val emailId = it.arguments?.getString("emailId") ?: "----"
+            val phone = it.arguments?.getString("phone") ?: "----"
 
-                    EditProfileScreen(
-                        navController = navController,
-                        fullName = fullName,
-                        userName = userName,
-                        emailId = emailId,
-                        phoneNumber = phone
-                    )
-                }
+            EditProfileScreen(
+                navController = navController,
+                fullName = fullName,
+                userName = userName,
+                emailId = emailId,
+                phoneNumber = phone
+            )
+        }
 
-                composable(Route.ProfileScreen.route) {
-                    ProfileScreen(navController = navController)
-                }
+        composable(Route.ProfileScreen.route) {
+            ProfileScreen(navController = navController)
+        }
 
-                composable(Route.SearchScreen.route) {
-                    SearchScreen(
-                        navController = navController,
-                        recentSearches = listOf("recent1", "recent2", "recent3", "recent4")
-                    )
-                }
-            }
+        composable(Route.SearchScreen.route) {
+            SearchScreen(
+                navController = navController,
+                recentSearches = listOf("recent1", "recent2", "recent3", "recent4")
+            )
         }
     }
 }
