@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,10 +32,15 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -50,8 +56,11 @@ import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.common.customTopAppBar.CustomTopAppBar
+import com.warrantysafe.app.presentation.ui.screens.common.dropDownMenu.DropDownMenuContent
 import com.warrantysafe.app.presentation.ui.screens.common.sideDrawer.SideDrawerContent
 import com.warrantysafe.app.presentation.ui.screens.profile.components.DetailRow
+import com.warrantysafe.app.presentation.ui.screens.warranty_navigator.components.BottomNavigationItem
+import com.warrantysafe.app.presentation.ui.screens.warranty_navigator.components.WarrantyBottomNavigation
 import kotlinx.coroutines.launch
 
 @Composable
@@ -61,6 +70,8 @@ fun ProfileScreen(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
+    // State to manage the visibility of the dropdown menu
+    var isMenuExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
     ModalNavigationDrawer(
@@ -126,53 +137,60 @@ fun ProfileScreen(
         },
         gesturesEnabled = true
     ){
-        Column {
-            CustomTopAppBar(
-            title = {
-                Text(
-                    text = " ",
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Start,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,  // Handling overflow text
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column {
+                CustomTopAppBar(
+                    title = {
+                        Text(
+                            text = " ",
+                            style = MaterialTheme.typography.titleLarge,
+                            textAlign = TextAlign.Start,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,  // Handling overflow text
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {coroutineScope.launch { drawerState.open() }}
+                        ){
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = "Menu"
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = { navController.navigate(route = Route.NotificationScreen.route) }) {
+                            Icon(
+                                imageVector = Icons.Filled.Notifications,
+                                contentDescription = "Notifications"
+                            )
+                        }
+                        IconButton(onClick = {isMenuExpanded = !isMenuExpanded}) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = "More Options"
+                            )
+                        }
+                        // Dropdown Menu
+                        DropdownMenu(
+                            expanded = isMenuExpanded,
+                            containerColor = Color.LightGray,
+                            onDismissRequest = { isMenuExpanded = false }
+                        ) {
+                            DropDownMenuContent(
+                                navController = navController,
+                                dropDownList = listOf("Logout"),
+                                onItemClicked = {}
+                            )
+                        }
+                    }
                 )
-            },
-            navigationIcon = {
-                IconButton(
-                    onClick = {coroutineScope.launch { drawerState.open() }}
-                ){
-                    Icon(
-                        imageVector = Icons.Filled.Menu,
-                        contentDescription = "Menu"
-                    )
-                }
-            },
-            actions = {
-                IconButton(onClick = { }) {
-                    Icon(
-                        imageVector = Icons.Filled.Notifications,
-                        contentDescription = "Notifications"
-                    )
-                }
-                IconButton(onClick = {}) {
-                    Icon(
-                        imageVector = Icons.Filled.MoreVert,
-                        contentDescription = "More Options"
-                    )
-                }
-            }
-        )
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 8.dp, start = 8.dp, end = 8.dp)
-                    .verticalScroll(scrollState)
-            ) {
                 // Edit Profile Icon
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Icon(
@@ -209,78 +227,111 @@ fun ProfileScreen(
                         contentScale = ContentScale.Crop
                     )
                 }
-                // Profile Details
-                DetailRow(
-                    "Name",
-                    updatedValue = user.fullName,
-                    enable = false,
-                    textColor = colorResource(R.color.purple_500),
-                    borderColor = colorResource(R.color.black),
-                    icon = null,
-                    onValueChange = { }
-                )
-                DetailRow(
-                    "Username",
-                    updatedValue =  user.userName,
-                    enable = false,
-                    textColor = colorResource(R.color.purple_500),
-                    borderColor = colorResource(R.color.black),
-                    icon = null,
-                    onValueChange = { }
-                )
-                DetailRow(
-                    "Email",
-                    updatedValue = user.emailId,
-                    enable = false,
-                    textColor = colorResource(R.color.purple_500),
-                    borderColor = colorResource(R.color.black),
-                    icon = null,
-                    onValueChange = { }
-                )
-                DetailRow(
-                    "Phone",
-                    updatedValue = user.phone,
-                    enable = false,
-                    textColor = colorResource(R.color.purple_500),
-                    borderColor = colorResource(R.color.black),
-                    icon = null,
-                    onValueChange = { }
-                )
 
-                // Change Password Button
-                Box(
+                Column(
                     modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxWidth()
-                        .border(1.dp, colorResource(R.color.purple_500))
+                        .fillMaxSize()
+                        .padding(top = 8.dp, start = 8.dp, end = 8.dp)
+                        .verticalScroll(scrollState)
                 ) {
-                    Row(
+
+                    // Profile Details
+                    DetailRow(
+                        "Name",
+                        updatedValue = user.fullName,
+                        enable = false,
+                        textColor = colorResource(R.color.purple_500),
+                        borderColor = colorResource(R.color.black),
+                        icon = null,
+                        onValueChange = { }
+                    )
+                    DetailRow(
+                        "Username",
+                        updatedValue =  user.userName,
+                        enable = false,
+                        textColor = colorResource(R.color.purple_500),
+                        borderColor = colorResource(R.color.black),
+                        icon = null,
+                        onValueChange = { }
+                    )
+                    DetailRow(
+                        "Email",
+                        updatedValue = user.emailId,
+                        enable = false,
+                        textColor = colorResource(R.color.purple_500),
+                        borderColor = colorResource(R.color.black),
+                        icon = null,
+                        onValueChange = { }
+                    )
+                    DetailRow(
+                        "Phone",
+                        updatedValue = user.phone,
+                        enable = false,
+                        textColor = colorResource(R.color.purple_500),
+                        borderColor = colorResource(R.color.black),
+                        icon = null,
+                        onValueChange = { }
+                    )
+
+                    // Change Password Button
+                    Box(
                         modifier = Modifier
+                            .padding(vertical = 8.dp)
                             .fillMaxWidth()
-                            .height(48.dp)
-                            .background(color = colorResource(R.color.purple_700)),
-                        horizontalArrangement = Arrangement.Center
+                            .border(1.dp, colorResource(R.color.purple_500))
                     ) {
-                        Text(
+                        Row(
                             modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .padding(vertical = 11.dp),
-                            text = "Change Your Password",
-                            fontSize = 18.sp,
-                            color = colorResource(R.color.white)
-                        )
-                        Icon(
-                            modifier = Modifier
-                                .width(24.dp)
-                                .fillMaxHeight()
-                                .padding(vertical = 9.dp),
-                            painter = painterResource(R.drawable.fast_forward),
-                            tint = colorResource(R.color.white),
-                            contentDescription = "Change Password"
-                        )
+                                .fillMaxWidth()
+                                .height(48.dp)
+                                .background(color = colorResource(R.color.purple_700)),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .padding(vertical = 11.dp),
+                                text = "Change Your Password",
+                                fontSize = 18.sp,
+                                color = colorResource(R.color.white)
+                            )
+                            Icon(
+                                modifier = Modifier
+                                    .width(24.dp)
+                                    .fillMaxHeight()
+                                    .padding(vertical = 9.dp),
+                                painter = painterResource(R.drawable.fast_forward),
+                                tint = colorResource(R.color.white),
+                                contentDescription = "Change Password"
+                            )
+                        }
                     }
-                }
-            }}
+                }}
+            // Bottom Navigation fixed at the bottom
+            WarrantyBottomNavigation(
+                items = listOf(
+                    BottomNavigationItem(
+                        icon = R.drawable.home_warranty,
+                        text = "Home",
+                        route = Route.HomeScreen
+                    ),
+                    BottomNavigationItem(
+                        icon = R.drawable.add_warranty,
+                        text = "Add",
+                        route = Route.AddScreen
+                    ),
+                    BottomNavigationItem(
+                        icon = R.drawable.profile_warranty,
+                        text = "Profile",
+                        route = Route.ProfileScreen
+                    )
+                ),
+                currentRoute = Route.ProfileScreen,
+                onItemClick = { route -> navigateToTab(navController, route) },
+                modifier = Modifier.align(Alignment.BottomCenter) // Fix at the bottom of the screen
+            )
+        }
+
 
     }
 }

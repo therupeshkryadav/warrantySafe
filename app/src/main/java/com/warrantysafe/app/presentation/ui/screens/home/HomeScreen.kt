@@ -172,7 +172,10 @@ fun HomeScreen(
                                 .padding(4.dp)
                                 .clip(RoundedCornerShape(8.dp))
                                 .background(Color.Transparent)
-                                .clickable {
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null // Disables ripple effect
+                                ) {
                                     scope.launch { pagerState.animateScrollToPage(index) }
                                 }
                                 .padding(8.dp),

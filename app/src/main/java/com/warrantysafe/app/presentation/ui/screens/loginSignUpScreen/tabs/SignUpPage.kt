@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.ui.screens.loginSignUpScreen.components
+package com.warrantysafe.app.presentation.ui.screens.loginSignUpScreen.tabs
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.ui.screens.profile.components.DetailRow
 
 @Composable
 fun SignUpPage(

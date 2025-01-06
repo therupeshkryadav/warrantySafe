@@ -19,9 +19,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -95,7 +92,6 @@ fun AddScreen(navController: NavController) {
         modifier = Modifier
             .padding(start = 8.dp, end = 8.dp, bottom = 16.dp)
             .fillMaxSize()
-            .verticalScroll(scrollState)
     ) {
         CustomTopAppBar(
             title = {
@@ -114,7 +110,7 @@ fun AddScreen(navController: NavController) {
             },
             navigationIcon = {
                 IconButton(
-                    onClick = {}
+                    onClick = {navController.popBackStack()}
                 ){
                     Icon(
                         imageVector = Icons.Filled.Close,
@@ -125,7 +121,7 @@ fun AddScreen(navController: NavController) {
             actions = {
                 IconButton(onClick = {
                     // Clear back stack of Route.AddScreen.route
-                    navController.popBackStack(this, inclusive = true)
+                    navController.popBackStack(Route.AddScreen.route, inclusive = true)
 
                     navController.navigate(Route.HomeScreen.route)
                 }) {
@@ -147,96 +143,103 @@ fun AddScreen(navController: NavController) {
             contentDescription = null
         )
 
-        // Product Name Field
-        DetailRow(
-            label = "Product Name",
-            textColor = colorResource(R.color.purple_500),
-            enable = true,
-            icon = null,
-            borderColor = colorResource(R.color.black),
-            updatedValue = productName,
-            onValueChange = { productName = it } // Update product name dynamically
-        )
-
-        // Category Section
-        CategorySection(enabled = true)
-
-        // Purchase Date Field
-        DetailRow(
-            label = "Purchase Date",
-            textColor = colorResource(R.color.purple_500),
-            enable = false,
-            icon = R.drawable.calendar,
-            borderColor = colorResource(R.color.black),
-            placeHolder = "DD/MM/YYYY",
-            updatedValue = purchaseDate,
-            onDetailRowClick = {
-                showDatePicker.value = true
-            },
-            onValueChange = { purchaseDate = it } // This handles the case where user types in the field (optional)
-        )
-
-        // Expiry Date Field
-        DetailRow(
-            label = "Expiry Date",
-            textColor = colorResource(R.color.purple_500),
-            enable = false,
-            icon = R.drawable.calendar,
-            borderColor = colorResource(R.color.black),
-            placeHolder = "DD/MM/YYYY",
-            updatedValue = expiryDate,
-            onDetailRowClick = {
-                showDatePicker.value = true
-            },
-            onValueChange = { expiryDate = it } // This handles the case where user types in the field (optional)
-        )
-
-        // Upload Receipt Image Section
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(colorResource(R.color.body))
-                .border(width = 1.dp, color = colorResource(R.color.black))
-                .padding(horizontal = 8.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+                .padding(start = 8.dp, end = 8.dp, bottom = 16.dp)
+                .fillMaxSize()
+                .verticalScroll(scrollState)
         ) {
-            Text(
-                modifier = Modifier.align(Alignment.CenterVertically),
-                textAlign = TextAlign.Center,
-                color = colorResource(R.color.white),
-                text = "Upload Receipt Image",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                maxLines = 1
+            // Product Name Field
+            DetailRow(
+                label = "Product Name",
+                textColor = colorResource(R.color.purple_500),
+                enable = true,
+                icon = null,
+                borderColor = colorResource(R.color.black),
+                updatedValue = productName,
+                onValueChange = { productName = it } // Update product name dynamically
             )
-            Icon(
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .fillMaxHeight(1f),
-                tint = colorResource(R.color.white),
-                painter = painterResource(R.drawable.upload),
-                contentDescription = null
-            )
-        }
 
-        // Notes Section
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
-                .border(1.dp, colorResource(R.color.black))
-        ) {
-            Text(
+            // Category Section
+            CategorySection(enabled = true)
+
+            // Purchase Date Field
+            DetailRow(
+                label = "Purchase Date",
+                textColor = colorResource(R.color.purple_500),
+                enable = false,
+                icon = R.drawable.calendar,
+                borderColor = colorResource(R.color.black),
+                placeHolder = "DD/MM/YYYY",
+                updatedValue = purchaseDate,
+                onDetailRowClick = {
+                    showDatePicker.value = true
+                },
+                onValueChange = { purchaseDate = it } // This handles the case where user types in the field (optional)
+            )
+
+            // Expiry Date Field
+            DetailRow(
+                label = "Expiry Date",
+                textColor = colorResource(R.color.purple_500),
+                enable = false,
+                icon = R.drawable.calendar,
+                borderColor = colorResource(R.color.black),
+                placeHolder = "DD/MM/YYYY",
+                updatedValue = expiryDate,
+                onDetailRowClick = {
+                    showDatePicker.value = true
+                },
+                onValueChange = { expiryDate = it } // This handles the case where user types in the field (optional)
+            )
+
+            // Upload Receipt Image Section
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(all = 8.dp),
-                text = "notes would be provided here, if stored!!",
-                textAlign = TextAlign.Start,
-                fontSize = 16.sp,
-                color = colorResource(R.color.purple_500)
-            )
+                    .background(colorResource(R.color.body))
+                    .border(width = 1.dp, color = colorResource(R.color.black))
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    textAlign = TextAlign.Center,
+                    color = colorResource(R.color.white),
+                    text = "Upload Receipt Image",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    maxLines = 1
+                )
+                Icon(
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .fillMaxHeight(1f),
+                    tint = colorResource(R.color.white),
+                    painter = painterResource(R.drawable.upload),
+                    contentDescription = null
+                )
+            }
+
+            // Notes Section
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                    .border(1.dp, colorResource(R.color.black))
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(all = 8.dp),
+                    text = "notes would be provided here, if stored!!",
+                    textAlign = TextAlign.Start,
+                    fontSize = 16.sp,
+                    color = colorResource(R.color.purple_500)
+                )
+            }
         }
     }
 }
