@@ -1,10 +1,12 @@
 package com.warrantysafe.app.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.warrantysafe.app.presentation.ui.screens.aboutApp.AboutAppScreen
 import com.warrantysafe.app.presentation.ui.screens.addScreen.AddScreen
@@ -24,9 +26,19 @@ import com.warrantysafe.app.presentation.ui.screens.upcomingFeaturesScreen.Upcom
 import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.ProductCardList
 
 @Composable
-fun AppNavGraph(
-    navController: NavHostController
-) {
+fun AppNavGraph() {
+    // Remember the NavController and tie it with a ViewModelStoreOwner
+    val navController = rememberNavController()
+
+    // Get the context and ensure that it is a ViewModelStoreOwner
+    val context = LocalContext.current
+    val viewModelStoreOwner = context as? ViewModelStoreOwner
+
+    // Set the ViewModelStore for the NavController, only if ViewModelStoreOwner is available
+    viewModelStoreOwner?.let {
+        navController.setViewModelStore(it.viewModelStore)
+    }
+
     // App Start Flow (SplashScreen to MainNavigationFlow)
     NavHost(navController, startDestination = Route.SplashScreen.route) {
 
@@ -58,7 +70,7 @@ fun AppNavGraph(
         // MainNavigation Flow
         composable(Route.MainNavigation.route) {
             NavHost(
-                navController = navController,
+                navController = rememberNavController(),
                 startDestination = Route.HomeScreen.route
             ) {
                 composable(Route.HomeScreen.route) {
@@ -97,6 +109,7 @@ fun AppNavGraph(
                     NotificationScreen(navController = navController)
                 }
 
+                // ProductDetailScreen with arguments
                 composable(
                     route = "productDetailsScreen/{productName}/{purchaseDate}/{category}/{expiryDate}",
                     arguments = listOf(
@@ -111,7 +124,6 @@ fun AppNavGraph(
                     val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
                     val category = it.arguments?.getString("category") ?: "N/A"
 
-                    //Navigate to ProductDetailsScreen -->
                     ProductDetailScreen(
                         navController = navController,
                         productName = productName,
@@ -121,6 +133,7 @@ fun AppNavGraph(
                     )
                 }
 
+                // EditProductDetailScreen with arguments
                 composable(
                     route = "editProductDetailsScreen/{productName}/{purchaseDate}/{category}/{expiryDate}",
                     arguments = listOf(
@@ -135,16 +148,16 @@ fun AppNavGraph(
                     val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
                     val category = it.arguments?.getString("category") ?: "N/A"
 
-                    //Navigate to EditProductDetailsScreen -->
                     EditProductDetailScreen(
                         navController = navController,
                         productName = productName,
                         purchaseDate = purchaseDate,
-                        category=category,
+                        category = category,
                         expiryDate = expiryDate,
                     )
                 }
 
+                // EditProfileScreen with arguments
                 composable(
                     route = "editProfileScreen/{fullName}/{userName}/{emailId}/{phone}",
                     arguments = listOf(
@@ -159,7 +172,6 @@ fun AppNavGraph(
                     val emailId = it.arguments?.getString("emailId") ?: "----"
                     val phone = it.arguments?.getString("phone") ?: "----"
 
-                    //Navigate to EditProfileScreen -->
                     EditProfileScreen(
                         navController = navController,
                         fullName = fullName,
@@ -170,9 +182,7 @@ fun AppNavGraph(
                 }
 
                 composable(Route.ProfileScreen.route) {
-                    ProfileScreen(
-                        navController = navController
-                    )
+                    ProfileScreen(navController = navController)
                 }
 
                 composable(Route.SearchScreen.route) {
