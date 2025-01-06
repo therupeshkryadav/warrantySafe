@@ -23,6 +23,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,12 +43,18 @@ import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.utils.dropDownMenu.components.dropDownMenuItem
 import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.components.ProductCard
+import com.warrantysafe.app.presentation.viewModel.ProductViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProductCardList(
-    navController: NavController,
-    productList: List<Product> // Changed to a flat list of products
+    navController: NavController
 ){
+    val productViewModel: ProductViewModel = koinViewModel()
+    LaunchedEffect(Unit) {
+        productViewModel.loadAllProducts()
+    }
+    val productList = productViewModel.allProducts.value
     val sortOptions = listOf(
         "Old to Recent",
         "Recent to Old"

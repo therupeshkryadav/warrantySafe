@@ -5,7 +5,7 @@ import android.net.Uri
 sealed class Route(
     val route : String
 ){
-    object SplashSheet : Route(route = "splashSheet")
+    object SplashScreen : Route(route = "splashScreen")
     object LoginSignUpScreen : Route(route = "loginSignUpScreen")
     object HomeScreen : Route(route = "homeScreen")
     object SearchScreen : Route(route = "search_screen")
@@ -64,6 +64,6 @@ sealed class Route(
     }
 
     object NotificationScreen : Route(route = "notificationScreen")
-    object WarrantyNavigator : Route(route = "bottomNavigation")
+    object MainNavigation : Route(route = "mainNavigation")
 
 }

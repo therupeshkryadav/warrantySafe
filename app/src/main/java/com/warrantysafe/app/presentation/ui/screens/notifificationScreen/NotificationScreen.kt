@@ -13,6 +13,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -21,16 +22,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.warrantysafe.app.domain.model.Notification
-import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.notifificationScreen.components.NotificationItem
+import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
+import com.warrantysafe.app.presentation.viewModel.NotificationViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NotificationScreen(
-    notificationList: List<Notification>,
     navController: NavController
 ) {
-
+    val notificationViewModel:NotificationViewModel = koinViewModel()
+    LaunchedEffect(Unit){
+        notificationViewModel.loadNotifications()
+    }
+    val notificationList= notificationViewModel.notifications.value
     // Content under the TopAppBar
     Column(
         modifier = Modifier.fillMaxSize()
@@ -77,15 +82,8 @@ fun NotificationScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewNotify() {
-    val notifications = listOf(
-        Notification(notification = "This is my First Notification!!"),
-        Notification(notification = "This is my Second Notification!!"),
-        Notification(notification = "This is my Third Notification!!"),
-        Notification(notification = "This is my Fourth Notification!!"),
-        Notification(notification = "This is my Fifth Notification!!")
-    )
+
     NotificationScreen(
-        navController = rememberNavController(),
-        notificationList = notifications
+        navController = rememberNavController()
     )
 }

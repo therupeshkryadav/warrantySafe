@@ -32,6 +32,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,24 +54,29 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
-import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.presentation.navigation.Route
-import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
-import com.warrantysafe.app.presentation.ui.screens.utils.dropDownMenu.DropDownMenuContent
-import com.warrantysafe.app.presentation.ui.screens.utils.sideDrawer.SideDrawerContent
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.utils.customBottomNavigation.BottomNavigationItem
 import com.warrantysafe.app.presentation.ui.screens.utils.customBottomNavigation.CustomBottomNavigation
+import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
+import com.warrantysafe.app.presentation.ui.screens.utils.dropDownMenu.DropDownMenuContent
+import com.warrantysafe.app.presentation.ui.screens.utils.sideDrawer.SideDrawerContent
+import com.warrantysafe.app.presentation.viewModel.UserViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProfileScreen(
-    navController: NavController,
-    user: User
+    navController: NavController
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     // State to manage the visibility of the dropdown menu
+    val userViewModel: UserViewModel = koinViewModel()
+    val user = userViewModel.user.value
+    LaunchedEffect(Unit){
+        userViewModel.loadUserDetails()
+    }
     var isMenuExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
@@ -367,12 +373,6 @@ private fun navigateToTab(navController: NavController, route: Route) {
 @Composable
 fun ProfilePreview() {
     ProfileScreen(
-        rememberNavController(),
-        user = User(
-            "Rupesh Kumar Yadav",
-            "therupeshkryadav",
-            "rupesh.official484@gmail.com",
-            "7233966649",
-        )
+        rememberNavController()
     )
 }

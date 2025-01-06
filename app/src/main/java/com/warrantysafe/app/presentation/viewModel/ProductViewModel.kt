@@ -7,18 +7,18 @@ import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.domain.useCases.AddProductUseCase
 import com.warrantysafe.app.domain.useCases.GetActiveProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetExpiredProductsUseCase
-import com.warrantysafe.app.domain.useCases.GetProductsUseCase
+import com.warrantysafe.app.domain.useCases.GetAllProductsUseCase
 import kotlinx.coroutines.launch
 
 class ProductViewModel(
-    private val getProductsUseCase: GetProductsUseCase,
+    private val getAllProductsUseCase: GetAllProductsUseCase,
     private val getActiveProductsUseCase: GetActiveProductsUseCase,
     private val getExpiredProductsUseCase: GetExpiredProductsUseCase,
     private val addProductUseCase: AddProductUseCase
 ) : ViewModel() {
 
     // State holders for all, active, and expired products
-    var products = mutableStateOf<List<Product>>(mutableListOf())
+    var allProducts = mutableStateOf<List<Product>>(mutableListOf())
     var activeProducts = mutableStateOf<List<Product>>(mutableListOf())
     var expiredProducts = mutableStateOf<List<Product>>(mutableListOf())
 
@@ -26,10 +26,10 @@ class ProductViewModel(
     private val currentDate = "04/01/2025"
 
     // Load all products
-    fun loadProducts() {
+    fun loadAllProducts() {
         viewModelScope.launch {
-            val fetchedProducts = getProductsUseCase()
-            products.value = fetchedProducts
+            val fetchedProducts = getAllProductsUseCase()
+            allProducts.value = fetchedProducts
         }
     }
 
@@ -54,7 +54,7 @@ class ProductViewModel(
         viewModelScope.launch {
             addProductUseCase(title, purchase, expiry, category, imageResId)
             // Refresh all product lists after adding a new product
-            loadProducts()
+            loadAllProducts()
             loadActiveProducts()
             loadExpiredProducts()
         }

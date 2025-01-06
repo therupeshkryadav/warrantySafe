@@ -30,6 +30,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,27 +51,33 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
-import com.warrantysafe.app.domain.model.Product
-import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.presentation.navigation.Route
-import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
-import com.warrantysafe.app.presentation.ui.screens.utils.dropDownMenu.DropDownMenuContent
-import com.warrantysafe.app.presentation.ui.screens.utils.sideDrawer.SideDrawerContent
 import com.warrantysafe.app.presentation.ui.screens.homeScreen.components.tabs.ActiveTab
 import com.warrantysafe.app.presentation.ui.screens.homeScreen.components.tabs.ExpiredTab
 import com.warrantysafe.app.presentation.ui.screens.utils.customBottomNavigation.BottomNavigationItem
 import com.warrantysafe.app.presentation.ui.screens.utils.customBottomNavigation.CustomBottomNavigation
+import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
+import com.warrantysafe.app.presentation.ui.screens.utils.dropDownMenu.DropDownMenuContent
+import com.warrantysafe.app.presentation.ui.screens.utils.sideDrawer.SideDrawerContent
+import com.warrantysafe.app.presentation.viewModel.ProductViewModel
+import com.warrantysafe.app.presentation.viewModel.UserViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
-    activeProducts: List<Product>,
-    expiredProducts: List<Product>,
-    navController: NavController,
-    user: User
+    navController: NavController
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
+    val userViewModel: UserViewModel = koinViewModel()
+    val productViewModel: ProductViewModel = koinViewModel()
+    LaunchedEffect(Unit){
+        userViewModel.loadUserDetails()
+        productViewModel.loadActiveProducts()
+        productViewModel.loadExpiredProducts()
+    }
+    val user = userViewModel.user.value
     // State to manage the visibility of the dropdown menu
     var isMenuExpanded by remember { mutableStateOf(false) }
 
@@ -146,7 +153,11 @@ fun HomeScreen(
                             DropDownMenuContent(
                                 navController = navController,
                                 dropDownList = listOf("Logout"),
-                                onItemClicked = {}
+                                onItemClicked = {
+                                    // Clear back stack of Route.HomeScreen.route
+                                    navController.popBackStack(Route.HomeScreen.route, inclusive = true)
+                                    navController.navigate(Route.LoginSignUpScreen.route) // Navigating to LoginSignUpScreen
+                                }
                             )
                         }
                     }
@@ -240,9 +251,9 @@ fun HomeScreen(
                 ) { page ->
                     when (page) {
                         0 ->
-                            ActiveTab(navController = navController, activeProducts = activeProducts)
+                            ActiveTab(navController = navController, activeProducts = productViewModel.activeProducts.value)
                         1 ->
-                            ExpiredTab(navController = navController, expiredProducts = expiredProducts)
+                            ExpiredTab(navController = navController, expiredProducts = productViewModel.expiredProducts.value)
                     }
                 }
             }
@@ -290,241 +301,6 @@ private fun navigateToTab(navController: NavController, route: Route) {
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(
-        activeProducts = listOf(
-            Product(
-                title = "Realme 3 Pro",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Realme 7 Pro",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Redmi Note 10 ",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Realme 3 Pro",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Realme 7 Pro",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Redmi Note 10 ",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Realme 3 Pro",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Realme 7 Pro",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Redmi Note 10 ",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Realme 3 Pro",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Realme 7 Pro",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Redmi Note 10 ",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Redmi Note 10 ",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Realme 3 Pro",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Realme 7 Pro",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Redmi Note 10 ",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Redmi Note 10 ",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Realme 3 Pro",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Realme 7 Pro",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Redmi Note 10 ",
-                purchase = "30/11/2024",
-                expiry = "30/11/2025",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            )
-
-        ),
-        expiredProducts = listOf(
-            Product(
-                title = "Rado Watch",
-                purchase = "30/11/2023",
-                expiry = "01/12/2024",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "PS5",
-                purchase = "30/11/2023",
-                expiry = "01/12/2024",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "LG Washing Machine ",
-                purchase = "30/11/2023",
-                expiry = "01/12/2024",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Rado Watch",
-                purchase = "30/11/2023",
-                expiry = "01/12/2024",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "PS5",
-                purchase = "30/11/2023",
-                expiry = "01/12/2024",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "LG Washing Machine ",
-                purchase = "30/11/2023",
-                expiry = "01/12/2024",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Rado Watch",
-                purchase = "30/11/2023",
-                expiry = "01/12/2024",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "PS5",
-                purchase = "30/11/2023",
-                expiry = "01/12/2024",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "LG Washing Machine ",
-                purchase = "30/11/2023",
-                expiry = "01/12/2024",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "Rado Watch",
-                purchase = "30/11/2023",
-                expiry = "01/12/2024",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "PS5",
-                purchase = "30/11/2023",
-                expiry = "01/12/2024",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            ),
-            Product(
-                title = "LG Washing Machine ",
-                purchase = "30/11/2023",
-                expiry = "01/12/2024",
-                category = "Electronics",
-                imageResId = R.drawable.item_image_placeholder
-            )
-        ),
-        navController = rememberNavController(),
-        user = User(
-            "Rupesh Kumar Yadav",
-            "therupeshkryadav",
-            "rupesh.official484@gmail.com",
-            "7233966649",
-        )
+        navController = rememberNavController()
     )
 }
