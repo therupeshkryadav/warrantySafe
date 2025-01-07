@@ -123,7 +123,7 @@ fun AppNavGraph() {
 
         // EditProductDetailScreen with arguments
         composable(
-            route = "editProductDetailsScreen/{productName}/{purchaseDate}/{category}/{expiryDate}",
+            route = "editProductDetailsScreen/{productName}/{purchaseDate}/{category}/{expiryDate}/{notes}",
             arguments = listOf(
                 navArgument("productName") { type = NavType.StringType },
                 navArgument("purchaseDate") { type = NavType.StringType },
