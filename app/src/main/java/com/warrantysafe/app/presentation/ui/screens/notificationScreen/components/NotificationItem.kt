@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.ui.screens.notifificationScreen.components
+package com.warrantysafe.app.presentation.ui.screens.notificationScreen.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warrantysafe.app.R
@@ -41,8 +42,9 @@ fun NotificationItem(
             )
     ) {
         Text(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-            text = notification
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 8.dp),
+            text = notification,
+            textAlign = TextAlign.Start
         )
     }
 }

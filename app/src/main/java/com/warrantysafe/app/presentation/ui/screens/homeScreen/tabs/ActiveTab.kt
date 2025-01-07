@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -48,72 +50,80 @@ fun ActiveTab(
     val expandedSort = remember { mutableStateOf(false) }
     val selectedSortOption = remember { mutableStateOf("Sort By") }
     Column(modifier = Modifier.fillMaxSize()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(horizontal = 8.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween, // Distribute components to start and end
-            verticalAlignment = Alignment.CenterVertically // Center items vertically
-        ) {
-            // First Box (Sort By Section)
-            Box(
+        if (activeProducts.isNotEmpty()) {
+            Row(
                 modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.surface)
-                    .clickable { expandedSort.value = true }
-                    .border(
-                        width = 1.dp,
-                        shape = RectangleShape,
-                        color = colorResource(R.color.black)
-                    )
-                    .padding(start = 8.dp)
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween, // Distribute components to start and end
+                verticalAlignment = Alignment.CenterVertically // Center items vertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "Sort By",
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        painter = painterResource(R.drawable.drop_down),
-                        contentDescription = null
-                    )
-                }
-
-                DropdownMenu(
-                    expanded = expandedSort.value,
-                    onDismissRequest = { expandedSort.value = false }
-                ) {
-                    sortOptions.forEach { option ->
-                        dropDownMenuItem(
-                            item = option,
-                            onClick = {
-                                selectedSortOption.value = option
-                                expandedSort.value = false
-                                applySorting(option, activeProducts) // Sorting logic
-                            }
+                // First Box (Sort By Section)
+                Box(
+                    modifier = Modifier
+                        .clickable { expandedSort.value = true }
+                        .border(
+                            width = 1.dp,
+                            shape = RectangleShape,
+                            color = colorResource(R.color.black)
                         )
+                        .padding(start = 8.dp)
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Sort By",
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            painter = painterResource(R.drawable.drop_down),
+                            contentDescription = null
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = expandedSort.value,
+                        onDismissRequest = { expandedSort.value = false }
+                    ) {
+                        sortOptions.forEach { option ->
+                            dropDownMenuItem(
+                                item = option,
+                                onClick = {
+                                    selectedSortOption.value = option
+                                    expandedSort.value = false
+                                    applySorting(option, activeProducts) // Sorting logic
+                                }
+                            )
+                        }
                     }
                 }
             }
-        }
-        //Tab Values
-        LazyColumn(modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 8.dp)) {
-            items(activeProducts) { product ->
-                ProductCard(
-                    productName = product.productName,
-                    purchase = product.purchase,
-                    expiry = product.expiry,
-                    category = product.category,
-                    imageResId = product.imageResId,
-                    itemTint = colorResource(R.color.transparent),
-                    detailsColor = MaterialTheme.colorScheme.onSurface,
-                    onClick = { navigateToDetails(product, navController) }
-                )
+            //Tab Values
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp)
+            ) {
+                items(activeProducts) { product ->
+                    ProductCard(
+                        productName = product.productName,
+                        purchase = product.purchase,
+                        expiry = product.expiry,
+                        category = product.category,
+                        imageResId = product.imageResId,
+                        itemTint = colorResource(R.color.transparent),
+                        detailsColor = MaterialTheme.colorScheme.onSurface,
+                        onClick = { navigateToDetails(product, navController) }
+                    )
+                }
+            }
+        } else {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("No active products available, Add Products.", style = MaterialTheme.typography.bodySmall)
             }
         }
+
 
     }
 }

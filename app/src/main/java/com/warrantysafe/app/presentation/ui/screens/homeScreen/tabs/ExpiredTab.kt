@@ -50,73 +50,78 @@ fun ExpiredTab(
     val expandedSort = remember { mutableStateOf(false) }
     val selectedSortOption = remember { mutableStateOf("Sort By") }
     Column(modifier = Modifier.fillMaxSize()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(horizontal = 8.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween, // Distribute components to start and end
-            verticalAlignment = Alignment.CenterVertically // Center items vertically
-        ) {
-            // First Box (Sort By Section)
-            Box(
+        if(expiredProducts.isNotEmpty()){
+            Row(
                 modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.surface)
-                    .clickable { expandedSort.value = true }
-                    .border(
-                        width = 1.dp,
-                        shape = RectangleShape,
-                        color = colorResource(R.color.black)
-                    )
-                    .padding(start = 8.dp)
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween, // Distribute components to start and end
+                verticalAlignment = Alignment.CenterVertically // Center items vertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "Sort By",
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        painter = painterResource(R.drawable.drop_down),
-                        contentDescription = null
-                    )
-                }
-
-                DropdownMenu(
-                    expanded = expandedSort.value,
-                    onDismissRequest = { expandedSort.value = false }
+                // First Box (Sort By Section)
+                Box(
+                    modifier = Modifier
+                        .clickable { expandedSort.value = true }
+                        .border(
+                            width = 1.dp,
+                            shape = RectangleShape,
+                            color = colorResource(R.color.black)
+                        )
+                        .padding(start = 8.dp)
                 ) {
-                    sortOptions.forEach { option ->
-                        dropDownMenuItem(
-                            item = option,
-                            onClick = {
-                                selectedSortOption.value = option
-                                expandedSort.value = false
-                                applySorting(option, expiredProducts) // Sorting logic
-                            }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Sort By",
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            painter = painterResource(R.drawable.drop_down),
+                            contentDescription = null
                         )
                     }
+
+                    DropdownMenu(
+                        expanded = expandedSort.value,
+                        onDismissRequest = { expandedSort.value = false }
+                    ) {
+                        sortOptions.forEach { option ->
+                            dropDownMenuItem(
+                                item = option,
+                                onClick = {
+                                    selectedSortOption.value = option
+                                    expandedSort.value = false
+                                    applySorting(option, expiredProducts) // Sorting logic
+                                }
+                            )
+                        }
+                    }
+                }
+
+            }
+            //Tab Values
+            LazyColumn(modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp)) {
+                items(expiredProducts) { product ->
+                    ProductCard(
+                        productName = product.productName,
+                        purchase = product.purchase,
+                        expiry = product.expiry,
+                        category = product.category,
+                        imageResId = product.imageResId,
+                        itemTint = colorResource(R.color.transparent),
+                        detailsColor = MaterialTheme.colorScheme.onSurface,
+                        onClick = { navigateToDetails(product, navController) }
+                    )
                 }
             }
-        }
-        //Tab Values
-        LazyColumn(modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 8.dp)) {
-            items(expiredProducts) { product ->
-                ProductCard(
-                    productName = product.productName,
-                    purchase = product.purchase,
-                    expiry = product.expiry,
-                    category = product.category,
-                    imageResId = product.imageResId,
-                    itemTint = colorResource(R.color.transparent),
-                    detailsColor = MaterialTheme.colorScheme.onSurface,
-                    onClick = { navigateToDetails(product, navController) }
-                )
+        }else{
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("No expired products available, Add Products.", style = MaterialTheme.typography.bodySmall)
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 

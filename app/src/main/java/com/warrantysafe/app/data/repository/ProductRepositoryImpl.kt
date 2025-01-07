@@ -52,6 +52,8 @@ class ProductRepositoryImpl : ProductRepository {
         )
     )
 
+  //  private val productsList = mutableListOf<Product>()
+
     override suspend fun getProducts(): List<Product> {
         return productsList
     }

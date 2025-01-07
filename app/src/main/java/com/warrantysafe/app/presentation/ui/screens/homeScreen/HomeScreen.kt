@@ -204,8 +204,6 @@ fun HomeScreen(
                 }
 
 
-
-
                 // Main Content
                 val tabTitles = listOf("Active", "Expired")
                 val pagerState = rememberPagerState(initialPage = 0, pageCount = { tabTitles.size })

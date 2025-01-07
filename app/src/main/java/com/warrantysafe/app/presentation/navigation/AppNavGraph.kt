@@ -13,7 +13,7 @@ import com.warrantysafe.app.presentation.ui.screens.homeScreen.HomeScreen
 import com.warrantysafe.app.presentation.ui.screens.utils.productDetailScreen.ProductDetailScreen
 import com.warrantysafe.app.presentation.ui.screens.utils.productDetailScreen.editProductDetailScreen.EditProductDetailScreen
 import com.warrantysafe.app.presentation.ui.screens.loginSignUpScreen.LoginSignUpScreen
-import com.warrantysafe.app.presentation.ui.screens.notifificationScreen.NotificationScreen
+import com.warrantysafe.app.presentation.ui.screens.notificationScreen.NotificationScreen
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.ProfileScreen
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.editProfileScreen.EditProfileScreen
 import com.warrantysafe.app.presentation.ui.screens.searchScreen.SearchScreen
