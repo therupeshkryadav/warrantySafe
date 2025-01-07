@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,16 +36,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
-import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.PhoneDetailRow
+import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
 
 @Composable
 fun EditProfileScreen(
@@ -136,7 +133,6 @@ fun EditProfileScreen(
                 updatedValue = actualFullName,
                 enable = true,
                 textColor = colorResource(R.color.purple_500),
-                borderColor = colorResource(R.color.black),
                 icon = null,
                 onValueChange = { actualFullName = it }
             )
@@ -145,7 +141,6 @@ fun EditProfileScreen(
                 updatedValue = actualUsername,
                 enable = true,
                 textColor = colorResource(R.color.purple_500),
-                borderColor = colorResource(R.color.black),
                 icon = null,
                 onValueChange = { actualUsername = it }
             )
@@ -154,7 +149,6 @@ fun EditProfileScreen(
                 updatedValue = actualEmailId,
                 enable = true,
                 textColor = colorResource(R.color.purple_500),
-                borderColor = colorResource(R.color.black),
                 icon = null,
                 onValueChange = { actualEmailId = it }
             )
@@ -182,16 +176,4 @@ private fun navigateToTab(navController: NavController, route: Route) {
         launchSingleTop = true // Avoid multiple instances of the same destination
         restoreState = true // Restore the state if previously saved
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun PrevEditProfile() {
-    EditProfileScreen(
-        navController = rememberNavController(),
-        fullName = "Rupesh Kumar Yadav",
-        userName = "therupeshkryadav",
-        emailId = "rupesh.official484@gmail.com",
-        phoneNumber = "7233966649"
-    )
 }

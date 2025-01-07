@@ -8,7 +8,7 @@ class ProductRepositoryImpl : ProductRepository {
 
     private val productsList = mutableListOf<Product>(
         Product(
-            title = "Realme 3 Pro",
+            productName = "Realme 3 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Electronics",
@@ -16,189 +16,35 @@ class ProductRepositoryImpl : ProductRepository {
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Water Geyser",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Home Appliances",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Honda Sp 125 ",
+            productName = "Honda Sp 125 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Vehicles",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Titan Watch",
+            productName = "Titan Watch",
             purchase = "01/10/2024",
             expiry = "01/10/2025",
             category = "Wearables",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Rado Watch",
+            productName = "Rado Watch",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "PS5",
+            productName = "PS5",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Water Geyser",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Home Appliances",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Honda Sp 125 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Vehicles",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Titan Watch",
-            purchase = "01/10/2024",
-            expiry = "01/10/2025",
-            category = "Wearables",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Water Geyser",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Home Appliances",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Honda Sp 125 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Vehicles",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Titan Watch",
-            purchase = "01/10/2024",
-            expiry = "01/10/2025",
-            category = "Wearables",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Water Geyser",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Home Appliances",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Honda Sp 125 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Vehicles",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Titan Watch",
-            purchase = "01/10/2024",
-            expiry = "01/10/2025",
-            category = "Wearables",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            title = "LG Washing Machine ",
+            productName = "LG Washing Machine ",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",

@@ -122,7 +122,7 @@ fun SearchScreen(
                 items(matchedList.size) { index ->
                     val product = matchedList[index]
                     ProductCard(
-                        title = product.title,
+                        productName = product.productName,
                         purchase = product.purchase,
                         expiry = product.expiry,
                         category = product.category,
@@ -140,7 +140,7 @@ fun SearchScreen(
 private fun navigateToDetails(product: Product, navController: NavController) {
 
     val route = Route.ProductDetailsScreen.createRoute(
-        productName = product.title,  // Correct property name
+        productName = product.productName,  // Correct property name
         purchaseDate = product.purchase,
         category = product.category,
         expiryDate = product.expiry, // Placeholder for expiry logic

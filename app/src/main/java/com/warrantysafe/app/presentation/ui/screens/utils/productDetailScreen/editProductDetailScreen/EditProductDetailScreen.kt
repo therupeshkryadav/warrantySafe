@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,9 +48,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.presentation.navigation.Route
+import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.utils.categorySection.CategorySection
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
-import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
 import java.util.Calendar
 
 @Composable
@@ -64,6 +67,23 @@ fun EditProductDetailScreen(
     var validPurchaseDate by remember { mutableStateOf(purchaseDate) }
     var validExpiryDate by remember { mutableStateOf(expiryDate) }
     var validNotes by remember { mutableStateOf(notes) }
+    var updatedCategory by remember { mutableStateOf(category) }
+    val categoryOptions = listOf(
+        "General",
+        "Electronics",
+        "Vehicles",
+        "Furniture",
+        "Home Appliances",
+        "Kitchen Appliances",
+        "Gadgets & Accessories",
+        "Personal & Lifestyle Products",
+        "Tools & Equipment",
+        "Health & Medical Devices",
+        "Wearables",
+        "Others"
+    )
+    var expanded by remember { mutableStateOf(false) }
+
     // Create a ScrollState for vertical scrolling
     val scrollState = rememberScrollState()
 
@@ -142,7 +162,19 @@ fun EditProductDetailScreen(
                     )
                 }
             },
-            actions = {}
+            actions = {
+                IconButton(
+                    onClick = {
+                        // Clear back stack of Route.EditProductDetailsScreen.route
+                        navController.popBackStack(Route.EditProductDetailsScreen.route, inclusive = true)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = "Edited Successfully!!"
+                    )
+                }
+            }
         )
         Image(
             painter = painterResource(R.drawable.item_image_placeholder),
@@ -166,13 +198,49 @@ fun EditProductDetailScreen(
                 updatedValue = validProductName!!,
                 enable = true,
                 textColor = Color.DarkGray,
-                borderColor = colorResource(R.color.black),
                 icon = null,
                 onValueChange = { validProductName = it},
             )
 
             // Category Section
-            CategorySection(selectCategory = category)
+            CategorySection(
+                updatedCategory = updatedCategory!!,
+                onSelectEnabled = false,
+                onCategoryChange = { updatedCategory = it},
+                onCategorySelection = { expanded = !expanded }
+            )
+            // Dropdown Menu
+            if (expanded) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                        .padding(vertical = 8.dp)
+                ) {
+                    Column {
+                        categoryOptions.forEach { category ->
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        updatedCategory = category // Pass selected category
+                                        expanded = false // Close dropdown
+                                    }
+                                    .padding(12.dp)
+                                    .background(Color.Transparent)
+                            ) {
+                                Text(
+                                    text = category,
+                                    fontSize = 16.sp,
+                                    color = Color.Black
+                                )
+                            }
+                        }
+                    }
+                }
+            }
 
             if (purchaseDate != null) {
                 // Purchase Date Field
@@ -181,7 +249,6 @@ fun EditProductDetailScreen(
                     textColor = Color.DarkGray,
                     enable = false,
                     icon = R.drawable.calendar,
-                    borderColor = colorResource(R.color.black),
                     placeHolder = "DD/MM/YYYY",
                     updatedValue = validPurchaseDate!!,
                     onDetailRowClick = {
@@ -197,7 +264,6 @@ fun EditProductDetailScreen(
                     textColor = Color.DarkGray,
                     enable = false,
                     icon = R.drawable.calendar,
-                    borderColor = colorResource(R.color.black),
                     placeHolder = "DD/MM/YYYY",
                     updatedValue = validExpiryDate!!,
                     onDetailRowClick = {
@@ -278,7 +344,6 @@ fun EditProductDetailScreen(
                 textColor = Color.DarkGray,
                 enable = true,
                 icon = null,
-                borderColor = colorResource(R.color.black),
                 placeHolder = "write your notes here -->",
                 updatedValue = validNotes!!,
                 onDetailRowClick = {

@@ -50,11 +50,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.presentation.navigation.Route
@@ -233,7 +231,6 @@ fun ProfileScreen(
                         updatedValue = user.fullName,
                         enable = false,
                         textColor = colorResource(R.color.purple_500),
-                        borderColor = colorResource(R.color.black),
                         icon = null,
                         onValueChange = { }
                     )
@@ -242,7 +239,6 @@ fun ProfileScreen(
                         updatedValue =  user.userName,
                         enable = false,
                         textColor = colorResource(R.color.purple_500),
-                        borderColor = colorResource(R.color.black),
                         icon = null,
                         onValueChange = { }
                     )
@@ -251,7 +247,6 @@ fun ProfileScreen(
                         updatedValue = user.emailId,
                         enable = false,
                         textColor = colorResource(R.color.purple_500),
-                        borderColor = colorResource(R.color.black),
                         icon = null,
                         onValueChange = { }
                     )
@@ -260,7 +255,6 @@ fun ProfileScreen(
                         updatedValue = user.phone,
                         enable = false,
                         textColor = colorResource(R.color.purple_500),
-                        borderColor = colorResource(R.color.black),
                         icon = null,
                         onValueChange = { }
                     )
@@ -383,13 +377,4 @@ private fun navigateToTab(navController: NavController, route: Route) {
         launchSingleTop = true // Avoid multiple instances of the same destination
         restoreState = true // Restore the state if previously saved
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun ProfilePreview() {
-    ProfileScreen(
-        rememberNavController()
-    )
 }

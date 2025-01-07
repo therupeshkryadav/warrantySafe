@@ -8,117 +8,102 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.warrantysafe.app.R
 
 @Composable
 fun CategorySection(
-    selectCategory: String?=null,
+    updatedCategory: String,
+    onSelectEnabled: Boolean,
+    onCategoryChange: (String) -> Unit,
+    onCategorySelection: () -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) } // Control the dropdown visibility
-    val categoryOptions = listOf(
-        "General",
-        "Electronics",
-        "Vehicles",
-        "Furniture",
-        "Home Appliances",
-        "Kitchen Appliances",
-        "Gadgets & Accessories",
-        "Personal & Lifestyle Products",
-        "Tools & Equipment",
-        "Health & Medical Devices",
-        "Wearables",
-        "Others"
-    ) // Dropdown options
-    val selectedCategory = remember { mutableStateOf(selectCategory?: "Select Category")} // Fallback to "General" if null
 
-    // Category Section Layout
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
-            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .padding(12.dp)
     ) {
         Text(
-            modifier = Modifier
-                .padding(bottom = 4.dp),
             text = "Category",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.DarkGray // Replace with colorResource if needed
+            color = Color.DarkGray,
+            modifier = Modifier.padding(bottom = 8.dp)
         )
 
-        // Type Box - Clickable area to toggle the dropdown
+        // Dropdown TextField
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White)
-                .border(width = 1.dp, color = Color.LightGray)
-                .padding(16.dp)
+                .background(Color.White, RoundedCornerShape(8.dp))
+                .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
                 .clickable(
-                    indication = null, // Remove ripple effect
-                    interactionSource = remember { MutableInteractionSource() } // Provide an interaction source
-                ) { expanded = !expanded },
-            contentAlignment = Alignment.CenterStart
+                    enabled = onSelectEnabled,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null // Disables ripple effect
+                ) { onCategorySelection() }
         ) {
-            Text(
-                text = selectedCategory.value,
-                fontSize = 16.sp,
-                color = Color.Black
-            )
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = "Arrow Down",
-                modifier = Modifier.align(Alignment.CenterEnd)
-            )
-        }
-
-        // Dropdown List - Show when expanded is true
-        if (expanded) {
-            Column(
+            TextField(
+                value = updatedCategory,
+                onValueChange = onCategoryChange, // No need for manual input, selection happens from dropdown
+                placeholder = {
+                    Text(text = "Select a category", color = Color.Gray)
+                },
+                readOnly = true,
+                enabled = false, // Prevent typing
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.LightGray)
-                    .padding(8.dp)
-            ) {
-                categoryOptions.forEach { category ->
-                    Text(
-                        text = category,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .clickable {
-                                selectedCategory.value = category // Set the selected category
-                                expanded = false // Close the dropdown after selection
-                            },
-                        fontSize = 16.sp
+                    .wrapContentHeight()
+                    .padding(horizontal = 8.dp),
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = "Dropdown icon"
                     )
-                }
-            }
+                },
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledContainerColor = Color.White,
+                    unfocusedTextColor = Color.Black,
+                    disabledTextColor = Color.Black
+                ),
+                textStyle = TextStyle(fontSize = 16.sp)
+            )
         }
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
-fun CategorySectionPreview() {
-    CategorySection()
+fun RedesignedCategorySectionPreview() {
+    val selectedCategory by remember { mutableStateOf("") }
+
+    CategorySection(
+        updatedCategory = selectedCategory,
+        onSelectEnabled = true,
+        onCategoryChange = {},
+        onCategorySelection = {}
+    )
 }
+

@@ -50,9 +50,9 @@ class ProductViewModel(
     }
 
     // Add a new product
-    fun addProduct(title: String, purchase: String, expiry: String, category: String, imageResId: Int) {
+    fun addProduct(productName: String, purchase: String, expiry: String, category: String,notes: String, imageResId: Int) {
         viewModelScope.launch {
-            addProductUseCase(title, purchase, expiry, category, imageResId)
+            addProductUseCase(productName, purchase, expiry, category, notes, imageResId)
             // Refresh all product lists after adding a new product
             loadAllProducts()
             loadActiveProducts()

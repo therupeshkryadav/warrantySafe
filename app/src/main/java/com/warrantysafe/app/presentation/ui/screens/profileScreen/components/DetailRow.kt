@@ -30,7 +30,6 @@ fun DetailRow(
     textColor: Color,
     enable: Boolean,
     icon: Int? = null,
-    borderColor: Color,
     placeHolder: String = "",
     updatedValue: String,
     onValueChange: (String) -> Unit, // New parameter to update the value dynamically
@@ -40,7 +39,6 @@ fun DetailRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .border(1.dp, borderColor, RoundedCornerShape(4.dp))
             .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
         Text(
@@ -114,7 +112,6 @@ fun DetailRowPreview() {
         enable = false,
         textColor = colorResource(R.color.black),
         placeHolder = "DD/MM/YYYY",
-        borderColor = colorResource(R.color.purple_500),
         icon = R.drawable.calendar,
         onDetailRowClick = { },
         onValueChange = { }

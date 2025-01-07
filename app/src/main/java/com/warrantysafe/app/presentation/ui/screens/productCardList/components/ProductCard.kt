@@ -42,7 +42,7 @@ import com.warrantysafe.app.presentation.ui.screens.productCardList.components.f
 @Composable
 fun ProductCard(
     onClick: () -> Unit, // Callback to handle click and pass details
-    title: String,
+    productName: String,
     itemTint: Color,
     category:String,
     detailsColor: Color,
@@ -56,8 +56,6 @@ fun ProductCard(
         currentDate = "28/12/2024"
     )
     val progress = calculateProgress(purchase, expiry, "28/12/2024")
-
-
 
     Box(modifier = Modifier.wrapContentSize().padding(vertical = 16.dp)) {
 
@@ -114,7 +112,7 @@ fun ProductCard(
                         .padding(horizontal = 8.dp)
                 ) {
                     Text(
-                        text = title,
+                        text = productName,
                         style = MaterialTheme.typography.titleMedium,
                         color = detailsColor
                     )
@@ -160,7 +158,7 @@ fun ProductCard(
 fun ProductCardPreview() {
     ProductCard(
         onClick = {},
-        title = "Realme 3 Pro",
+        productName = "Realme 3 Pro",
         purchase = "30/11/2023",
         expiry = "01/12/2025",
         category = "Electronics",

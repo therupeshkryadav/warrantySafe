@@ -1,6 +1,7 @@
 package com.warrantysafe.app.presentation.ui.screens.productCardList.components.functions
 
 import android.annotation.SuppressLint
+import android.util.Log
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -35,7 +36,7 @@ fun periodCalculator(
 
      //   if(current date is bigger than expiry date then return  0 years 0 months 0 days)
     } catch (e: Exception) {
-        // Handle invalid date formats gracefully
+        Log.d("fatal","$e")// Handle invalid date formats gracefully
         return "Invalid date format. Please use the format: dd/MM/yyyy"
     }
 }

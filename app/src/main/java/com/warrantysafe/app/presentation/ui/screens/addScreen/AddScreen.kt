@@ -1,10 +1,14 @@
 package com.warrantysafe.app.presentation.ui.screens.addScreen
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -38,25 +43,45 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.utils.categorySection.CategorySection
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
+import com.warrantysafe.app.presentation.viewModel.ProductViewModel
+import org.koin.androidx.compose.koinViewModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
+@SuppressLint("NewApi")
 @Composable
 fun AddScreen(navController: NavController) {
 
+    val productViewModel: ProductViewModel = koinViewModel()
     var productName by remember { mutableStateOf("") }
     var purchaseDate by remember { mutableStateOf("") }
     var expiryDate by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
+    var updatedCategory by remember { mutableStateOf("") }
+    val categoryOptions = listOf(
+        "General",
+        "Electronics",
+        "Vehicles",
+        "Furniture",
+        "Home Appliances",
+        "Kitchen Appliances",
+        "Gadgets & Accessories",
+        "Personal & Lifestyle Products",
+        "Tools & Equipment",
+        "Health & Medical Devices",
+        "Wearables",
+        "Others"
+    )
+    var expanded by remember { mutableStateOf(false) }
 
     // Create a ScrollState for vertical scrolling
     val scrollState = rememberScrollState()
@@ -68,13 +93,14 @@ fun AddScreen(navController: NavController) {
     // State for showing the date picker
     val showPurchaseDatePicker = remember { mutableStateOf(false) }
     val showExpiryDatePicker = remember { mutableStateOf(false) }
+    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
     if (showPurchaseDatePicker.value) {
         DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
-                val formattedDate = "$dayOfMonth/${month + 1}/$year"
-                purchaseDate = formattedDate // Update the purchase date
+                val localDate = LocalDate.of(year, month + 1, dayOfMonth)
+                purchaseDate = dateFormatter.format(localDate)
                 showPurchaseDatePicker.value = false
             },
             calendar.get(Calendar.YEAR),
@@ -91,8 +117,8 @@ fun AddScreen(navController: NavController) {
         DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
-                val formattedDate = "$dayOfMonth/${month + 1}/$year"
-                expiryDate = formattedDate // Update the expiry date
+                val localDate = LocalDate.of(year, month + 1, dayOfMonth)
+                expiryDate = dateFormatter.format(localDate)
                 showExpiryDatePicker.value = false
             },
             calendar.get(Calendar.YEAR),
@@ -137,16 +163,27 @@ fun AddScreen(navController: NavController) {
             },
             actions = {
                 IconButton(onClick = {
-                    // Clear back stack of Route.AddScreen.route
-                    navController.popBackStack(Route.AddScreen.route, inclusive = true)
-
-                    navController.navigate(Route.HomeScreen.route)
+                    if (productName.isBlank() || purchaseDate.isBlank() || expiryDate.isBlank()) {
+                        Toast.makeText(context, "Please fill all required fields.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        productViewModel.addProduct(
+                            productName = productName,
+                            purchase = purchaseDate,
+                            expiry = expiryDate,
+                            category = updatedCategory,
+                            notes = notes,
+                            imageResId = R.drawable.item_image_placeholder
+                        )
+                        navController.popBackStack()
+                        navController.navigate(Route.HomeScreen.route)
+                    }
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Check,
-                        contentDescription = "Check Icon"
+                        contentDescription = "Add Product Card Icon"
                     )
                 }
+
             }
         )
         Image(
@@ -162,7 +199,7 @@ fun AddScreen(navController: NavController) {
 
         Column(
             modifier = Modifier
-                .padding(horizontal =  8.dp)
+                .padding(horizontal = 8.dp)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
@@ -173,13 +210,49 @@ fun AddScreen(navController: NavController) {
                 enable = true,
                 icon = null,
                 placeHolder = "write product name -->",
-                borderColor = colorResource(R.color.black),
                 updatedValue = productName,
                 onValueChange = { productName = it } // Update product name dynamically
             )
 
             // Category Section
-            CategorySection()
+            CategorySection(
+                updatedCategory = updatedCategory,
+                onSelectEnabled = true,
+                onCategoryChange = { updatedCategory = it},
+                onCategorySelection = { expanded = !expanded }
+            )
+            // Dropdown Menu
+            if (expanded) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                        .padding(vertical = 8.dp)
+                ) {
+                    Column {
+                        categoryOptions.forEach { category ->
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        updatedCategory = category // Pass selected category
+                                        expanded = false // Close dropdown
+                                    }
+                                    .padding(12.dp)
+                                    .background(Color.Transparent)
+                            ) {
+                                Text(
+                                    text = category,
+                                    fontSize = 16.sp,
+                                    color = Color.Black
+                                )
+                            }
+                        }
+                    }
+                }
+            }
 
             // Purchase Date Field
             DetailRow(
@@ -187,7 +260,6 @@ fun AddScreen(navController: NavController) {
                 textColor = Color.DarkGray,
                 enable = false,
                 icon = R.drawable.calendar,
-                borderColor = colorResource(R.color.black),
                 placeHolder = "DD/MM/YYYY",
                 updatedValue = purchaseDate,
                 onDetailRowClick = {
@@ -202,7 +274,6 @@ fun AddScreen(navController: NavController) {
                 textColor = Color.DarkGray,
                 enable = false,
                 icon = R.drawable.calendar,
-                borderColor = colorResource(R.color.black),
                 placeHolder = "DD/MM/YYYY",
                 updatedValue = expiryDate,
                 onDetailRowClick = {
@@ -244,12 +315,8 @@ fun AddScreen(navController: NavController) {
                 textColor = Color.DarkGray,
                 enable = true,
                 icon = null,
-                borderColor = colorResource(R.color.black),
                 placeHolder = "write your notes here -->",
                 updatedValue = notes,
-                onDetailRowClick = {
-                    showExpiryDatePicker.value = true
-                },
                 onValueChange = { notes = it } // This handles the case where user types in the field (optional)
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -257,9 +324,4 @@ fun AddScreen(navController: NavController) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewAdd() {
-    AddScreen(rememberNavController())
-}
 

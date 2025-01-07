@@ -107,7 +107,7 @@ fun ExpiredTab(
             .padding(horizontal = 8.dp)) {
             items(expiredProducts) { product ->
                 ProductCard(
-                    title = product.title,
+                    productName = product.productName,
                     purchase = product.purchase,
                     expiry = product.expiry,
                     category = product.category,
@@ -125,7 +125,7 @@ fun ExpiredTab(
 private fun navigateToDetails(product: Product, navController: NavController) {
 
     val route = Route.ProductDetailsScreen.createRoute(
-        productName = product.title,  // Correct property name
+        productName = product.productName,  // Correct property name
         purchaseDate = product.purchase,
         category = product.category,
         expiryDate = product.expiry,
@@ -140,84 +140,84 @@ private fun navigateToDetails(product: Product, navController: NavController) {
 fun onPreview() {
     val expiredProducts = listOf(
         Product(
-            title = "Rado Watch",
+            productName = "Rado Watch",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "PS5",
+            productName = "PS5",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "LG Washing Machine ",
+            productName = "LG Washing Machine ",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Rado Watch",
+            productName = "Rado Watch",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "PS5",
+            productName = "PS5",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "LG Washing Machine ",
+            productName = "LG Washing Machine ",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Rado Watch",
+            productName = "Rado Watch",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "PS5",
+            productName = "PS5",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "LG Washing Machine ",
+            productName = "LG Washing Machine ",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Rado Watch",
+            productName = "Rado Watch",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "PS5",
+            productName = "PS5",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "LG Washing Machine ",
+            productName = "LG Washing Machine ",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",

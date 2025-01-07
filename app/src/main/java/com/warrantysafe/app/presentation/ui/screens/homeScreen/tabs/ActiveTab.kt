@@ -8,14 +8,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DropdownMenu
@@ -108,7 +105,7 @@ fun ActiveTab(
             .padding(horizontal = 8.dp)) {
             items(activeProducts) { product ->
                 ProductCard(
-                    title = product.title,
+                    productName = product.productName,
                     purchase = product.purchase,
                     expiry = product.expiry,
                     category = product.category,
@@ -126,7 +123,7 @@ fun ActiveTab(
 private fun navigateToDetails(product: Product, navController: NavController) {
 
     val route = Route.ProductDetailsScreen.createRoute(
-        productName = product.title,  // Correct property name
+        productName = product.productName,  // Correct property name
         purchaseDate = product.purchase,
         category = product.category,
         expiryDate = product.expiry,
@@ -142,49 +139,49 @@ private fun navigateToDetails(product: Product, navController: NavController) {
 private fun PrevActive() {
     val activeProducts = listOf(
         Product(
-            title = "Realme 3 Pro",
+            productName = "Realme 3 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Realme 7 Pro",
+            productName = "Realme 7 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Redmi Note 10 ",
+            productName = "Redmi Note 10 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Realme 3 Pro",
+            productName = "Realme 3 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Realme 7 Pro",
+            productName = "Realme 7 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Redmi Note 10 ",
+            productName = "Redmi Note 10 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Electronics",
             imageResId = R.drawable.item_image_placeholder
         ),
         Product(
-            title = "Last",
+            productName = "Last",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Electronics",

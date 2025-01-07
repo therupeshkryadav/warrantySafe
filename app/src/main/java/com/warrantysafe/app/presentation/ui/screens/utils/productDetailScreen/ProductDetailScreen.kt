@@ -41,12 +41,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
-import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
-import com.warrantysafe.app.presentation.ui.screens.utils.categorySection.CategorySection
-import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.productCardList.components.functions.CustomLinearProgressIndicator
 import com.warrantysafe.app.presentation.ui.screens.productCardList.components.functions.calculateProgress
 import com.warrantysafe.app.presentation.ui.screens.productCardList.components.functions.periodCalculator
+import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
+import com.warrantysafe.app.presentation.ui.screens.utils.categorySection.CategorySection
+import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
 
 @Composable
 fun ProductDetailScreen(
@@ -60,6 +60,7 @@ fun ProductDetailScreen(
     val validProductName = productName ?: "Unknown Product"
     val validPurchaseDate = purchaseDate ?: "Not Available"
     val validExpiryDate = expiryDate ?: "Not Available"
+    val updatedCategory = category ?: ""
 
     val validPeriod = periodCalculator(
         purchaseDate = validPurchaseDate,
@@ -97,7 +98,7 @@ fun ProductDetailScreen(
                     onClick = { navController.popBackStack() }
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack ,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back"
                     )
                 }
@@ -110,8 +111,9 @@ fun ProductDetailScreen(
                         purchaseDate = purchaseDate,
                         category = category,
                         expiryDate = expiryDate,
-                        notes= notes
-                    ) }) {
+                        notes = notes
+                    )
+                }) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
                         contentDescription = "Edit"
@@ -142,13 +144,18 @@ fun ProductDetailScreen(
                     updatedValue = validProductName,
                     enable = false,
                     textColor = Color.DarkGray,
-                    borderColor = colorResource(R.color.black),
                     icon = null,
                     onValueChange = { },
                 )
             }
+
             // Category Section
-            CategorySection(selectCategory = category)
+            CategorySection(
+                updatedCategory = updatedCategory,
+                onSelectEnabled = false,
+                onCategoryChange = {},
+                onCategorySelection = {}
+            )
 
             if (purchaseDate != null) {
                 DetailRow(
@@ -156,7 +163,6 @@ fun ProductDetailScreen(
                     updatedValue = validPurchaseDate,
                     enable = false,
                     textColor = Color.DarkGray,
-                    borderColor = colorResource(R.color.black),
                     icon = R.drawable.calendar,
                     onValueChange = { },
                 )
@@ -260,10 +266,10 @@ fun ProductDetailScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
-                    text = if(notes.isNullOrEmpty()) "// your notes would be provided here" else "$notes",
+                    text = if (notes.isNullOrEmpty()) "// your notes would be provided here" else "$notes",
                     textAlign = TextAlign.Start,
                     fontSize = 16.sp,
-                    color = if(notes.isNullOrEmpty()) Color.LightGray else Color.DarkGray
+                    color = if (notes.isNullOrEmpty()) Color.LightGray else Color.DarkGray
                 )
             }
         }
@@ -283,7 +289,7 @@ fun navigateToEditProductDetailsScreen(
         purchaseDate = purchaseDate,
         category = category,
         expiryDate = expiryDate,
-        notes= notes
+        notes = notes
     )
     navController.navigate(route)
 }
@@ -296,7 +302,7 @@ private fun PreviewProductDetailsScreen() {
         productName = "LG WASHING MACHINE",
         purchaseDate = "11/01/2023",
         category = "Electronics",
-        expiryDate = "11/09/2024"
+        expiryDate = "9/09/2024"
     )
 
 }
