@@ -82,8 +82,8 @@ fun EditProfileScreen(
             },
             navigationIcon = {
                 IconButton(
-                    onClick = {navController.popBackStack()}
-                ){
+                    onClick = { navController.popBackStack() }
+                ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back"
@@ -91,7 +91,7 @@ fun EditProfileScreen(
                 }
             },
             actions = {
-                IconButton(onClick = { navigateToTab(navController,Route.ProfileScreen) }) {
+                IconButton(onClick = { navigateToTab(navController, Route.ProfileScreen) }) {
                     Icon(
                         imageVector = Icons.Filled.Check,
                         contentDescription = "Check"
@@ -100,33 +100,34 @@ fun EditProfileScreen(
             }
         )
 
-        Spacer(modifier = Modifier.size(16.dp))
-        // Profile Avatar
-        Box(
-            modifier = Modifier
-                .size(200.dp)
-                .clip(CircleShape)
-                .clickable {
-                    //Edit Profile Image
-                }
-                .background(color = colorResource(R.color.black))
-                .align(Alignment.CenterHorizontally)
-        ) {
-            Image(
-                painter = painterResource(R.drawable.profile_avatar),
-                modifier = Modifier
-                    .size(198.dp)
-                    .align(Alignment.Center)
-                    .clip(CircleShape),
-                contentDescription = "Profile Avatar",
-                contentScale = ContentScale.Crop
-            )
-        }
         Column(
-            modifier = Modifier.fillMaxSize()
-            .padding(top = 8.dp, start = 8.dp, end = 8.dp)
-            .verticalScroll(scrollState)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 8.dp, start = 8.dp, end = 8.dp)
+                .verticalScroll(scrollState)
         ) {
+            Spacer(modifier = Modifier.size(16.dp))
+            // Profile Avatar
+            Box(
+                modifier = Modifier
+                    .size(200.dp)
+                    .clip(CircleShape)
+                    .clickable {
+                        //Edit Profile Image
+                    }
+                    .background(color = colorResource(R.color.black))
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.profile_avatar),
+                    modifier = Modifier
+                        .size(198.dp)
+                        .align(Alignment.Center)
+                        .clip(CircleShape),
+                    contentDescription = "Profile Avatar",
+                    contentScale = ContentScale.Crop
+                )
+            }
             // Profile Details
             DetailRow(
                 "Name",
@@ -157,9 +158,7 @@ fun EditProfileScreen(
                 label = "Phone",
                 enable = true,
                 phoneNumber = actualPhoneNumber,
-                countryCode = actualCountryCode,
                 textColor = colorResource(R.color.purple_500),
-                borderColor = colorResource(R.color.black),
                 onCountryCodeChange = { actualCountryCode = it },
                 onPhoneNumberChange = { actualPhoneNumber = it }
             )

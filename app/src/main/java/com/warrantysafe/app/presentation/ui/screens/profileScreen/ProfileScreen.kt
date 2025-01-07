@@ -75,7 +75,7 @@ fun ProfileScreen(
     // State to manage the visibility of the dropdown menu
     val userViewModel: UserViewModel = koinViewModel()
     val user = userViewModel.user.value
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         userViewModel.loadUserDetails()
     }
     var isMenuExpanded by remember { mutableStateOf(false) }
@@ -143,7 +143,7 @@ fun ProfileScreen(
             )
         },
         gesturesEnabled = true
-    ){
+    ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
                 CustomTopAppBar(
@@ -163,8 +163,8 @@ fun ProfileScreen(
                     },
                     navigationIcon = {
                         IconButton(
-                            onClick = {coroutineScope.launch { drawerState.open() }}
-                        ){
+                            onClick = { coroutineScope.launch { drawerState.open() } }
+                        ) {
                             Icon(
                                 imageVector = Icons.Filled.Menu,
                                 contentDescription = "Menu"
@@ -178,7 +178,7 @@ fun ProfileScreen(
                                 contentDescription = "Notifications"
                             )
                         }
-                        IconButton(onClick = {isMenuExpanded = !isMenuExpanded}) {
+                        IconButton(onClick = { isMenuExpanded = !isMenuExpanded }) {
                             Icon(
                                 imageVector = Icons.Filled.MoreVert,
                                 contentDescription = "More Options"
@@ -198,32 +198,33 @@ fun ProfileScreen(
                         }
                     }
                 )
-                Spacer(modifier = Modifier.size(16.dp))
-                // Profile Avatar
-                Box(
-                    modifier = Modifier
-                        .size(200.dp)
-                        .clip(CircleShape)
-                        .background(color = colorResource(R.color.black))
-                        .align(Alignment.CenterHorizontally)
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.profile_avatar),
-                        modifier = Modifier
-                            .size(198.dp)
-                            .align(Alignment.Center)
-                            .clip(CircleShape),
-                        contentDescription = "Profile Avatar",
-                        contentScale = ContentScale.Crop
-                    )
-                }
-
+                
                 Column(
                     modifier = Modifier
                         .fillMaxHeight(0.84f)
                         .padding(top = 8.dp, start = 8.dp, end = 8.dp, bottom = 16.dp)
                         .verticalScroll(scrollState)
                 ) {
+
+                    Spacer(modifier = Modifier.size(16.dp))
+                    // Profile Avatar
+                    Box(
+                        modifier = Modifier
+                            .size(200.dp)
+                            .clip(CircleShape)
+                            .background(color = colorResource(R.color.black))
+                            .align(Alignment.CenterHorizontally)
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.profile_avatar),
+                            modifier = Modifier
+                                .size(198.dp)
+                                .align(Alignment.Center)
+                                .clip(CircleShape),
+                            contentDescription = "Profile Avatar",
+                            contentScale = ContentScale.Crop
+                        )
+                    }
 
                     // Profile Details
                     DetailRow(
@@ -236,7 +237,7 @@ fun ProfileScreen(
                     )
                     DetailRow(
                         "Username",
-                        updatedValue =  user.userName,
+                        updatedValue = user.userName,
                         enable = false,
                         textColor = colorResource(R.color.purple_500),
                         icon = null,
@@ -297,7 +298,12 @@ fun ProfileScreen(
                         modifier = Modifier
                             .padding(vertical = 8.dp)
                             .fillMaxWidth()
-                            .clickable { navigateToEditProfile(navController = navController,user= user ) }
+                            .clickable {
+                                navigateToEditProfile(
+                                    navController = navController,
+                                    user = user
+                                )
+                            }
                             .border(1.dp, colorResource(R.color.purple_500))
                     ) {
                         Row(
@@ -326,7 +332,8 @@ fun ProfileScreen(
                             )
                         }
                     }
-                }}
+                }
+            }
             // Bottom Navigation fixed at the bottom
             CustomBottomNavigation(
                 items = listOf(

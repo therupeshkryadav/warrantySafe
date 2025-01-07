@@ -121,16 +121,6 @@ fun ProductDetailScreen(
                 }
             }
         )
-        Image(
-            painter = painterResource(R.drawable.product_placeholder),
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .height(280.dp)
-                .padding(8.dp)
-                .border(width = 2.dp, color = colorResource(R.color.black)),
-            contentScale = ContentScale.Crop,
-            contentDescription = null
-        )
 
         Column(
             modifier = Modifier
@@ -138,6 +128,17 @@ fun ProductDetailScreen(
                 .padding(horizontal = 8.dp)
                 .verticalScroll(scrollState)
         ) {
+            Image(
+                painter = painterResource(R.drawable.product_placeholder),
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .height(280.dp)
+                    .padding(8.dp)
+                    .border(width = 2.dp, color = colorResource(R.color.black)),
+                contentScale = ContentScale.Crop,
+                contentDescription = null
+            )
+
             if (productName != null) {
                 DetailRow(
                     label = "Product Name",

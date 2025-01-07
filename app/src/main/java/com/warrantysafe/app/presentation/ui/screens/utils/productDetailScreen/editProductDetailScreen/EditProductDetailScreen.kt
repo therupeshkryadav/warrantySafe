@@ -15,12 +15,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -176,16 +179,6 @@ fun EditProductDetailScreen(
                 }
             }
         )
-        Image(
-            painter = painterResource(R.drawable.product_placeholder),
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .height(280.dp)
-                .padding(8.dp)
-                .border(width = 2.dp, color = colorResource(R.color.black)),
-            contentScale = ContentScale.Crop,
-            contentDescription = null
-        )
 
         Column(
             modifier = Modifier
@@ -193,6 +186,46 @@ fun EditProductDetailScreen(
                 .padding(horizontal = 8.dp)
                 .verticalScroll(scrollState)
         ){
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(8.dp)
+                    .border(width = 2.dp, color = colorResource(R.color.black))
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.product_placeholder),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxWidth().height(280.dp)
+                )
+
+                IconButton(
+                    onClick = { /* Add your onClick logic here */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Black)
+                ) {
+                    Row(
+                        modifier = Modifier.wrapContentWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AddCircle,
+                            contentDescription = "Add Product Image",
+                            tint = Color.White
+                        )
+                        Spacer(modifier = Modifier.width(4.dp)) // Add spacing between Icon and Text
+                        Text(
+                            text = "Add Product Image",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
+                }
+            }
+
             DetailRow(
                 label = "Product Name",
                 updatedValue = validProductName!!,

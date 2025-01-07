@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.profileScreen.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,9 +26,7 @@ fun PhoneDetailRow(
     label:String,
     phoneNumber: String,
     enable: Boolean,
-    countryCode: String,
     textColor: Color,
-    borderColor: Color,
     onCountryCodeChange: (String) -> Unit,
     onPhoneNumberChange: (String) -> Unit
 ) {
@@ -35,8 +34,6 @@ fun PhoneDetailRow(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .border(1.dp, borderColor, RoundedCornerShape(4.dp))
             .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
         Text(
@@ -53,9 +50,7 @@ fun PhoneDetailRow(
         ) {
             // Country Code Picker
             CountryCodePickerComposable(
-                modifier = Modifier.padding(end = 8.dp),
                 onCountrySelected = onCountryCodeChange
-
             )
 
             // Phone Number Input Field
@@ -63,15 +58,16 @@ fun PhoneDetailRow(
                 value = phoneNumber,
                 enabled = enable,
                 onValueChange = onPhoneNumberChange,
-                modifier = Modifier.weight(1f), // Take up remaining space
+                modifier = Modifier.weight(1f).background(Color.White, RoundedCornerShape(8.dp))
+                    .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)), // Take up remaining space
                 placeholder = { Text("Enter phone number") },
                 singleLine = true,
                 shape = RectangleShape,
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.LightGray,
+                    focusedContainerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
-                    unfocusedContainerColor = Color.LightGray,
-                    disabledContainerColor = Color.LightGray,
+                    unfocusedContainerColor = Color.White,
+                    disabledContainerColor = Color.White,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
                     unfocusedTextColor = Color.Black,
