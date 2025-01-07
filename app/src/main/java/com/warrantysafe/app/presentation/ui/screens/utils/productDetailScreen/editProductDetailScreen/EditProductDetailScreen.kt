@@ -177,7 +177,7 @@ fun EditProductDetailScreen(
             }
         )
         Image(
-            painter = painterResource(R.drawable.item_image_placeholder),
+            painter = painterResource(R.drawable.product_placeholder),
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .height(280.dp)

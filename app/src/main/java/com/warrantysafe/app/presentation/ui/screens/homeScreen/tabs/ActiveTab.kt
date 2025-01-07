@@ -27,16 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.navigation.Route
-import com.warrantysafe.app.presentation.ui.screens.utils.dropDownMenu.components.dropDownMenuItem
 import com.warrantysafe.app.presentation.ui.screens.productCardList.applySorting
 import com.warrantysafe.app.presentation.ui.screens.productCardList.components.ProductCard
+import com.warrantysafe.app.presentation.ui.screens.utils.dropDownMenu.components.dropDownMenuItem
 
 @Composable
 fun ActiveTab(
@@ -131,62 +129,4 @@ private fun navigateToDetails(product: Product, navController: NavController) {
     ) // Placeholder for expiry logic
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)
-}
-
-
-@Preview(showBackground = true)
-@Composable
-private fun PrevActive() {
-    val activeProducts = listOf(
-        Product(
-            productName = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "Realme 7 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "Redmi Note 10 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "Realme 3 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "Realme 7 Pro",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "Redmi Note 10 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "Last",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        )
-    )
-    ActiveTab(navController = rememberNavController(), activeProducts = activeProducts)
 }

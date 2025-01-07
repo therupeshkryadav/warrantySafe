@@ -29,16 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.navigation.Route
-import com.warrantysafe.app.presentation.ui.screens.utils.dropDownMenu.components.dropDownMenuItem
 import com.warrantysafe.app.presentation.ui.screens.productCardList.applySorting
 import com.warrantysafe.app.presentation.ui.screens.productCardList.components.ProductCard
+import com.warrantysafe.app.presentation.ui.screens.utils.dropDownMenu.components.dropDownMenuItem
 
 @Composable
 fun ExpiredTab(
@@ -133,96 +131,4 @@ private fun navigateToDetails(product: Product, navController: NavController) {
     ) // Placeholder for expiry logic
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun onPreview() {
-    val expiredProducts = listOf(
-        Product(
-            productName = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        ),
-        Product(
-            productName = "LG Washing Machine ",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
-        )
-    )
-    ExpiredTab(navController = rememberNavController(), expiredProducts = expiredProducts)
 }

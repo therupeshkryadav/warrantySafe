@@ -164,6 +164,6 @@ fun ProductCardPreview() {
         category = "Electronics",
         itemTint = colorResource(R.color.transparent),
         detailsColor = MaterialTheme.colorScheme.surface,
-        imageResId = R.drawable.item_image_placeholder // Replace with your drawable resource
+        imageResId = R.drawable.product_placeholder // Replace with your drawable resource
     )
 }

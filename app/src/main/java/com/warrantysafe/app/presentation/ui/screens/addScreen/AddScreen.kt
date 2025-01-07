@@ -17,11 +17,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
@@ -153,8 +156,8 @@ fun AddScreen(navController: NavController) {
             },
             navigationIcon = {
                 IconButton(
-                    onClick = {navController.popBackStack()}
-                ){
+                    onClick = { navController.popBackStack() }
+                ) {
                     Icon(
                         imageVector = Icons.Filled.Close,
                         contentDescription = "Close"
@@ -164,7 +167,11 @@ fun AddScreen(navController: NavController) {
             actions = {
                 IconButton(onClick = {
                     if (productName.isBlank() || purchaseDate.isBlank() || expiryDate.isBlank()) {
-                        Toast.makeText(context, "Please fill all required fields.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Please fill all required fields.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
                         productViewModel.addProduct(
                             productName = productName,
@@ -186,16 +193,6 @@ fun AddScreen(navController: NavController) {
 
             }
         )
-        Image(
-            painter = painterResource(R.drawable.product_placeholder),
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .height(280.dp)
-                .padding(8.dp)
-                .border(width = 2.dp, color = colorResource(R.color.black)),
-            contentScale = ContentScale.Crop,
-            contentDescription = null
-        )
 
         Column(
             modifier = Modifier
@@ -203,6 +200,46 @@ fun AddScreen(navController: NavController) {
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(8.dp)
+                    .border(width = 2.dp, color = colorResource(R.color.black))
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.product_placeholder),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxWidth().height(280.dp)
+                )
+
+                IconButton(
+                    onClick = { /* Add your onClick logic here */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Black)
+                ) {
+                    Row(
+                        modifier = Modifier.wrapContentWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AddCircle,
+                            contentDescription = "Add Product Image",
+                            tint = Color.White
+                        )
+                        Spacer(modifier = Modifier.width(4.dp)) // Add spacing between Icon and Text
+                        Text(
+                            text = "Add Product Image",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
+                }
+            }
+
             // Product Name Field
             DetailRow(
                 label = "Product Name",
@@ -218,7 +255,7 @@ fun AddScreen(navController: NavController) {
             CategorySection(
                 updatedCategory = updatedCategory,
                 onSelectEnabled = true,
-                onCategoryChange = { updatedCategory = it},
+                onCategoryChange = { updatedCategory = it },
                 onCategorySelection = { expanded = !expanded }
             )
             // Dropdown Menu
@@ -265,7 +302,9 @@ fun AddScreen(navController: NavController) {
                 onDetailRowClick = {
                     showPurchaseDatePicker.value = true
                 },
-                onValueChange = { purchaseDate = it } // This handles the case where user types in the field (optional)
+                onValueChange = {
+                    purchaseDate = it
+                } // This handles the case where user types in the field (optional)
             )
 
             // Expiry Date Field
@@ -279,7 +318,9 @@ fun AddScreen(navController: NavController) {
                 onDetailRowClick = {
                     showExpiryDatePicker.value = true
                 },
-                onValueChange = { expiryDate = it } // This handles the case where user types in the field (optional)
+                onValueChange = {
+                    expiryDate = it
+                } // This handles the case where user types in the field (optional)
             )
 
             // Upload Receipt Image Section
@@ -317,7 +358,9 @@ fun AddScreen(navController: NavController) {
                 icon = null,
                 placeHolder = "write your notes here -->",
                 updatedValue = notes,
-                onValueChange = { notes = it } // This handles the case where user types in the field (optional)
+                onValueChange = {
+                    notes = it
+                } // This handles the case where user types in the field (optional)
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
