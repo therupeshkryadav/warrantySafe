@@ -13,42 +13,42 @@ class ProductRepositoryImpl : ProductRepository {
             expiry = "30/11/2025",
             category = "Electronics",
             notes = "First Notes served!!",
-            imageResId = R.drawable.item_image_placeholder
+            imageResId = R.drawable.product_placeholder
         ),
         Product(
             productName = "Honda Sp 125 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Vehicles",
-            imageResId = R.drawable.item_image_placeholder
+            imageResId = R.drawable.product_placeholder
         ),
         Product(
             productName = "Titan Watch",
             purchase = "01/10/2024",
             expiry = "01/10/2025",
             category = "Wearables",
-            imageResId = R.drawable.item_image_placeholder
+            imageResId = R.drawable.product_placeholder
         ),
         Product(
             productName = "Rado Watch",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
+            imageResId = R.drawable.product_placeholder
         ),
         Product(
             productName = "PS5",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
+            imageResId = R.drawable.product_placeholder
         ),
         Product(
             productName = "LG Washing Machine ",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
             category = "Electronics",
-            imageResId = R.drawable.item_image_placeholder
+            imageResId = R.drawable.product_placeholder
         )
     )
 

@@ -172,7 +172,7 @@ fun AddScreen(navController: NavController) {
                             expiry = expiryDate,
                             category = updatedCategory,
                             notes = notes,
-                            imageResId = R.drawable.item_image_placeholder
+                            imageResId = R.drawable.product_placeholder
                         )
                         navController.popBackStack()
                         navController.navigate(Route.HomeScreen.route)
@@ -187,7 +187,7 @@ fun AddScreen(navController: NavController) {
             }
         )
         Image(
-            painter = painterResource(R.drawable.item_image_placeholder),
+            painter = painterResource(R.drawable.product_placeholder),
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .height(280.dp)
