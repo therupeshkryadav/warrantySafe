@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.profileScreen.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -38,7 +39,6 @@ fun DetailRow(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
             .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
         Text(
@@ -81,7 +81,8 @@ fun DetailRow(
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .padding(8.dp)
-                    .border(width = 1.dp, color = Color.LightGray),
+                    .background(Color.White, RoundedCornerShape(8.dp))
+                    .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
                 textStyle = TextStyle(fontSize = 16.sp),
                 singleLine = true,
                 shape = RectangleShape,
