@@ -37,7 +37,7 @@ import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.searchScreen.components.RecentItem
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
-import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.components.ProductCard
+import com.warrantysafe.app.presentation.ui.screens.productCardList.components.ProductCard
 
 @Composable
 fun SearchScreen(

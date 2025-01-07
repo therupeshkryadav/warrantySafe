@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.ui.screens.utils.productCardList
+package com.warrantysafe.app.presentation.ui.screens.productCardList
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -42,7 +42,7 @@ import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.utils.dropDownMenu.components.dropDownMenuItem
-import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.components.ProductCard
+import com.warrantysafe.app.presentation.ui.screens.productCardList.components.ProductCard
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import org.koin.androidx.compose.koinViewModel
 

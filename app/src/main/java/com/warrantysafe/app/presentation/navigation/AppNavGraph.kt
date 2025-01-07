@@ -21,7 +21,7 @@ import com.warrantysafe.app.presentation.ui.screens.settingsScreen.SettingsScree
 import com.warrantysafe.app.presentation.ui.screens.splashScreen.SplashScreen
 import com.warrantysafe.app.presentation.ui.screens.termsPrivacyScreen.TermsPrivacyScreen
 import com.warrantysafe.app.presentation.ui.screens.upcomingFeaturesScreen.UpcomingFeaturesScreen
-import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.ProductCardList
+import com.warrantysafe.app.presentation.ui.screens.productCardList.ProductCardList
 
 @Composable
 fun AppNavGraph() {

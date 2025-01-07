@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.ui.screens.utils.productCardList.components.functions
+package com.warrantysafe.app.presentation.ui.screens.productCardList.components.functions
 
 import android.annotation.SuppressLint
 import java.time.LocalDate

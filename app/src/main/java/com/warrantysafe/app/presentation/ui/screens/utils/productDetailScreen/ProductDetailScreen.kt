@@ -44,9 +44,9 @@ import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.utils.categorySection.CategorySection
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
-import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.components.functions.CustomLinearProgressIndicator
-import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.components.functions.calculateProgress
-import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.components.functions.periodCalculator
+import com.warrantysafe.app.presentation.ui.screens.productCardList.components.functions.CustomLinearProgressIndicator
+import com.warrantysafe.app.presentation.ui.screens.productCardList.components.functions.calculateProgress
+import com.warrantysafe.app.presentation.ui.screens.productCardList.components.functions.periodCalculator
 
 @Composable
 fun ProductDetailScreen(

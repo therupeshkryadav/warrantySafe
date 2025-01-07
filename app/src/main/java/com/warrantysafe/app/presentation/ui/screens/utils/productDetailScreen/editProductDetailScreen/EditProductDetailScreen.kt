@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -272,23 +273,20 @@ fun EditProductDetailScreen(
                     )
                 }
             }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 32.dp)
-                    .border(1.dp, colorResource(R.color.black))
-            ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(all = 8.dp),
-                    text = if(validNotes.isNullOrEmpty()) "// write your notes here" else "$validNotes",
-                    textAlign = TextAlign.Start,
-                    fontSize = 16.sp,
-                    color = if(notes.isNullOrEmpty()) Color.LightGray else Color.DarkGray
-                )
-            }
+            DetailRow(
+                label = "Notes",
+                textColor = if(validNotes.isNullOrEmpty()) Color.LightGray else Color.DarkGray,
+                enable = true,
+                icon = null,
+                borderColor = colorResource(R.color.black),
+                placeHolder = "DD/MM/YYYY",
+                updatedValue = if(validNotes.isNullOrEmpty()) "// write your notes here" else "$validNotes"!!,
+                onDetailRowClick = {
+                    showExpiryDatePicker.value = true
+                },
+                onValueChange = { validNotes = it } // This handles the case where user types in the field (optional)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

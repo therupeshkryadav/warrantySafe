@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.ui.screens.utils.productCardList.components.functions
+package com.warrantysafe.app.presentation.ui.screens.productCardList.components.functions
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable

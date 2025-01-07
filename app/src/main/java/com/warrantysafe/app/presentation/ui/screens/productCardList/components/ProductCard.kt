@@ -1,4 +1,4 @@
-package com.warrantysafe.app.presentation.ui.screens.utils.productCardList.components
+package com.warrantysafe.app.presentation.ui.screens.productCardList.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,9 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.components.functions.CustomLinearProgressIndicator
-import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.components.functions.calculateProgress
-import com.warrantysafe.app.presentation.ui.screens.utils.productCardList.components.functions.periodCalculator
+import com.warrantysafe.app.presentation.ui.screens.productCardList.components.functions.CustomLinearProgressIndicator
+import com.warrantysafe.app.presentation.ui.screens.productCardList.components.functions.calculateProgress
+import com.warrantysafe.app.presentation.ui.screens.productCardList.components.functions.periodCalculator
 
 @Composable
 fun ProductCard(
