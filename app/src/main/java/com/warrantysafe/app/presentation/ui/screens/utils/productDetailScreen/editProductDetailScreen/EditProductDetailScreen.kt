@@ -165,7 +165,7 @@ fun EditProductDetailScreen(
                 label = "Product Name",
                 updatedValue = validProductName!!,
                 enable = true,
-                textColor = colorResource(R.color.purple_500),
+                textColor = Color.DarkGray,
                 borderColor = colorResource(R.color.black),
                 icon = null,
                 onValueChange = { validProductName = it},
@@ -178,7 +178,7 @@ fun EditProductDetailScreen(
                 // Purchase Date Field
                 DetailRow(
                     label = "Purchase Date",
-                    textColor = colorResource(R.color.purple_500),
+                    textColor = Color.DarkGray,
                     enable = false,
                     icon = R.drawable.calendar,
                     borderColor = colorResource(R.color.black),
@@ -194,7 +194,7 @@ fun EditProductDetailScreen(
                 // Expiry Date Field
                 DetailRow(
                     label = "Expiry Date",
-                    textColor = colorResource(R.color.purple_500),
+                    textColor = Color.DarkGray,
                     enable = false,
                     icon = R.drawable.calendar,
                     borderColor = colorResource(R.color.black),
@@ -275,12 +275,12 @@ fun EditProductDetailScreen(
             }
             DetailRow(
                 label = "Notes",
-                textColor = if(validNotes.isNullOrEmpty()) Color.LightGray else Color.DarkGray,
+                textColor = Color.DarkGray,
                 enable = true,
                 icon = null,
                 borderColor = colorResource(R.color.black),
-                placeHolder = "DD/MM/YYYY",
-                updatedValue = if(validNotes.isNullOrEmpty()) "// write your notes here" else "$validNotes"!!,
+                placeHolder = "write your notes here -->",
+                updatedValue = validNotes!!,
                 onDetailRowClick = {
                     showExpiryDatePicker.value = true
                 },

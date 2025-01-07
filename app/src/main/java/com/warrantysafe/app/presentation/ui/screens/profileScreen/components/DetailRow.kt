@@ -78,7 +78,7 @@ fun DetailRow(
                 value = updatedValue,
                 onValueChange = onValueChange, // Update the value dynamically
                 enabled = enable,
-                placeholder = { Text(text = placeHolder) },
+                placeholder = { Text( text = placeHolder, color = Color.LightGray) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()

@@ -5,9 +5,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -168,9 +169,10 @@ fun AddScreen(navController: NavController) {
             // Product Name Field
             DetailRow(
                 label = "Product Name",
-                textColor = colorResource(R.color.purple_500),
+                textColor = Color.DarkGray,
                 enable = true,
                 icon = null,
+                placeHolder = "write product name -->",
                 borderColor = colorResource(R.color.black),
                 updatedValue = productName,
                 onValueChange = { productName = it } // Update product name dynamically
@@ -182,7 +184,7 @@ fun AddScreen(navController: NavController) {
             // Purchase Date Field
             DetailRow(
                 label = "Purchase Date",
-                textColor = colorResource(R.color.purple_500),
+                textColor = Color.DarkGray,
                 enable = false,
                 icon = R.drawable.calendar,
                 borderColor = colorResource(R.color.black),
@@ -197,7 +199,7 @@ fun AddScreen(navController: NavController) {
             // Expiry Date Field
             DetailRow(
                 label = "Expiry Date",
-                textColor = colorResource(R.color.purple_500),
+                textColor = Color.DarkGray,
                 enable = false,
                 icon = R.drawable.calendar,
                 borderColor = colorResource(R.color.black),
@@ -237,25 +239,20 @@ fun AddScreen(navController: NavController) {
                     contentDescription = null
                 )
             }
-
-            // Notes Section
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp, bottom = 32.dp)
-                    .border(1.dp, colorResource(R.color.black))
-            ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(all = 8.dp),
-                    text = "notes would be provided here, if stored!!",
-                    textAlign = TextAlign.Start,
-                    fontSize = 16.sp,
-                    color = colorResource(R.color.purple_500)
-                )
-            }
+            DetailRow(
+                label = "Notes",
+                textColor = Color.DarkGray,
+                enable = true,
+                icon = null,
+                borderColor = colorResource(R.color.black),
+                placeHolder = "write your notes here -->",
+                updatedValue = notes,
+                onDetailRowClick = {
+                    showExpiryDatePicker.value = true
+                },
+                onValueChange = { notes = it } // This handles the case where user types in the field (optional)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

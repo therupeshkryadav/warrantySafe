@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.ui.screens.productCardList.components.functions.CustomLinearProgressIndicator
@@ -54,28 +57,31 @@ fun ProductCard(
     )
     val progress = calculateProgress(purchase, expiry, "28/12/2024")
 
-    Box(modifier = Modifier) {
+
+
+    Box(modifier = Modifier.wrapContentSize().padding(vertical = 16.dp)) {
 
         // Category tag positioned above the card
         Box(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .zIndex(1f) // Ensures it is drawn above the card
-                .padding(top = 4.dp, end = 16.dp)
+                .offset(y= (-12).dp,x=(-18).dp)
                 .background(Color.Yellow, shape = RoundedCornerShape(8.dp))
-                .padding(horizontal = 12.dp, vertical = 4.dp)
+                .padding(horizontal = 12.dp, vertical = 4.dp) //text Box design
         ) {
             Text(
-                text = "$category",
+                text = category,
+                fontSize = 9.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 style = MaterialTheme.typography.bodySmall
             )
         }
+
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp, bottom = 6.dp)
                 .clip(RoundedCornerShape(20.dp))
                 .clickable { onClick() }
                 .background(color = itemTint),
@@ -86,7 +92,7 @@ fun ProductCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(110.dp),
+                    .height(120.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
@@ -95,7 +101,6 @@ fun ProductCard(
                     modifier = Modifier
                         .fillMaxWidth(0.35f)
                         .fillMaxHeight(1f)
-                        .padding(end = 16.dp)
                         .clip(shape = RectangleShape),
                     colorFilter = ColorFilter.tint(
                         color = colorResource(R.color.expired), // Change this to your desired color
@@ -106,8 +111,7 @@ fun ProductCard(
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxWidth()
-                        .padding(end = 16.dp)
+                        .padding(horizontal = 8.dp)
                 ) {
                     Text(
                         text = title,

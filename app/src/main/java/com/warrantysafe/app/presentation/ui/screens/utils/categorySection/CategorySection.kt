@@ -62,7 +62,7 @@ fun CategorySection(
             text = "Category",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = colorResource(R.color.purple_500) // Replace with colorResource if needed
+            color = Color.DarkGray // Replace with colorResource if needed
         )
 
         // Type Box - Clickable area to toggle the dropdown
