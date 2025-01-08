@@ -2,6 +2,7 @@ package com.warrantysafe.app.presentation.ui.screens.productCardList.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -88,6 +89,7 @@ fun ProductCard(
                 .zIndex(1f) // Ensures it is drawn above the card
                 .offset(y= (-12).dp,x=(-18).dp)
                 .background(Color.Yellow, shape = RoundedCornerShape(8.dp))
+                .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(8.dp))
                 .padding(horizontal = 12.dp, vertical = 4.dp) //text Box design
         ) {
             Text(
@@ -104,9 +106,10 @@ fun ProductCard(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(20.dp))
                 .clickable { onClick() }
-                .background(color = itemTint),
+                .background(color = itemTint)
+                .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
             colors = CardDefaults.cardColors(
-                containerColor = colorResource(R.color.xtreme)
+                containerColor = Color.LightGray
             )
         ) {
             Row(
@@ -174,7 +177,7 @@ fun ProductCard(
 
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ProductCardPreview() {
     ProductCard(
@@ -184,8 +187,8 @@ fun ProductCardPreview() {
         purchase = "30/11/2023",
         expiry = "01/12/2025",
         category = "Electronics",
-        itemTint = colorResource(R.color.transparent),
-        detailsColor = MaterialTheme.colorScheme.surface,
+        itemTint = Color.Transparent,
+        detailsColor = Color.Black,
         imageResId = R.drawable.product_placeholder // Replace with your drawable resource
     )
 }

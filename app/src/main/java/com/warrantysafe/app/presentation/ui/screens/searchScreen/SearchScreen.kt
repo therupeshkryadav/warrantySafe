@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -105,15 +106,7 @@ fun SearchScreen(
 
         val matchedList = mutableListOf<Product>()
 
-        if (matchedList.isEmpty()) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(recentSearches) { recentSearch ->
-                    RecentItem(recent = recentSearch)
-                }
-            }
-        } else {
+        if (matchedList.isNotEmpty()) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(top = 8.dp, start = 8.dp, end = 8.dp)
@@ -127,11 +120,22 @@ fun SearchScreen(
                         expiry = product.expiry,
                         category = product.category,
                         imageResId = product.imageResId,
-                        itemTint = colorResource(R.color.transparent),
-                        detailsColor = MaterialTheme.colorScheme.onSurface,
+                        itemTint = Color.Transparent,
+                        detailsColor = Color.Black,
                         onLongPress = {},
                         onClick = { navigateToDetails(product, navController) }
                     )
+                }
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
+        }else{
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(recentSearches) { recentSearch ->
+                    RecentItem(recent = recentSearch)
                 }
             }
         }

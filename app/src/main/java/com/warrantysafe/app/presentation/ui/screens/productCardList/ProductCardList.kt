@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -167,8 +169,8 @@ fun ProductCardList(
                         expiry = product.expiry,
                         category = product.category,
                         imageResId = product.imageResId,
-                        itemTint = colorResource(R.color.transparent),
-                        detailsColor = MaterialTheme.colorScheme.onSurface,
+                        itemTint = Color.Transparent,
+                        detailsColor = Color.Black,
                         onLongPress = {
                             if (onLongPress) {
                                 selectedProducts.value.add(product) // show a tickable icon in a row and beside the product card which shows it is selected!!
@@ -178,6 +180,9 @@ fun ProductCardList(
                         },
                         onClick = { navigateToDetails(product, navController) }
                     )
+                }
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         } else {
