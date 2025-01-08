@@ -123,7 +123,7 @@ fun ActiveTab(
                         purchase = product.purchase,
                         expiry = product.expiry,
                         category = product.category,
-                        imageResId = product.imageResId,
+                        imageResource = product.imageResource,
                         itemTint = Color.Transparent,
                         detailsColor = Color.Black,
                         onLongPress = {},

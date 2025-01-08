@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -56,7 +57,7 @@ fun ProductCard(
     detailsColor: Color,
     purchase: String,
     expiry: String,
-    imageResId: Int // Image resource ID
+    imageResource: Painter // Image resource ID
 ) {
     val period = periodCalculator(
         purchaseDate = purchase,
@@ -119,7 +120,7 @@ fun ProductCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = painterResource(id = imageResId),
+                    painter = imageResource,
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth(0.35f)
@@ -188,6 +189,6 @@ fun ProductCardPreview() {
         category = "Electronics",
         itemTint = Color.Transparent,
         detailsColor = Color.Black,
-        imageResId = R.drawable.product_placeholder // Replace with your drawable resource
+        imageResource = painterResource( R.drawable.product_placeholder )// Replace with your drawable resource
     )
 }

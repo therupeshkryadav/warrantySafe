@@ -1,6 +1,8 @@
 package com.warrantysafe.app.presentation.viewModel
 
+import android.net.Uri
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.warrantysafe.app.domain.model.Product
@@ -50,9 +52,9 @@ class ProductViewModel(
     }
 
     // Add a new product
-    fun addProduct(productName: String, purchase: String, expiry: String, category: String,notes: String, imageResId: Int) {
+    fun addProduct(productName: String, purchase: String, expiry: String, category: String,notes: String, imageResource: Painter) {
         viewModelScope.launch {
-            addProductUseCase(productName, purchase, expiry, category, notes, imageResId)
+            addProductUseCase(productName, purchase, expiry, category, notes, imageResource)
             // Refresh all product lists after adding a new product
             loadAllProducts()
             loadActiveProducts()

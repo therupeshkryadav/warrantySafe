@@ -2,7 +2,10 @@ package com.warrantysafe.app.presentation.ui.screens.addScreen
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,11 +16,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -50,6 +53,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
@@ -101,6 +106,28 @@ fun AddScreen(navController: NavController) {
     val purchaseDateSelected = remember { mutableStateOf(false) }
     var purchaseDateLocalDate by remember { mutableStateOf<LocalDate?>(null) } // Store purchase date as LocalDate for comparison
 
+    // States for selected image URI
+    var selectedProductReceiptImageUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedProductImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    // Activity Result Launcher for Image Picker
+    val launcher1 = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if (uri != null) {
+            selectedProductReceiptImageUri = uri // Handle success (uri is not null, content was selected)
+        } else {
+            selectedProductReceiptImageUri = null // Handle cancellation (uri is null, no content selected)
+        }
+    }
+
+    // Activity Result Launcher for Image Picker
+    val launcher2 = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if (uri != null) {
+            selectedProductImageUri = uri // Handle success (uri is not null, content was selected)
+        } else {
+            selectedProductImageUri = null // Handle cancellation (uri is null, no content selected)
+        }
+    }
+
     if (showPurchaseDatePicker.value) {
         DatePickerDialog(
             context,
@@ -147,6 +174,9 @@ fun AddScreen(navController: NavController) {
         }.show()
     }
 
+    val imageResource = selectedProductImageUri?.let {
+        rememberAsyncImagePainter(it)
+    } ?: painterResource(R.drawable.product_placeholder)
 
     Column(
         modifier = Modifier
@@ -193,7 +223,7 @@ fun AddScreen(navController: NavController) {
                             expiry = expiryDate,
                             category = updatedCategory,
                             notes = notes,
-                            imageResId = R.drawable.product_placeholder
+                            imageResource = imageResource
                         )
                         navController.popBackStack()
                         navController.navigate(Route.HomeScreen.route)
@@ -222,7 +252,7 @@ fun AddScreen(navController: NavController) {
                     .border(width = 2.dp, color = colorResource(R.color.black))
             ) {
                 Image(
-                    painter = painterResource(R.drawable.product_placeholder),
+                    painter = rememberImagePainter(data = selectedProductImageUri ?: R.drawable.product_placeholder),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -231,7 +261,10 @@ fun AddScreen(navController: NavController) {
                 )
 
                 IconButton(
-                    onClick = { /* Add your onClick logic here */ },
+                    onClick = {
+                        launcher2.launch("image/*") // Open the gallery to select an image
+                    //i want to open the gallery and want to select the image and the selected image should be set to the above image composable!!
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.Black)
@@ -352,7 +385,7 @@ fun AddScreen(navController: NavController) {
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null // Disables ripple effect
                     ) {
-                       // uploadImage() // make it in which i may be able to select the image from gallery and also show that which image is selected!!
+                        launcher1.launch("image/*") // Open gallery for image selection
                     }
                     .padding(horizontal = 8.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -362,7 +395,7 @@ fun AddScreen(navController: NavController) {
                     modifier = Modifier.align(Alignment.CenterVertically),
                     textAlign = TextAlign.Center,
                     color = colorResource(R.color.white),
-                    text = "Upload Receipt Image",
+                    text = if (selectedProductReceiptImageUri == null) "Upload Receipt Image" else "Change Image",
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     maxLines = 1
@@ -370,10 +403,24 @@ fun AddScreen(navController: NavController) {
                 Icon(
                     modifier = Modifier
                         .padding(start = 8.dp)
-                        .fillMaxHeight(1f),
+                        .size(24.dp),
                     tint = colorResource(R.color.white),
-                    painter = painterResource(R.drawable.upload),
+                    painter = if (selectedProductReceiptImageUri == null) painterResource(R.drawable.upload) else painterResource(R.drawable.refresh_icon),
                     contentDescription = null
+                )
+            }
+
+            // Display the selected image below the button
+            selectedProductReceiptImageUri?.let { uri ->
+                Image(
+                    painter = rememberImagePainter(data = uri),
+                    contentDescription = "Selected Image",
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .height(350.dp)
+                        .padding(8.dp)
+                        .border(width = 1.dp, color = Color.Gray)
+                        .align(Alignment.CenterHorizontally)
                 )
             }
 
