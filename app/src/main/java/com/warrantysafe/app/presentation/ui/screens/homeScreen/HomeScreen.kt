@@ -99,7 +99,7 @@ fun HomeScreen(
                 }
             )
         },
-        gesturesEnabled = true
+        gesturesEnabled = false
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(

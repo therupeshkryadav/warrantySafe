@@ -13,11 +13,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.warrantysafe.app.R
 
 @Composable
 fun NotificationItem(
@@ -29,8 +27,9 @@ fun NotificationItem(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .border(width = 1.dp, color = colorResource(R.color.xtreme))
-            .background(color = if (isClicked.value) Color.Transparent else colorResource(R.color.xtreme2))
+            .border(width = 1.dp, color = Color.LightGray)
+            .padding(bottom = 2.dp)
+            .background(color = if (isClicked.value) Color.Transparent else Color.LightGray)
             .clickable(
                 interactionSource = remember {MutableInteractionSource()}, // Disable the ripple effect
                 indication = null,

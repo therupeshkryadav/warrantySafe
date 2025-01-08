@@ -142,7 +142,7 @@ fun ProfileScreen(
                 }
             )
         },
-        gesturesEnabled = true
+        gesturesEnabled = false
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
