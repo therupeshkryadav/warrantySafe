@@ -97,6 +97,8 @@ fun AddScreen(navController: NavController) {
     val showPurchaseDatePicker = remember { mutableStateOf(false) }
     val showExpiryDatePicker = remember { mutableStateOf(false) }
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    val purchaseDateSelected = remember { mutableStateOf(false) }
+    var purchaseDateLocalDate by remember { mutableStateOf<LocalDate?>(null) } // Store purchase date as LocalDate for comparison
 
     if (showPurchaseDatePicker.value) {
         DatePickerDialog(
@@ -104,6 +106,8 @@ fun AddScreen(navController: NavController) {
             { _, year, month, dayOfMonth ->
                 val localDate = LocalDate.of(year, month + 1, dayOfMonth)
                 purchaseDate = dateFormatter.format(localDate)
+                purchaseDateLocalDate = localDate // Store selected date
+                purchaseDateSelected.value = true
                 showPurchaseDatePicker.value = false
             },
             calendar.get(Calendar.YEAR),
@@ -121,8 +125,16 @@ fun AddScreen(navController: NavController) {
             context,
             { _, year, month, dayOfMonth ->
                 val localDate = LocalDate.of(year, month + 1, dayOfMonth)
-                expiryDate = dateFormatter.format(localDate)
-                showExpiryDatePicker.value = false
+                if (purchaseDateLocalDate != null && localDate.isAfter(purchaseDateLocalDate)) {
+                    expiryDate = dateFormatter.format(localDate)
+                    showExpiryDatePicker.value = false
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Expiry Date must be greater than Purchase Date!!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
@@ -133,6 +145,7 @@ fun AddScreen(navController: NavController) {
             }
         }.show()
     }
+
 
     Column(
         modifier = Modifier
@@ -211,7 +224,9 @@ fun AddScreen(navController: NavController) {
                     painter = painterResource(R.drawable.product_placeholder),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxWidth().height(280.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(280.dp)
                 )
 
                 IconButton(
@@ -306,7 +321,6 @@ fun AddScreen(navController: NavController) {
                     purchaseDate = it
                 } // This handles the case where user types in the field (optional)
             )
-
             // Expiry Date Field
             DetailRow(
                 label = "Expiry Date",
@@ -316,12 +330,17 @@ fun AddScreen(navController: NavController) {
                 placeHolder = "DD/MM/YYYY",
                 updatedValue = expiryDate,
                 onDetailRowClick = {
-                    showExpiryDatePicker.value = true
+                    if (purchaseDateSelected.value) {
+                        showExpiryDatePicker.value = true
+                    } else {
+                        Toast.makeText(context, "Please select Purchase Date first!", Toast.LENGTH_SHORT).show()
+                    }
                 },
                 onValueChange = {
                     expiryDate = it
                 } // This handles the case where user types in the field (optional)
             )
+
 
             // Upload Receipt Image Section
             Row(

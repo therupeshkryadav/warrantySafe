@@ -26,7 +26,8 @@ fun CustomLinearProgressIndicator(
             color = trackColor,
             start = Offset(0f, height / 2),
             end = Offset(width, height / 2),
-            strokeWidth = strokeWidth
+            strokeWidth = strokeWidth,
+            cap = StrokeCap.Round
         )
 
         // Draw progress
@@ -35,7 +36,7 @@ fun CustomLinearProgressIndicator(
             start = Offset(0f, height / 2),
             end = Offset(progressWidth - gapSize, height / 2), // Adjust for gap
             strokeWidth = strokeWidth,
-            cap = StrokeCap.Square
+            cap = StrokeCap.Round
         )
     }
 }

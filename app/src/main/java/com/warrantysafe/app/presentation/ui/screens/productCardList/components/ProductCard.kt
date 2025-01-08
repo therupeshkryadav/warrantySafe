@@ -153,14 +153,13 @@ fun ProductCard(
                         style = MaterialTheme.typography.labelSmall,
                         color = detailsColor.copy(alpha = 0.7f)
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     if (progress != null) {
                         CustomLinearProgressIndicator(
                             progress = progress,
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .height(28.dp),
+                                .fillMaxWidth(),
                             trackColor = colorResource(R.color.white),
                             progressColor = if (progress >= 1f)
                                 colorResource(R.color.noDaysLeft)
