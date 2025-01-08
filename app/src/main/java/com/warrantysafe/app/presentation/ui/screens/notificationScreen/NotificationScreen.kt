@@ -4,8 +4,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -79,14 +81,14 @@ fun NotificationScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding( vertical = 8.dp)
             ) {
                 // Add "Mark All as Read" as the first item
                 item {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)
+                            .padding(8.dp)
                             .border(
                                 width = 1.dp,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
@@ -111,6 +113,10 @@ fun NotificationScreen(
                     NotificationItem(
                         notification = notifications.notification
                     )
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         } else {

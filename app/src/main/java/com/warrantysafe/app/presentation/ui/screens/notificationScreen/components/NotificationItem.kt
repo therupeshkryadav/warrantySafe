@@ -28,7 +28,7 @@ fun NotificationItem(
         modifier = Modifier
             .fillMaxWidth()
             .border(width = 1.dp, color = Color.LightGray)
-            .padding(bottom = 2.dp)
+            .padding(bottom = 8.dp)
             .background(color = if (isClicked.value) Color.Transparent else Color.LightGray)
             .clickable(
                 interactionSource = remember {MutableInteractionSource()}, // Disable the ripple effect
