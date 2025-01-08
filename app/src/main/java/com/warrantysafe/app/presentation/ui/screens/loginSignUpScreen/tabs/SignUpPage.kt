@@ -53,7 +53,7 @@ fun SignUpPage(
                 .align(Alignment.CenterHorizontally)
         ) {
             Image(
-                painter = painterResource(R.drawable.profile_avatar),
+                painter = painterResource(R.drawable.profile_placeholder),
                 modifier = Modifier
                     .size(198.dp)
                     .align(Alignment.Center)
