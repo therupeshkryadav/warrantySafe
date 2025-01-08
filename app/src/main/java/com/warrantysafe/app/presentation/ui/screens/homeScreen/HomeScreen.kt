@@ -99,7 +99,7 @@ fun HomeScreen(
                 }
             )
         },
-        gesturesEnabled = false
+        gesturesEnabled = true
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -293,13 +293,4 @@ private fun navigateToTab(navController: NavController, route: Route) {
         launchSingleTop = true // Avoid multiple instances of the same destination
         restoreState = true // Restore the state if previously saved
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen(
-        navController = rememberNavController()
-    )
 }
