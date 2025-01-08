@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -341,13 +342,18 @@ fun AddScreen(navController: NavController) {
                 } // This handles the case where user types in the field (optional)
             )
 
-
             // Upload Receipt Image Section
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(colorResource(R.color.body))
                     .border(width = 1.dp, color = colorResource(R.color.black))
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null // Disables ripple effect
+                    ) {
+                       // uploadImage() // make it in which i may be able to select the image from gallery and also show that which image is selected!!
+                    }
                     .padding(horizontal = 8.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
@@ -370,6 +376,8 @@ fun AddScreen(navController: NavController) {
                     contentDescription = null
                 )
             }
+
+
             DetailRow(
                 label = "Notes",
                 textColor = Color.DarkGray,

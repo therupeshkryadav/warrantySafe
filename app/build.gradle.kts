@@ -60,6 +60,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.ccp) // Add CountryCodePicker here
 
+    // Coil
+    implementation(libs.coil.compose)
+
     // Koin
     implementation (libs.koin.androidx.compose)
+
 }
