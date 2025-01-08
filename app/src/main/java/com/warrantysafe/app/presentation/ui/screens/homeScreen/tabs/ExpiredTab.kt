@@ -3,6 +3,7 @@ package com.warrantysafe.app.presentation.ui.screens.homeScreen.tabs
 import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -25,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -34,7 +37,6 @@ import androidx.navigation.NavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.navigation.Route
-import com.warrantysafe.app.presentation.ui.screens.productCardList.applySorting
 import com.warrantysafe.app.presentation.ui.screens.productCardList.components.ProductCard
 import com.warrantysafe.app.presentation.ui.screens.utils.dropDownMenu.components.dropDownMenuItem
 
@@ -50,27 +52,32 @@ fun ExpiredTab(
     val expandedSort = remember { mutableStateOf(false) }
     val selectedSortOption = remember { mutableStateOf("Sort By") }
     Column(modifier = Modifier.fillMaxSize()) {
-        if(expiredProducts.isNotEmpty()){
-            Row(
+        if (expiredProducts.isNotEmpty()) {
+
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween, // Distribute components to start and end
-                verticalAlignment = Alignment.CenterVertically // Center items vertically
+                    .wrapContentWidth()
+                    .padding(start = 18.dp)
             ) {
                 // First Box (Sort By Section)
                 Box(
                     modifier = Modifier
-                        .clickable { expandedSort.value = true }
+                        .wrapContentWidth()
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null // Disables ripple effect
+                        ) { expandedSort.value = true }
                         .border(
                             width = 1.dp,
                             shape = RectangleShape,
                             color = colorResource(R.color.black)
                         )
-                        .padding(start = 8.dp)
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier.padding(4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
                         Text(
                             text = "Sort By",
                             modifier = Modifier.padding(end = 4.dp)
@@ -83,6 +90,8 @@ fun ExpiredTab(
                     }
 
                     DropdownMenu(
+                        modifier = Modifier.wrapContentWidth(),
+                        containerColor = Color.White,
                         expanded = expandedSort.value,
                         onDismissRequest = { expandedSort.value = false }
                     ) {
@@ -98,12 +107,14 @@ fun ExpiredTab(
                         }
                     }
                 }
-
             }
+
             //Tab Values
-            LazyColumn(modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp)) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp)
+            ) {
                 items(expiredProducts) { product ->
                     ProductCard(
                         productName = product.productName,
@@ -113,11 +124,12 @@ fun ExpiredTab(
                         imageResId = product.imageResId,
                         itemTint = colorResource(R.color.transparent),
                         detailsColor = MaterialTheme.colorScheme.onSurface,
+                        onLongPress = {},
                         onClick = { navigateToDetails(product, navController) }
                     )
                 }
             }
-        }else{
+        } else {
             // Empty state UI
             Column(
                 modifier = Modifier

@@ -3,6 +3,7 @@ package com.warrantysafe.app.presentation.ui.screens.productCardList
 import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -28,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -49,7 +52,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ProductCardList(
     navController: NavController
-){
+) {
     val productViewModel: ProductViewModel = koinViewModel()
     LaunchedEffect(Unit) {
         productViewModel.loadAllProducts()
@@ -61,6 +64,9 @@ fun ProductCardList(
     )
     val expandedSort = remember { mutableStateOf(false) }
     val selectedSortOption = remember { mutableStateOf("Sort By") }
+
+    // Maintain a state for selected products
+    val selectedProducts = remember { mutableStateOf(mutableSetOf<Product>()) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         CustomTopAppBar(
@@ -90,27 +96,32 @@ fun ProductCardList(
             },
             actions = {}
         )
-        if(productList.isNotEmpty()){
-            Row(
+        if (productList.isNotEmpty()) {
+
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween, // Distribute components to start and end
-                verticalAlignment = Alignment.CenterVertically // Center items vertically
+                    .wrapContentWidth()
+                    .padding(start = 18.dp)
             ) {
                 // First Box (Sort By Section)
                 Box(
                     modifier = Modifier
-                        .clickable { expandedSort.value = true }
+                        .wrapContentWidth()
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null // Disables ripple effect
+                        ) { expandedSort.value = true }
                         .border(
                             width = 1.dp,
                             shape = RectangleShape,
                             color = colorResource(R.color.black)
                         )
-                        .padding(start = 8.dp)
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier.padding(4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
                         Text(
                             text = "Sort By",
                             modifier = Modifier.padding(end = 4.dp)
@@ -123,6 +134,8 @@ fun ProductCardList(
                     }
 
                     DropdownMenu(
+                        modifier = Modifier.wrapContentWidth(),
+                        containerColor = Color.White,
                         expanded = expandedSort.value,
                         onDismissRequest = { expandedSort.value = false }
                     ) {
@@ -139,6 +152,7 @@ fun ProductCardList(
                     }
                 }
             }
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -146,6 +160,7 @@ fun ProductCardList(
                     .padding(horizontal = 8.dp)
             ) {
                 items(productList) { product ->
+                    val onLongPress = selectedProducts.value.contains(product)
                     ProductCard(
                         productName = product.productName,
                         purchase = product.purchase,
@@ -154,11 +169,18 @@ fun ProductCardList(
                         imageResId = product.imageResId,
                         itemTint = colorResource(R.color.transparent),
                         detailsColor = MaterialTheme.colorScheme.onSurface,
+                        onLongPress = {
+                            if (onLongPress) {
+                                selectedProducts.value.add(product) // show a tickable icon in a row and beside the product card which shows it is selected!!
+                            } else {
+                                selectedProducts.value.remove(product)
+                            }
+                        },
                         onClick = { navigateToDetails(product, navController) }
                     )
                 }
             }
-        }else{
+        } else {
             // Empty state UI
             Column(
                 modifier = Modifier
@@ -186,22 +208,14 @@ fun ProductCardList(
     }
 }
 
-fun applySorting(option: String, products: List<Product>) {
-    when (option) {
-        "By Date of Purchase" -> {
-            // Sorting logic for date of purchase
-        }
-        "By Days Left in Expiry" -> {
-            // Sorting logic for days left in expiry
-        }
-        "By Name of Product" -> {
-            // Sorting logic for product name
-        }
-        "By Category" -> {
-            // Sorting logic for category
-        }
+fun applySorting(option: String, products: List<Product>): List<Product> {
+    return when (option) {
+        "Old to Recent" -> products.sortedBy { it.purchase }
+        "Recent to Old" -> products.sortedByDescending { it.purchase }
+        else -> products // Default sorting (if needed)
     }
 }
+
 
 private fun navigateToDetails(product: Product, navController: NavController) {
 
@@ -210,7 +224,8 @@ private fun navigateToDetails(product: Product, navController: NavController) {
         purchaseDate = product.purchase,
         category = product.category,
         expiryDate = product.expiry,
-        notes = product.notes) // Placeholder for expiry logic
+        notes = product.notes
+    ) // Placeholder for expiry logic
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)
 }

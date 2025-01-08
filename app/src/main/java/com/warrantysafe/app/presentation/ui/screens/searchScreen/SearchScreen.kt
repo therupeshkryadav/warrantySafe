@@ -129,6 +129,7 @@ fun SearchScreen(
                         imageResId = product.imageResId,
                         itemTint = colorResource(R.color.transparent),
                         detailsColor = MaterialTheme.colorScheme.onSurface,
+                        onLongPress = {},
                         onClick = { navigateToDetails(product, navController) }
                     )
                 }
