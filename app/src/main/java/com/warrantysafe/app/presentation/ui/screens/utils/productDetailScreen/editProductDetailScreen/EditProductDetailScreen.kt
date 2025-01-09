@@ -178,7 +178,9 @@ fun EditProductDetailScreen(
             selectedExpiryDate.monthValue - 1, // DatePickerDialog uses 0-based months
             selectedExpiryDate.dayOfMonth
         ).apply {
-            datePicker.minDate = selectedPurchaseDate.atStartOfDay().toEpochSecond(java.time.ZoneOffset.UTC) * 1000
+            // Properly set the minimum date using time in milliseconds
+            datePicker.minDate = selectedPurchaseDate.atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli()
+
             setOnCancelListener {
                 showExpiryDatePicker.value = false
             }

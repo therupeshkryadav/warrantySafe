@@ -36,6 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
+import com.warrantysafe.app.domain.model.Recent
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.searchScreen.components.RecentItem
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
@@ -136,7 +137,7 @@ fun SearchScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 items(recentSearches) { recentSearch ->
-                    RecentItem(recent = recentSearch)
+                    RecentItem(Recent(recentSearch = recentSearch))
                 }
             }
         }
