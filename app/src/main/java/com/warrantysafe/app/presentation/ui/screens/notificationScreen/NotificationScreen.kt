@@ -82,7 +82,6 @@ fun NotificationScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding( vertical = 8.dp)
             ) {
                 // Add "Mark All as Read" as the first item
                 item {

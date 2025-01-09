@@ -2,13 +2,17 @@ package com.warrantysafe.app.presentation.ui.screens.loginSignUpScreen.tabs
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -63,13 +67,15 @@ fun SignUpPage(
             )
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
         // FullName Field
         TextField(
             value = fullName.value,
             onValueChange = { fullName.value = it },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp),
+                .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
             placeholder = {
                 Text("Enter Your Full Name", color = Color.Gray)
             },
@@ -87,16 +93,21 @@ fun SignUpPage(
             ),
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White
             )
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         // Username Field
         TextField(
             value = username.value,
             onValueChange = { username.value = it },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp),
+                .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
             placeholder = {
                 Text("Choose Your username", color = Color.Gray)
             },
@@ -114,16 +125,20 @@ fun SignUpPage(
             ),
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White
             )
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         // EmailAddress Field
         TextField(
             value = emailAddress.value,
             onValueChange = { emailAddress.value = it },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
+                .fillMaxWidth().border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
             placeholder = {
                 Text("Enter Your Email Address", color = Color.Gray)
             },
@@ -141,16 +156,20 @@ fun SignUpPage(
             ),
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White
             )
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         // PhoneNumber Field
         TextField(
             value = phoneNumber.value,
             onValueChange = { phoneNumber.value = it },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
+                .fillMaxWidth().border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
             placeholder = {
                 Text("Enter Your Phone Number", color = Color.Gray)
             },
@@ -168,14 +187,18 @@ fun SignUpPage(
             ),
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White
             )
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         //Login Button
         Button(
             onClick = { onSignUpSuccess() },
-            shape = RectangleShape,
+            shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .fillMaxWidth()
         ) {

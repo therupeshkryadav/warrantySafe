@@ -1,6 +1,7 @@
 package com.warrantysafe.app.presentation.ui.screens.homeScreen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -171,7 +172,8 @@ fun HomeScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(50))
-                            .background(Color.LightGray) // Soft background for better aesthetics
+                            .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(50) )
+                            .background(Color.White) // Soft background for better aesthetics
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null // Disables ripple effect

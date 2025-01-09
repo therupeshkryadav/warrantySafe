@@ -1,7 +1,9 @@
 package com.warrantysafe.app.presentation.ui.screens.loginSignUpScreen.tabs
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -45,7 +47,11 @@ fun LoginPage(
                     onValueChange = { username.value = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 16.dp),
+                        .border(
+                            width = 1.dp,
+                            color = Color.LightGray,
+                            shape = RoundedCornerShape(20.dp)
+                        ),
                     placeholder = {
                         Text("Enter Username", color = Color.Gray)
                     },
@@ -63,15 +69,25 @@ fun LoginPage(
                     ),
                     colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
                     )
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 // Password Field
                 TextField(
                     value = password.value,
                     onValueChange = { password.value = it },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(
+                            width = 1.dp,
+                            color = Color.LightGray,
+                            shape = RoundedCornerShape(20.dp)
+                        ),
                     placeholder = {
                         Text("Enter Password", color = Color.Gray)
                     },
@@ -89,7 +105,9 @@ fun LoginPage(
                     ),
                     colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
                     )
                 )
 
@@ -98,7 +116,7 @@ fun LoginPage(
                     onClick = { onLoginSuccess()
                         //navigate to Bottom Navigation Flow
                         },
-                    shape = RectangleShape,
+                    shape = RoundedCornerShape(20.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp)
@@ -108,7 +126,9 @@ fun LoginPage(
             }
         }
         Text(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 48.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 48.dp),
             textAlign = TextAlign.Center,
             text = "OR",
             fontSize = 18.sp,
@@ -125,7 +145,7 @@ fun LoginPage(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .fillMaxWidth()
-                    .border(width = 1.dp, color = colorResource(R.color.black)),
+                    .border(width = 1.dp, color = colorResource(R.color.black), shape = RoundedCornerShape(20.dp)),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
