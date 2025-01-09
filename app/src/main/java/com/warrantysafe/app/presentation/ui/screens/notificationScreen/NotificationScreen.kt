@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.notificationScreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -91,8 +92,8 @@ fun NotificationScreen(
                             .padding(8.dp)
                             .border(
                                 width = 1.dp,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                            ),
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                            ).background(MaterialTheme.colorScheme.background),
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Icon(
@@ -103,6 +104,7 @@ fun NotificationScreen(
                         Text(
                             modifier = Modifier.padding(8.dp),
                             text = "Mark all as Read",
+                            fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }

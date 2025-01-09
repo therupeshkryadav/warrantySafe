@@ -31,11 +31,11 @@ fun NotificationItem(
     // Track if the item is clicked or not
     val isClicked = remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth().background(color = if (isClicked.value) Color.Transparent else MaterialTheme.colorScheme.background)) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = if (isClicked.value) Color.Transparent else MaterialTheme.colorScheme.background)
+                .padding(vertical = 8.dp)
                 .clickable(
                     interactionSource = remember {MutableInteractionSource()}, // Disable the ripple effect
                     indication = null,
