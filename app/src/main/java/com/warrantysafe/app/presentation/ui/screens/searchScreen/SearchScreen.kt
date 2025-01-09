@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,12 +42,18 @@ import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.searchScreen.components.RecentItem
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.productCardList.components.ProductCard
+import com.warrantysafe.app.presentation.viewModel.RecentViewModel
+import com.warrantysafe.app.presentation.viewModel.UserViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchScreen(
-    navController: NavController,
-    recentSearches: List<String>
+    navController: NavController
 ) {
+    val recentViewModel: RecentViewModel = koinViewModel()
+    LaunchedEffect(Unit){
+        recentViewModel.loadRecentSearches()
+    }
     var text by remember { mutableStateOf("") }
     // Content under the TopAppBar
     Column(
@@ -136,8 +143,8 @@ fun SearchScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(recentSearches) { recentSearch ->
-                    RecentItem(Recent(recentSearch = recentSearch))
+                items(recentViewModel.recent.value) { recentSearch ->
+                    RecentItem(Recent(recent = recentSearch.recent))
                 }
             }
         }
@@ -156,13 +163,4 @@ private fun navigateToDetails(product: Product, navController: NavController) {
     )
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSearchScreen() {
-    SearchScreen(
-        rememberNavController(),
-        recentSearches = listOf("recent1", "recent2", "recent3", "recent4")
-    )
 }

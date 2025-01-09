@@ -204,10 +204,7 @@ fun AppNavGraph() {
         }
 
         composable(Route.SearchScreen.route) {
-            SearchScreen(
-                navController = navController,
-                recentSearches = listOf("recent1", "recent2", "recent3", "recent4")
-            )
+            SearchScreen(navController = navController)
         }
     }
 }

@@ -5,6 +5,7 @@ import com.warrantysafe.app.domain.useCases.GetActiveProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetAllProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetExpiredProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetNotificationsUseCase
+import com.warrantysafe.app.domain.useCases.GetRecentsUseCase
 import com.warrantysafe.app.domain.useCases.GetUserDetailUseCase
 import org.koin.dsl.module
 
@@ -16,5 +17,5 @@ val domainModule = module {
     single { GetUserDetailUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
     single { GetNotificationsUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
     single { AddProductUseCase(get()) }
-
+    single { GetRecentsUseCase(get()) }
 }
