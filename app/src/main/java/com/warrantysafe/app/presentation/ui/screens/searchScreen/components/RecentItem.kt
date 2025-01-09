@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,8 +25,12 @@ fun RecentItem(
 ) {
     Row(modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 24.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.Absolute.SpaceBetween) {
+        .padding(horizontal = 24.dp, vertical = 8.dp)) {
+        Image(
+            modifier = Modifier.padding(start = 16.dp).size(10.dp),
+            painter = painterResource(R.drawable.recent_search_img),
+            contentDescription = null
+        )
         Text(
             text = recent,
             color = colorResource(R.color.teal_700),

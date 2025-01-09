@@ -1,7 +1,9 @@
 package com.warrantysafe.app.presentation.ui.screens.utils.productDetailScreen.editProductDetailScreen
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -26,9 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -60,8 +60,12 @@ import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.utils.categorySection.CategorySection
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
+@SuppressLint("NewApi")
 @Composable
 fun EditProductDetailScreen(
     navController: NavController,
@@ -92,6 +96,9 @@ fun EditProductDetailScreen(
         "Others"
     )
     var expanded by remember { mutableStateOf(false) }
+    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    val purchaseDateSelected = remember { mutableStateOf(false) }
+    var purchaseDateLocalDate by remember { mutableStateOf<LocalDate?>(null) } // Store purchase date as LocalDate for comparison
 
     // Create a ScrollState for vertical scrolling
     val scrollState = rememberScrollState()
@@ -117,16 +124,25 @@ fun EditProductDetailScreen(
     }
 
     if (showPurchaseDatePicker.value) {
+        // Parse the validPurchaseDate or use the current date as default
+         val selectedPurchaseDate = runCatching {
+            LocalDate.parse(validPurchaseDate, dateFormatter)
+        }.getOrElse {
+            LocalDate.now()
+        }
+
         DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
-                val formattedDate = "$dayOfMonth/${month + 1}/$year"
-                validPurchaseDate = formattedDate // Update the purchase date
+                val pickedDate = LocalDate.of(year, month + 1, dayOfMonth)
+                validPurchaseDate = dateFormatter.format(pickedDate)
+                purchaseDateLocalDate = pickedDate // Store selected date
+                purchaseDateSelected.value = true
                 showPurchaseDatePicker.value = false
             },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+            selectedPurchaseDate.year,
+            selectedPurchaseDate.monthValue - 1, // DatePickerDialog uses 0-based months
+            selectedPurchaseDate.dayOfMonth
         ).apply {
             setOnCancelListener {
                 showPurchaseDatePicker.value = false // Dismiss dialog without updating date
@@ -135,19 +151,36 @@ fun EditProductDetailScreen(
     }
 
     if (showExpiryDatePicker.value) {
+        val selectedPurchaseDate = purchaseDateLocalDate ?: LocalDate.now() // Default to purchaseDateLocalDate
+        val selectedExpiryDate = runCatching {
+            LocalDate.parse(validExpiryDate, dateFormatter)
+        }.getOrElse {
+            LocalDate.now()
+        }
+
         DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
-                val formattedDate = "$dayOfMonth/${month + 1}/$year"
-                validExpiryDate = formattedDate // Update the expiry date
-                showExpiryDatePicker.value = false
+                val pickedDate = LocalDate.of(year, month + 1, dayOfMonth)
+                if (pickedDate.isBefore(selectedPurchaseDate)) {
+                    // Show an error message or handle the invalid date scenario
+                    Toast.makeText(
+                        context,
+                        "Expiry date cannot be before the purchase date!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    validExpiryDate = dateFormatter.format(pickedDate)
+                    showExpiryDatePicker.value = false
+                }
             },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+            selectedExpiryDate.year,
+            selectedExpiryDate.monthValue - 1, // DatePickerDialog uses 0-based months
+            selectedExpiryDate.dayOfMonth
         ).apply {
+            datePicker.minDate = selectedPurchaseDate.atStartOfDay().toEpochSecond(java.time.ZoneOffset.UTC) * 1000
             setOnCancelListener {
-                showExpiryDatePicker.value = false // Dismiss dialog without updating date
+                showExpiryDatePicker.value = false
             }
         }.show()
     }

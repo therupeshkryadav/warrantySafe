@@ -152,29 +152,23 @@ fun AddScreen(navController: NavController) {
             context,
             { _, year, month, dayOfMonth ->
                 val localDate = LocalDate.of(year, month + 1, dayOfMonth)
-                if (purchaseDateLocalDate != null && localDate.isAfter(purchaseDateLocalDate)) {
-                    expiryDate = dateFormatter.format(localDate)
-                    showExpiryDatePicker.value = false
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Expiry Date must be greater than Purchase Date!!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                expiryDate = dateFormatter.format(localDate)
+                showExpiryDatePicker.value = false
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         ).apply {
+            purchaseDateLocalDate?.let {
+                datePicker.minDate = it.atStartOfDay().toEpochSecond(java.time.ZoneOffset.UTC) * 1000
+            }
             setOnCancelListener {
-                showExpiryDatePicker.value = false // Dismiss dialog without updating date
+                showExpiryDatePicker.value = false
             }
         }.show()
     }
 
     val imageUri = selectedProductImageUri?: Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-
 
     Column(
         modifier = Modifier
