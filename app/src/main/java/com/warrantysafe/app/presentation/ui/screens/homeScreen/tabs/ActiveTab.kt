@@ -116,7 +116,7 @@ fun ActiveTab(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = 4.dp)
             ) {
                 items(activeProducts) { product ->
                     ProductCard(
@@ -130,9 +130,6 @@ fun ActiveTab(
                         onLongPress = {},
                         onClick = { navigateToDetails(product, navController) }
                     )
-                }
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         } else {

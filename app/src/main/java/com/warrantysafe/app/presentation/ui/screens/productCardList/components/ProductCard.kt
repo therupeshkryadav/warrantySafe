@@ -125,9 +125,10 @@ fun ProductCard(
                     modifier = Modifier
                         .fillMaxWidth(0.35f)
                         .fillMaxHeight(1f)
-                        .clip(shape = RectangleShape),
+                        .clip(shape = RectangleShape)
+                        .border(width = 1.dp, color = Color.DarkGray),
                     colorFilter = ColorFilter.tint(
-                        color = colorResource(R.color.expired), // Change this to your desired color
+                        color = Color.Transparent, // Change this to your desired color
                         blendMode = BlendMode.Color
                     ),
                     contentScale = ContentScale.Crop

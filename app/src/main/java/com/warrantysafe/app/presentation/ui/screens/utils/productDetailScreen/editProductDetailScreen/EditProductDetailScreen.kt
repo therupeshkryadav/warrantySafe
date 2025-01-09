@@ -2,6 +2,8 @@ package com.warrantysafe.app.presentation.ui.screens.utils.productDetailScreen.e
 
 import android.app.DatePickerDialog
 import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,6 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -62,11 +65,11 @@ import java.util.Calendar
 @Composable
 fun EditProductDetailScreen(
     navController: NavController,
-    productName: String?=null,
+    productName: String? = null,
     purchaseDate: String?,
-    category: String?=null,
+    category: String? = null,
     expiryDate: String?,
-    notes: String?=null,
+    notes: String? = null,
     imageUri: Uri,
 ) {
     var validProductName by remember { mutableStateOf(productName) }
@@ -100,6 +103,18 @@ fun EditProductDetailScreen(
     // State for showing the date picker
     val showPurchaseDatePicker = remember { mutableStateOf(false) }
     val showExpiryDatePicker = remember { mutableStateOf(false) }
+
+    // States for selected image URI
+    var selectedProductImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    // Activity Result Launcher for Image Picker
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if (uri != null) {
+            selectedProductImageUri = uri // Handle success (uri is not null, content was selected)
+        } else {
+            selectedProductImageUri = null // Handle cancellation (uri is null, no content selected)
+        }
+    }
 
     if (showPurchaseDatePicker.value) {
         DatePickerDialog(
@@ -137,6 +152,8 @@ fun EditProductDetailScreen(
         }.show()
     }
 
+    val updatedImageUri = selectedProductImageUri?: imageUri
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -172,7 +189,10 @@ fun EditProductDetailScreen(
                 IconButton(
                     onClick = {
                         // Clear back stack of Route.EditProductDetailsScreen.route
-                        navController.popBackStack(Route.EditProductDetailsScreen.route, inclusive = true)
+                        navController.popBackStack(
+                            Route.EditProductDetailsScreen.route,
+                            inclusive = true
+                        )
                     }
                 ) {
                     Icon(
@@ -188,7 +208,7 @@ fun EditProductDetailScreen(
                 .fillMaxSize()
                 .padding(horizontal = 8.dp)
                 .verticalScroll(scrollState)
-        ){
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -197,14 +217,20 @@ fun EditProductDetailScreen(
                     .border(width = 2.dp, color = colorResource(R.color.black))
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter(imageUri),
+                    painter = rememberAsyncImagePainter(updatedImageUri),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxWidth().height(280.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(280.dp)
+                        .padding(2.dp)
                 )
 
                 IconButton(
-                    onClick = { /* Add your onClick logic here */ },
+                    onClick = {
+                        launcher.launch("image/*") // Open the gallery to select an image
+                        //i want to open the gallery and want to select the image and the selected image should be set to the above image composable!!
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.Black)
@@ -214,13 +240,13 @@ fun EditProductDetailScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Default.AddCircle,
-                            contentDescription = "Add Product Image",
+                            painter = painterResource(R.drawable.refresh_icon),
+                            contentDescription = null,
                             tint = Color.White
                         )
                         Spacer(modifier = Modifier.width(4.dp)) // Add spacing between Icon and Text
                         Text(
-                            text = "Add Product Image",
+                            text = "Change Image",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
@@ -235,14 +261,14 @@ fun EditProductDetailScreen(
                 enable = true,
                 textColor = Color.DarkGray,
                 icon = null,
-                onValueChange = { validProductName = it},
+                onValueChange = { validProductName = it },
             )
 
             // Category Section
             CategorySection(
                 updatedCategory = updatedCategory!!,
                 onSelectEnabled = false,
-                onCategoryChange = { updatedCategory = it},
+                onCategoryChange = { updatedCategory = it },
                 onCategorySelection = { expanded = !expanded }
             )
             // Dropdown Menu
@@ -290,7 +316,9 @@ fun EditProductDetailScreen(
                     onDetailRowClick = {
                         showPurchaseDatePicker.value = true
                     },
-                    onValueChange = { validPurchaseDate = it } // This handles the case where user types in the field (optional)
+                    onValueChange = {
+                        validPurchaseDate = it
+                    } // This handles the case where user types in the field (optional)
                 )
             }
             if (expiryDate != null) {
@@ -305,7 +333,9 @@ fun EditProductDetailScreen(
                     onDetailRowClick = {
                         showExpiryDatePicker.value = true
                     },
-                    onValueChange = { validExpiryDate = it } // This handles the case where user types in the field (optional)
+                    onValueChange = {
+                        validExpiryDate = it
+                    } // This handles the case where user types in the field (optional)
                 )
             }
             Row(
@@ -385,7 +415,9 @@ fun EditProductDetailScreen(
                 onDetailRowClick = {
                     showExpiryDatePicker.value = true
                 },
-                onValueChange = { validNotes = it } // This handles the case where user types in the field (optional)
+                onValueChange = {
+                    validNotes = it
+                } // This handles the case where user types in the field (optional)
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
