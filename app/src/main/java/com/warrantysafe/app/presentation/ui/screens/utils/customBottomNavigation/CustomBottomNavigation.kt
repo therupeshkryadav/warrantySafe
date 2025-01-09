@@ -1,8 +1,5 @@
 package com.warrantysafe.app.presentation.ui.screens.utils.customBottomNavigation
 
-import androidx.annotation.DrawableRes
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -14,7 +11,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -22,20 +19,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
-
-data class BottomNavigationItem(
-    @DrawableRes val icon: Int,
-    val text: String,
-    val route: Route
-)
+import com.warrantysafe.app.presentation.viewModel.BottomNavigationViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CustomBottomNavigation(
     modifier: Modifier,
-    items: List<BottomNavigationItem>,
     currentRoute: Route,
     onItemClick: (Route) -> Unit
 ) {
+    val bottomNavigationViewModel : BottomNavigationViewModel = koinViewModel()
+
+    LaunchedEffect(Unit){
+        bottomNavigationViewModel.loadBottomNavigationIcons()
+    }
+
+    val items = bottomNavigationViewModel.bottomNavigation.value
+
     NavigationBar(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,

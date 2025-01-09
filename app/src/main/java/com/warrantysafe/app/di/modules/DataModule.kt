@@ -1,9 +1,11 @@
 package com.warrantysafe.app.di.modules
 
+import com.warrantysafe.app.data.repository.BottomNavigationRepositoryImpl
 import com.warrantysafe.app.data.repository.NotificationRepositoryImpl
 import com.warrantysafe.app.data.repository.ProductRepositoryImpl
 import com.warrantysafe.app.data.repository.RecentRepositoryImpl
 import com.warrantysafe.app.data.repository.UserRepositoryImpl
+import com.warrantysafe.app.domain.repository.BottomNavigationRepository
 import com.warrantysafe.app.domain.repository.NotificationRepository
 import com.warrantysafe.app.domain.repository.ProductRepository
 import com.warrantysafe.app.domain.repository.RecentRepository
@@ -16,4 +18,5 @@ val dataModule = module {
     single<NotificationRepository> { NotificationRepositoryImpl() } // Add data layer dependencies here, e.g., repositories, network clients
     single<UserRepository> { UserRepositoryImpl() } // Add data layer dependencies here, e.g., repositories, network clients
     single<RecentRepository> { RecentRepositoryImpl() } // Add data layer dependencies here, e.g., repositories, network clients
+    single<BottomNavigationRepository> { BottomNavigationRepositoryImpl() } // Add data layer dependencies here, e.g., repositories, network clients
 }

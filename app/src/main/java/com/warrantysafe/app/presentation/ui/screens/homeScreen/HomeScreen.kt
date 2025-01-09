@@ -53,7 +53,6 @@ import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.homeScreen.tabs.ActiveTab
 import com.warrantysafe.app.presentation.ui.screens.homeScreen.tabs.ExpiredTab
-import com.warrantysafe.app.presentation.ui.screens.utils.customBottomNavigation.BottomNavigationItem
 import com.warrantysafe.app.presentation.ui.screens.utils.customBottomNavigation.CustomBottomNavigation
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.utils.dropDownMenu.DropDownMenuContent
@@ -71,6 +70,7 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     val userViewModel: UserViewModel = koinViewModel()
     val productViewModel: ProductViewModel = koinViewModel()
+
     LaunchedEffect(Unit){
         userViewModel.loadUserDetails()
         productViewModel.loadActiveProducts()
@@ -257,23 +257,6 @@ fun HomeScreen(
 
             // Bottom Navigation fixed at the bottom
             CustomBottomNavigation(
-                items = listOf(
-                    BottomNavigationItem(
-                        icon = R.drawable.home_warranty,
-                        text = "Home",
-                        route = Route.HomeScreen
-                    ),
-                    BottomNavigationItem(
-                        icon = R.drawable.add_warranty,
-                        text = "Add",
-                        route = Route.AddScreen
-                    ),
-                    BottomNavigationItem(
-                        icon = R.drawable.profile_warranty,
-                        text = "Profile",
-                        route = Route.ProfileScreen
-                    )
-                ),
                 currentRoute = Route.HomeScreen,
                 onItemClick = { route -> navigateToTab(navController, route) },
                 modifier = Modifier.align(Alignment.BottomCenter) // Fix at the bottom of the screen

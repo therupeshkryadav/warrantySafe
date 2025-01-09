@@ -1,6 +1,7 @@
 package com.warrantysafe.app.di.modules
 
 
+import com.warrantysafe.app.presentation.viewModel.BottomNavigationViewModel
 import com.warrantysafe.app.presentation.viewModel.NotificationViewModel
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import com.warrantysafe.app.presentation.viewModel.RecentViewModel
@@ -13,5 +14,6 @@ val presentationModule = module {
     viewModel { NotificationViewModel(get()) }
     viewModel { UserViewModel(get()) }
     viewModel { RecentViewModel(get()) }
+    viewModel { BottomNavigationViewModel(get()) }
 }
 
