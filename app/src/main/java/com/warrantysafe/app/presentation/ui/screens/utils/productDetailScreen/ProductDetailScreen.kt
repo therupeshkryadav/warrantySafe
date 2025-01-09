@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.utils.productDetailScreen
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -39,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.productCardList.components.functions.CustomLinearProgressIndicator
@@ -55,7 +58,8 @@ fun ProductDetailScreen(
     purchaseDate: String?,
     category: String?,
     expiryDate: String?,
-    notes: String? = null
+    notes: String? = null,
+    imageUri: Uri // Image resource ID
 ) {
     val validProductName = productName ?: "Unknown Product"
     val validPurchaseDate = purchaseDate ?: "Not Available"
@@ -111,7 +115,8 @@ fun ProductDetailScreen(
                         purchaseDate = purchaseDate,
                         category = category,
                         expiryDate = expiryDate,
-                        notes = notes
+                        notes = notes,
+                        imageUri = imageUri
                     )
                 }) {
                     Icon(
@@ -129,7 +134,7 @@ fun ProductDetailScreen(
                 .verticalScroll(scrollState)
         ) {
             Image(
-                painter = painterResource(R.drawable.product_placeholder),
+                painter = rememberAsyncImagePainter(imageUri),
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .height(280.dp)
@@ -283,14 +288,16 @@ fun navigateToEditProductDetailsScreen(
     purchaseDate: String?,
     category: String?,
     expiryDate: String?,
-    notes: String?
+    notes: String?,
+    imageUri: Uri? // Image resource ID
 ) {
     val route = Route.EditProductDetailsScreen.createRoute(
         productName = productName,
         purchaseDate = purchaseDate,
         category = category,
         expiryDate = expiryDate,
-        notes = notes
+        notes = notes,
+        imageUri = imageUri
     )
     navController.navigate(route)
 }
@@ -303,7 +310,8 @@ private fun PreviewProductDetailsScreen() {
         productName = "LG WASHING MACHINE",
         purchaseDate = "11/01/2023",
         category = "Electronics",
-        expiryDate = "9/09/2024"
+        expiryDate = "9/09/2024",
+        imageUri =  Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
     )
 
 }

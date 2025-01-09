@@ -1,12 +1,12 @@
 package com.warrantysafe.app.domain.model
 
-import androidx.compose.ui.graphics.painter.Painter
+import android.net.Uri
 
 data class Product(
     val productName: String,
     val purchase: String,
     val expiry: String,
     val category: String,
-    val imageResource: Painter,
+    val imageUri: Uri,
     val notes: String? = null
 )

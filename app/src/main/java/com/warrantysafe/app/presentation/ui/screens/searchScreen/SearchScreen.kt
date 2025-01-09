@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.navigation.Route
@@ -119,7 +120,7 @@ fun SearchScreen(
                         purchase = product.purchase,
                         expiry = product.expiry,
                         category = product.category,
-                        imageResource = product.imageResource,
+                        imageResource = rememberAsyncImagePainter(product.imageUri),
                         itemTint = Color.Transparent,
                         detailsColor = Color.Black,
                         onLongPress = {},
@@ -149,7 +150,8 @@ private fun navigateToDetails(product: Product, navController: NavController) {
         purchaseDate = product.purchase,
         category = product.category,
         expiryDate = product.expiry, // Placeholder for expiry logic
-        notes = product.notes
+        notes = product.notes,
+        imageUri = product.imageUri
     )
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)

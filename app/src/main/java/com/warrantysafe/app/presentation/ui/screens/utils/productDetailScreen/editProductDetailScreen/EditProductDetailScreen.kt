@@ -1,6 +1,7 @@
 package com.warrantysafe.app.presentation.ui.screens.utils.productDetailScreen.editProductDetailScreen
 
 import android.app.DatePickerDialog
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -50,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
@@ -64,7 +66,8 @@ fun EditProductDetailScreen(
     purchaseDate: String?,
     category: String?=null,
     expiryDate: String?,
-    notes: String?=null
+    notes: String?=null,
+    imageUri: Uri,
 ) {
     var validProductName by remember { mutableStateOf(productName) }
     var validPurchaseDate by remember { mutableStateOf(purchaseDate) }
@@ -194,7 +197,7 @@ fun EditProductDetailScreen(
                     .border(width = 2.dp, color = colorResource(R.color.black))
             ) {
                 Image(
-                    painter = painterResource(R.drawable.product_placeholder),
+                    painter = rememberAsyncImagePainter(imageUri),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxWidth().height(280.dp)
@@ -397,7 +400,8 @@ private fun PreviewProductDetailsScreen() {
         productName = "LG WASHING MACHINE",
         purchaseDate = "11/01/2023",
         category = "Electronics",
-        expiryDate = "11/09/2024"
+        expiryDate = "11/09/2024",
+        imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
     )
 
 }

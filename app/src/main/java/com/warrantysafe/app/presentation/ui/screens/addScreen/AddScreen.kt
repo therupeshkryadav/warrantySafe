@@ -174,9 +174,8 @@ fun AddScreen(navController: NavController) {
         }.show()
     }
 
-    val imageResource = selectedProductImageUri?.let {
-        rememberAsyncImagePainter(it)
-    } ?: painterResource(R.drawable.product_placeholder)
+    val imageUri = selectedProductImageUri?: Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
+
 
     Column(
         modifier = Modifier
@@ -223,7 +222,7 @@ fun AddScreen(navController: NavController) {
                             expiry = expiryDate,
                             category = updatedCategory,
                             notes = notes,
-                            imageResource = imageResource
+                            imageUri = imageUri
                         )
                         navController.popBackStack()
                         navController.navigate(Route.HomeScreen.route)
@@ -252,12 +251,13 @@ fun AddScreen(navController: NavController) {
                     .border(width = 2.dp, color = colorResource(R.color.black))
             ) {
                 Image(
-                    painter = rememberImagePainter(data = selectedProductImageUri ?: R.drawable.product_placeholder),
+                    painter = rememberAsyncImagePainter(imageUri),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(280.dp)
+                        .padding(2.dp)
                 )
 
                 IconButton(
@@ -274,13 +274,13 @@ fun AddScreen(navController: NavController) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Default.AddCircle,
+                            painter = if (selectedProductImageUri == null) painterResource(R.drawable.add_warranty) else painterResource(R.drawable.refresh_icon),
                             contentDescription = "Add Product Image",
                             tint = Color.White
                         )
                         Spacer(modifier = Modifier.width(4.dp)) // Add spacing between Icon and Text
                         Text(
-                            text = "Add Product Image",
+                            text = if (selectedProductImageUri == null) "Upload Receipt Image" else "Change Image",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White

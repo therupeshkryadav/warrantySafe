@@ -36,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.navigation.Route
@@ -123,7 +124,7 @@ fun ExpiredTab(
                         purchase = product.purchase,
                         expiry = product.expiry,
                         category = product.category,
-                        imageResource = product.imageResource,
+                        imageResource = rememberAsyncImagePainter(product.imageUri),
                         itemTint = Color.Transparent,
                         detailsColor = Color.Black,
                         onLongPress = {},
@@ -168,7 +169,8 @@ private fun navigateToDetails(product: Product, navController: NavController) {
         purchaseDate = product.purchase,
         category = product.category,
         expiryDate = product.expiry,
-        notes = product.notes
+        notes = product.notes,
+        imageUri = product.imageUri
     ) // Placeholder for expiry logic
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)
