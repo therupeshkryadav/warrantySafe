@@ -304,7 +304,7 @@ fun EditProductDetailScreen(
             // Category Section
             CategorySection(
                 updatedCategory = updatedCategory!!,
-                onSelectEnabled = false,
+                onSelectEnabled = true,
                 onCategoryChange = { updatedCategory = it },
                 onCategorySelection = { expanded = !expanded }
             )
@@ -314,9 +314,9 @@ fun EditProductDetailScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
-                        .background(Color.White, RoundedCornerShape(8.dp))
-                        .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
-                        .padding(vertical = 8.dp)
+                        .padding(horizontal = 8.dp)
+                        .background(Color.White, RoundedCornerShape(20.dp))
+                        .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
                 ) {
                     Column {
                         categoryOptions.forEach { category ->
