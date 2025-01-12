@@ -120,8 +120,6 @@ fun EditProductDetailScreen(
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri != null) {
             selectedProductImageUri = uri // Handle success (uri is not null, content was selected)
-        } else {
-            selectedProductImageUri = null // Handle cancellation (uri is null, no content selected)
         }
     }
 
