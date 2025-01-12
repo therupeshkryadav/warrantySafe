@@ -120,7 +120,8 @@ fun NotificationScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
-        } else {
+        }
+        else {
             // Empty state UI
             Column(
                 modifier = Modifier
@@ -146,105 +147,3 @@ fun NotificationScreen(
         }
     }
 }
-
-
-//@Composable
-//fun NotificationScreen(
-//    navController: NavController
-//) {
-//    val notificationViewModel: NotificationViewModel = koinViewModel()
-//
-//    // Load notifications when the screen is launched
-//    LaunchedEffect(Unit) {
-//        notificationViewModel.loadNotifications()
-//    }
-//
-//    val notificationList = notificationViewModel.notifications.value
-//
-//    Column(modifier = Modifier.fillMaxSize()) {
-//        CustomTopAppBar(
-//            title = {
-//                Text(
-//                    text = "Notifications",
-//                    style = MaterialTheme.typography.titleLarge,
-//                    textAlign = TextAlign.Center,
-//                    fontWeight = FontWeight.Bold,
-//                    fontSize = 16.sp,
-//                    maxLines = 1,
-//                    overflow = TextOverflow.Ellipsis,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .wrapContentHeight()
-//                )
-//            },
-//            navigationIcon = {
-//                IconButton(onClick = { navController.popBackStack() }) {
-//                    Icon(
-//                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-//                        contentDescription = "Navigate Back"
-//                    )
-//                }
-//            },
-//            actions = {}
-//        )
-//
-//        // "Mark All as Read" Section
-//        MarkAllAsReadSection()
-//
-//        // Notifications List or Empty State
-//        if (notificationList.isNotEmpty()) {
-//            LazyColumn(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .padding(horizontal = 16.dp, vertical = 8.dp)
-//            ) {
-//                items(notificationList) { notifications ->
-//                    NotificationItem(notification = notifications.notification)
-//                }
-//            }
-//        } else {
-//            EmptyState()
-//        }
-//    }
-//}
-//
-//@Composable
-//fun MarkAllAsReadSection() {
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(16.dp)
-//            .border(1.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)),
-//        horizontalArrangement = Arrangement.Center,
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        Icon(
-//            modifier = Modifier.padding(8.dp),
-//            imageVector = Icons.Default.Email,
-//            contentDescription = "Mark All as Read"
-//        )
-//        Text(
-//            text = "Mark all as Read",
-//            style = MaterialTheme.typography.bodyLarge,
-//            modifier = Modifier.padding(8.dp)
-//        )
-//    }
-//}
-//
-//@Composable
-//fun EmptyState() {
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(16.dp),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
-//    ) {
-//        Text(
-//            text = "No notifications available.",
-//            style = MaterialTheme.typography.bodyLarge,
-//            textAlign = TextAlign.Center,
-//            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-//        )
-//    }
-//}

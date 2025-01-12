@@ -110,6 +110,7 @@ fun ProductCardList(
                 Box(
                     modifier = Modifier
                         .wrapContentWidth()
+                        .padding(top = 8.dp)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null // Disables ripple effect

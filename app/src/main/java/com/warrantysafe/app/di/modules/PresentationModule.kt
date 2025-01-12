@@ -5,6 +5,7 @@ import com.warrantysafe.app.presentation.viewModel.BottomNavigationViewModel
 import com.warrantysafe.app.presentation.viewModel.NotificationViewModel
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import com.warrantysafe.app.presentation.viewModel.RecentViewModel
+import com.warrantysafe.app.presentation.viewModel.UpcomingViewModel
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -15,5 +16,6 @@ val presentationModule = module {
     viewModel { UserViewModel(get()) }
     viewModel { RecentViewModel(get()) }
     viewModel { BottomNavigationViewModel(get()) }
+    viewModel { UpcomingViewModel(get()) }
 }
 
