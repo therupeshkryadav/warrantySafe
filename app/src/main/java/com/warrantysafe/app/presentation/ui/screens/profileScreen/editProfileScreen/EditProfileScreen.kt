@@ -1,5 +1,8 @@
 package com.warrantysafe.app.presentation.ui.screens.profileScreen.editProfileScreen
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,8 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
@@ -57,13 +59,22 @@ fun EditProfileScreen(
     var actualUsername by remember { mutableStateOf(userName) }
     var actualEmailId by remember { mutableStateOf(emailId) }
     var actualPhoneNumber by remember { mutableStateOf(phoneNumber) }
-    var actualCountryCode by remember { mutableStateOf("+91") } // Default country code
     val scrollState = rememberScrollState()
+
+    // State to handle profile image
+    var profileImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    // Image picker launcher
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        profileImageUri = uri // Update the profile image URI
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 8.dp, end = 8.dp)
+            .verticalScroll(scrollState)
     ) {
         CustomTopAppBar(
             title = {
@@ -99,71 +110,79 @@ fun EditProfileScreen(
                 }
             }
         )
+        Spacer(modifier = Modifier.size(16.dp))
 
-        Column(
+        // Profile Avatar Box
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 8.dp, start = 8.dp, end = 8.dp)
-                .verticalScroll(scrollState)
+                .size(200.dp)
+                .clip(CircleShape)
+                .background(color = colorResource(R.color.black))
+                .align(Alignment.CenterHorizontally)
+                .clickable { launcher.launch("image/*") } // Open gallery on click
         ) {
-            Spacer(modifier = Modifier.size(16.dp))
-            // Profile Avatar
-            Box(
-                modifier = Modifier
-                    .size(200.dp)
-                    .clip(CircleShape)
-                    .clickable {
-                        //Edit Profile Image
-                    }
-                    .background(color = colorResource(R.color.black))
-                    .align(Alignment.CenterHorizontally)
-            ) {
+            // Display the selected profile image or a placeholder
+            if (profileImageUri != null) {
                 Image(
-                    painter = painterResource(R.drawable.profile_placeholder),
+                    painter = rememberAsyncImagePainter(profileImageUri),
+                    contentDescription = "Profile Avatar",
                     modifier = Modifier
                         .size(198.dp)
                         .align(Alignment.Center)
+                        .clickable { launcher.launch("image/*") } // Open gallery on icon click
                         .clip(CircleShape),
-                    contentDescription = "Profile Avatar",
+                    contentScale = ContentScale.Crop
+                )
+
+            } else {
+                Image(
+                    painter = painterResource(R.drawable.profile_placeholder),
+                    contentDescription = "Profile Placeholder",
+                    modifier = Modifier
+                        .size(198.dp)
+                        .align(Alignment.Center)
+                        .clip(CircleShape)
+                        .clickable { launcher.launch("image/*") },// Open gallery on icon click,
                     contentScale = ContentScale.Crop
                 )
             }
-            // Profile Details
-            DetailRow(
-                "Name",
-                updatedValue = actualFullName,
-                enable = true,
-                textColor = colorResource(R.color.purple_500),
-                icon = null,
-                onValueChange = { actualFullName = it }
-            )
-            DetailRow(
-                "Username",
-                updatedValue = actualUsername,
-                enable = true,
-                textColor = colorResource(R.color.purple_500),
-                icon = null,
-                onValueChange = { actualUsername = it }
-            )
-            DetailRow(
-                "Email",
-                updatedValue = actualEmailId,
-                enable = true,
-                textColor = colorResource(R.color.purple_500),
-                icon = null,
-                onValueChange = { actualEmailId = it }
-            )
-            // Phone Number DetailRow with Country Code Picker
-            PhoneDetailRow(
-                label = "Phone",
-                enable = true,
-                phoneNumber = actualPhoneNumber,
-                textColor = colorResource(R.color.purple_500),
-                onCountryCodeChange = { actualCountryCode = it },
-                onPhoneNumberChange = { actualPhoneNumber = it }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
         }
+
+        Spacer(modifier = Modifier.size(16.dp))
+
+        // Profile details (e.g., name, username, email, phone number)
+        DetailRow(
+            "Name",
+            updatedValue = actualFullName,
+            enable = true,
+            textColor = colorResource(R.color.purple_500),
+            icon = null,
+            onValueChange = { actualFullName = it }
+        )
+        DetailRow(
+            "Username",
+            updatedValue = actualUsername,
+            enable = true,
+            textColor = colorResource(R.color.purple_500),
+            icon = null,
+            onValueChange = { actualUsername = it }
+        )
+        DetailRow(
+            "Email",
+            updatedValue = actualEmailId,
+            enable = true,
+            textColor = colorResource(R.color.purple_500),
+            icon = null,
+            onValueChange = { actualEmailId = it }
+        )
+        PhoneDetailRow(
+            label = "Phone",
+            enable = true,
+            phoneNumber = actualPhoneNumber,
+            textColor = colorResource(R.color.purple_500),
+            onCountryCodeChange = { /* Handle country code */ },
+            onPhoneNumberChange = { actualPhoneNumber = it }
+        )
     }
 }
 

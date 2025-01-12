@@ -73,6 +73,27 @@ fun SettingsScreen(navController: NavController) {
             verticalAlignment = Alignment.CenterVertically
         )
         {
+            Text("Change Password",
+                modifier = Modifier.padding(8.dp),
+                fontSize = 12.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Medium
+            )
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = null
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(1f)
+                .padding(8.dp)
+                .border(width = 1.dp, Color.Black)
+                .background(Color.LightGray),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        )
+        {
             Text(
                 "Manage Categories",
                 modifier = Modifier.padding(8.dp),

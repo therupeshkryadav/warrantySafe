@@ -19,12 +19,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
@@ -200,8 +202,8 @@ fun ProfileScreen(
                 
                 Column(
                     modifier = Modifier
-                        .fillMaxHeight(0.84f)
-                        .padding(top = 8.dp, start = 8.dp, end = 8.dp, bottom = 16.dp)
+                        .fillMaxHeight(1f)
+                        .padding(horizontal = 16.dp)
                         .verticalScroll(scrollState)
                 ) {
 
@@ -259,78 +261,37 @@ fun ProfileScreen(
                         onValueChange = { }
                     )
 
-                    // Change Password Button
-                    Box(
+                    //Edit Profile Button
+                    Button(
+                        onClick = {
+                            navigateToEditProfile(
+                            navController = navController,
+                            user = user
+                        )},
+                        shape = RoundedCornerShape(20.dp),
                         modifier = Modifier
-                            .padding(vertical = 8.dp)
                             .fillMaxWidth()
-                            .border(1.dp, colorResource(R.color.purple_500))
+                            .padding(top = 16.dp)
                     ) {
-                        Row(
+                        Text(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp)
-                                .background(color = colorResource(R.color.purple_700)),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .padding(vertical = 11.dp),
-                                text = "Change Your Password",
-                                fontSize = 18.sp,
-                                color = colorResource(R.color.white)
-                            )
-                            Icon(
-                                modifier = Modifier
-                                    .width(24.dp)
-                                    .fillMaxHeight()
-                                    .padding(vertical = 9.dp),
-                                painter = painterResource(R.drawable.fast_forward),
-                                tint = colorResource(R.color.white),
-                                contentDescription = "Change Password"
-                            )
-                        }
-                    }
-                    // Edit Profile Button
-                    Box(
-                        modifier = Modifier
-                            .padding(vertical = 8.dp)
-                            .fillMaxWidth()
-                            .clickable {
-                                navigateToEditProfile(
-                                    navController = navController,
-                                    user = user
-                                )
-                            }
-                            .border(1.dp, colorResource(R.color.purple_500))
-                    ) {
-                        Row(
+                                .align(Alignment.CenterVertically),
+                            text = "Edit Profile",
+                            fontSize = 18.sp,
+                            color = colorResource(R.color.white)
+                        )
+                        Icon(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp)
-                                .background(color = colorResource(R.color.purple_700)),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .padding(vertical = 11.dp),
-                                text = "Edit Profile",
-                                fontSize = 18.sp,
-                                color = colorResource(R.color.white)
-                            )
-                            Icon(
-                                modifier = Modifier
-                                    .width(24.dp)
-                                    .fillMaxHeight()
-                                    .padding(vertical = 9.dp),
-                                imageVector = Icons.Filled.Edit,
-                                tint = colorResource(R.color.white),
-                                contentDescription = "Edit Profile"
-                            )
-                        }
+                                .width(18.dp)
+                                .padding(start = 4.dp)
+                                .fillMaxHeight(),
+                            imageVector = Icons.Filled.Edit,
+                            tint = colorResource(R.color.white),
+                            contentDescription = "Edit Profile"
+                        )
                     }
+
+                    Spacer(modifier = Modifier.size(120.dp))
                 }
             }
             // Bottom Navigation fixed at the bottom

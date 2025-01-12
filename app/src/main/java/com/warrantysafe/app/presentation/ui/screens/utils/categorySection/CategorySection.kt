@@ -11,7 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -20,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -35,7 +37,8 @@ fun CategorySection(
     onCategoryChange: (String) -> Unit,
     onCategorySelection: () -> Unit
 ) {
-
+    // Track dropdown state
+    var isSelected by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -54,13 +57,20 @@ fun CategorySection(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White, RoundedCornerShape(8.dp))
-                .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                .background(Color.White, RoundedCornerShape(20.dp))
+                .border(
+                    width = 1.dp,
+                    color = Color.LightGray,
+                    shape = RoundedCornerShape(20.dp)
+                )
                 .clickable(
                     enabled = onSelectEnabled,
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null // Disables ripple effect
-                ) { onCategorySelection() }
+                ) {
+                    isSelected = !isSelected // Toggle dropdown arrow state
+                    onCategorySelection()
+                },
         ) {
             TextField(
                 value = updatedCategory,
@@ -76,7 +86,7 @@ fun CategorySection(
                     .padding(horizontal = 8.dp),
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
+                        imageVector = if (isSelected) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                         contentDescription = "Dropdown icon"
                     )
                 },
@@ -84,6 +94,7 @@ fun CategorySection(
                     focusedContainerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
                     disabledContainerColor = Color.White,
                     unfocusedTextColor = Color.Black,
                     disabledTextColor = Color.Black
@@ -97,13 +108,12 @@ fun CategorySection(
 @Preview(showBackground = true)
 @Composable
 fun RedesignedCategorySectionPreview() {
-    val selectedCategory by remember { mutableStateOf("") }
+    var selectedCategory by remember { mutableStateOf("") }
 
     CategorySection(
         updatedCategory = selectedCategory,
         onSelectEnabled = true,
-        onCategoryChange = {},
-        onCategorySelection = {}
+        onCategoryChange = { selectedCategory = it },
+        onCategorySelection = { /* Handle dropdown logic here */ }
     )
 }
-

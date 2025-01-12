@@ -6,7 +6,7 @@ import com.warrantysafe.app.domain.repository.UpcomingRepository
 class UpcomingRepositoryImpl: UpcomingRepository {
     // private val upcomingList = mutableListOf<Upcoming>()
     private val upcomingList = mutableListOf<Upcoming>(
-        Upcoming("feature !!"),
+        Upcoming("Dark Mode will be available soon !!"),
         Upcoming("feature !!"),
         Upcoming("feature !!"),
         Upcoming("feature !!"),

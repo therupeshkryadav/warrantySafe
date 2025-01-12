@@ -55,6 +55,7 @@ fun LoginPage(
                     placeholder = {
                         Text("Enter Username", color = Color.Gray)
                     },
+                    shape = RoundedCornerShape(20.dp),
                     leadingIcon = {
                         Icon(
                             painter = painterResource(id = R.drawable.username),
@@ -91,6 +92,7 @@ fun LoginPage(
                     placeholder = {
                         Text("Enter Password", color = Color.Gray)
                     },
+                    shape = RoundedCornerShape(20.dp),
                     leadingIcon = {
                         Icon(
                             painter = painterResource(id = R.drawable.password),

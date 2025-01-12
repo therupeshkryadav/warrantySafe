@@ -266,17 +266,19 @@ fun AddScreen(navController: NavController) {
                         modifier = Modifier.wrapContentWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            painter = if (selectedProductImageUri == null) painterResource(R.drawable.upload) else painterResource(R.drawable.refresh_icon),
-                            contentDescription = "Add Product Image",
-                            tint = Color.White
-                        )
-                        Spacer(modifier = Modifier.width(4.dp)) // Add spacing between Icon and Text
                         Text(
                             text = if (selectedProductImageUri == null) "Upload Product Image Image" else "Change Image",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
+                        )
+
+                        Spacer(modifier = Modifier.width(4.dp)) // Add spacing between Icon and Text
+
+                        Icon(
+                            painter = if (selectedProductImageUri == null) painterResource(R.drawable.upload) else painterResource(R.drawable.refresh_icon),
+                            contentDescription = "Add Product Image",
+                            tint = Color.White
                         )
                     }
                 }
@@ -306,9 +308,9 @@ fun AddScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
-                        .background(Color.White, RoundedCornerShape(8.dp))
-                        .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
-                        .padding(vertical = 8.dp)
+                        .padding(horizontal = 8.dp)
+                        .background(Color.White, RoundedCornerShape(20.dp))
+                        .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
                 ) {
                     Column {
                         categoryOptions.forEach { category ->
