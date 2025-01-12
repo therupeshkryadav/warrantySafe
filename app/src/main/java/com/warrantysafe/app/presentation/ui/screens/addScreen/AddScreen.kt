@@ -267,13 +267,13 @@ fun AddScreen(navController: NavController) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            painter = if (selectedProductImageUri == null) painterResource(R.drawable.add_warranty) else painterResource(R.drawable.refresh_icon),
+                            painter = if (selectedProductImageUri == null) painterResource(R.drawable.upload) else painterResource(R.drawable.refresh_icon),
                             contentDescription = "Add Product Image",
                             tint = Color.White
                         )
                         Spacer(modifier = Modifier.width(4.dp)) // Add spacing between Icon and Text
                         Text(
-                            text = if (selectedProductImageUri == null) "Upload Receipt Image" else "Change Image",
+                            text = if (selectedProductImageUri == null) "Upload Product Image Image" else "Change Image",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
