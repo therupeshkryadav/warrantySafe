@@ -203,4 +203,14 @@ class ProductRepositoryImpl : ProductRepository {
         productsList.add(product)
     }
 
+    override suspend fun updateProduct(product: Product) {
+        val index = productsList.indexOfFirst { it.productName == product.productName }
+        if (index != -1) {
+            productsList[index] = product
+        }
+    }
+
+    override suspend fun deleteProducts(products: List<Product>) {
+        productsList.removeAll(products)
+    }
 }

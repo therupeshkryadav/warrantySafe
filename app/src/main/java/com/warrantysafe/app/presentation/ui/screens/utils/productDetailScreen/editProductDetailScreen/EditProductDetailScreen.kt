@@ -57,6 +57,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
+import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.utils.categorySection.CategorySection
@@ -65,6 +66,7 @@ import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
@@ -105,6 +107,8 @@ fun EditProductDetailScreen(
 
     // Create a ScrollState for vertical scrolling
     val scrollState = rememberScrollState()
+
+    val productViewModel: ProductViewModel = koinViewModel()
 
     // Create a DatePickerDialog callback inside the composable context
     val context = LocalContext.current
@@ -179,7 +183,7 @@ fun EditProductDetailScreen(
             selectedExpiryDate.dayOfMonth
         ).apply {
             // Properly set the minimum date using time in milliseconds
-            datePicker.minDate = selectedPurchaseDate.atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli()
+            datePicker.minDate = selectedPurchaseDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
 
             setOnCancelListener {
                 showExpiryDatePicker.value = false
@@ -223,9 +227,19 @@ fun EditProductDetailScreen(
             actions = {
                 IconButton(
                     onClick = {
+                        productViewModel.updateProduct(
+                            product = Product(
+                                productName = validProductName!!,
+                                purchase = validPurchaseDate!!,
+                                expiry = validExpiryDate!!,
+                                category = updatedCategory!!,
+                                imageUri = updatedImageUri,
+                                notes = validNotes
+                            )
+                        )
                         // Clear back stack of Route.EditProductDetailsScreen.route
                         navController.popBackStack(
-                            Route.EditProductDetailsScreen.route,
+                            Route.ProductDetailsScreen.route,
                             inclusive = true
                         )
                     }

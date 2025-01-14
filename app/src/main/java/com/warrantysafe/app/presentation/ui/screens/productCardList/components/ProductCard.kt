@@ -4,7 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,10 +21,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,10 +46,11 @@ import com.warrantysafe.app.presentation.ui.screens.productCardList.components.f
 @Composable
 fun ProductCard(
     onClick: () -> Unit, // Callback to handle click and pass details
-    onLongPress: () -> Unit,
+    onSlidingForward: () -> Unit,
+    onSlidingBackward: () -> Unit,
     productName: String,
     itemTint: Color,
-    category:String,
+    category: String,
     detailsColor: Color,
     purchase: String,
     expiry: String,
@@ -65,23 +62,20 @@ fun ProductCard(
         currentDate = "28/12/2024"
     )
     val progress = calculateProgress(purchase, expiry, "28/12/2024")
-    var isSelected by remember { mutableStateOf(false) } // State to track selection
 
-    Box(modifier = Modifier.wrapContentSize().padding(vertical = 16.dp).pointerInput(Unit) {
-        detectTapGestures(
-            onPress = {
-                val startPress = System.currentTimeMillis()
-                tryAwaitRelease()
-                if (System.currentTimeMillis() - startPress > 500) { // Long press threshold (in ms)
-                    isSelected = !isSelected
-                    onLongPress()
+    Box(modifier = Modifier
+        .wrapContentSize()
+        .padding(vertical = 16.dp)
+        .pointerInput(Unit) {
+            detectHorizontalDragGestures { change, dragAmount ->
+                change.consume() // Consume the gesture
+                if (dragAmount > 0) {
+                    onSlidingForward()
+                } else {
+                    onSlidingBackward()
                 }
-            },
-            onTap = {
-                onClick() // Regular click functionality
             }
-        )
-    }) {
+        }) {
 
         // Category tag positioned above the card
         Box(
@@ -183,13 +177,14 @@ fun ProductCard(
 fun ProductCardPreview() {
     ProductCard(
         onClick = {},
-        onLongPress = {},
+        onSlidingForward = {},
+        onSlidingBackward = {},
         productName = "Realme 3 Pro",
+        itemTint = Color.Transparent,
+        category = "Electronics",
+        detailsColor = Color.Black,
         purchase = "30/11/2023",
         expiry = "01/12/2025",
-        category = "Electronics",
-        itemTint = Color.Transparent,
-        detailsColor = Color.Black,
-        imageResource = painterResource( R.drawable.product_placeholder )// Replace with your drawable resource
+        imageResource = painterResource( R.drawable.product_placeholder )
     )
 }

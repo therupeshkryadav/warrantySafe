@@ -138,15 +138,16 @@ fun SearchScreen(
                 items(matchedList.size) { index ->
                     val product = matchedList[index]
                     ProductCard(
+                        onClick = { navigateToDetails(product, navController) },
+                        onSlidingForward = {},
                         productName = product.productName,
+                        itemTint = Color.Transparent,
+                        category = product.category,
+                        detailsColor = Color.Black,
                         purchase = product.purchase,
                         expiry = product.expiry,
-                        category = product.category,
                         imageResource = rememberAsyncImagePainter(product.imageUri),
-                        itemTint = Color.Transparent,
-                        detailsColor = Color.Black,
-                        onLongPress = {},
-                        onClick = { navigateToDetails(product, navController) }
+                        onSlidingBackward = {}
                     )
                 }
                 item {

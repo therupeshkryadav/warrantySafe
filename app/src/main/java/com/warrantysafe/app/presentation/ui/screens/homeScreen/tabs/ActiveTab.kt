@@ -8,13 +8,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -120,15 +116,16 @@ fun ActiveTab(
             ) {
                 items(activeProducts) { product ->
                     ProductCard(
+                        onClick = { navigateToDetails(product, navController) },
+                        onSlidingForward = {},
                         productName = product.productName,
+                        itemTint = Color.Transparent,
+                        category = product.category,
+                        detailsColor = Color.Black,
                         purchase = product.purchase,
                         expiry = product.expiry,
-                        category = product.category,
-                        imageResource = rememberAsyncImagePainter(product.imageUri) ,
-                        itemTint = Color.Transparent,
-                        detailsColor = Color.Black,
-                        onLongPress = {},
-                        onClick = { navigateToDetails(product, navController) }
+                        imageResource = rememberAsyncImagePainter(product.imageUri),
+                        onSlidingBackward = {}
                     )
                 }
             }

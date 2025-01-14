@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
@@ -28,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -67,9 +70,8 @@ fun ProductCardList(
     )
     val expandedSort = remember { mutableStateOf(false) }
     val selectedSortOption = remember { mutableStateOf("Sort By") }
-
-    // Maintain a state for selected products
-    val selectedProducts = remember { mutableStateOf(mutableSetOf<Product>()) }
+    // State to keep track of selected products
+    val selectedProducts = remember { mutableStateListOf<Product>() }
 
     Column(modifier = Modifier.fillMaxSize()) {
         CustomTopAppBar(
@@ -101,16 +103,16 @@ fun ProductCardList(
         )
         if (productList.isNotEmpty()) {
 
-            Box(
+            Row(
                 modifier = Modifier
-                    .wrapContentWidth()
-                    .padding(start = 18.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 // First Box (Sort By Section)
                 Box(
                     modifier = Modifier
-                        .wrapContentWidth()
-                        .padding(top = 8.dp)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null // Disables ripple effect
@@ -155,6 +157,17 @@ fun ProductCardList(
                         }
                     }
                 }
+                if (selectedProducts.size > 0) {
+                    Icon(
+                        modifier = Modifier.clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null // Disables ripple effect
+                        ) { },
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = null
+                    )
+                }
+
             }
 
             LazyColumn(
@@ -164,24 +177,42 @@ fun ProductCardList(
                     .padding(horizontal = 8.dp)
             ) {
                 items(productList) { product ->
-                    val onLongPress = selectedProducts.value.contains(product)
-                    ProductCard(
-                        productName = product.productName,
-                        purchase = product.purchase,
-                        expiry = product.expiry,
-                        category = product.category,
-                        imageResource = rememberAsyncImagePainter(product.imageUri),
-                        itemTint = Color.Transparent,
-                        detailsColor = Color.Black,
-                        onLongPress = {
-                            if (onLongPress) {
-                                selectedProducts.value.add(product) // show a tickable icon in a row and beside the product card which shows it is selected!!
-                            } else {
-                                selectedProducts.value.remove(product)
+                    val isSelected = selectedProducts.contains(product)
+
+                    Row {
+                        if (isSelected) {
+                            Icon(
+                                modifier = Modifier.align(Alignment.CenterVertically),
+                                imageVector = Icons.Filled.Check,
+                                contentDescription = "Selected",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                        ProductCard(
+                            productName = product.productName,
+                            purchase = product.purchase,
+                            expiry = product.expiry,
+                            category = product.category,
+                            imageResource = rememberAsyncImagePainter(product.imageUri),
+                            itemTint = Color.Transparent, // Indicate selection
+                            detailsColor = Color.Black, // Change text color for selected item
+                            onSlidingForward = {
+                                if (!isSelected) {
+                                    // Add to selected products
+                                    selectedProducts.add(product)
+                                }
+                            },
+                            onSlidingBackward = {
+                                if (isSelected) {
+                                    // If already selected, deselect it
+                                    selectedProducts.remove(product)
+                                }
+                            },
+                            onClick = {
+                                navigateToDetails(product, navController)
                             }
-                        },
-                        onClick = { navigateToDetails(product, navController) }
-                    )
+                        )
+                    }
                 }
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
