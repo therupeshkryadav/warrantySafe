@@ -187,31 +187,49 @@ fun ProductCardList(
                                 contentDescription = "Selected",
                                 tint = MaterialTheme.colorScheme.primary
                             )
+                            ProductCard(
+                                productName = product.productName,
+                                purchase = product.purchase,
+                                expiry = product.expiry,
+                                category = product.category,
+                                imageResource = rememberAsyncImagePainter(product.imageUri),
+                                itemTint = Color.Transparent, // Indicate selection
+                                detailsColor = Color.Black, // Change text color for selected item
+                                onSlidingForward = {
+                                        // Add to selected products
+                                        selectedProducts.add(product)
+                                },
+                                onSlidingBackward = {
+                                        // If already selected, deselect it
+                                        selectedProducts.remove(product)
+                                },
+                                onClick = {
+                                    navigateToDetails(product, navController)
+                                }
+                            )
                         }
-                        ProductCard(
-                            productName = product.productName,
-                            purchase = product.purchase,
-                            expiry = product.expiry,
-                            category = product.category,
-                            imageResource = rememberAsyncImagePainter(product.imageUri),
-                            itemTint = Color.Transparent, // Indicate selection
-                            detailsColor = Color.Black, // Change text color for selected item
-                            onSlidingForward = {
-                                if (!isSelected) {
-                                    // Add to selected products
-                                    selectedProducts.add(product)
+                        else{
+                            ProductCard(
+                                productName = product.productName,
+                                purchase = product.purchase,
+                                expiry = product.expiry,
+                                category = product.category,
+                                imageResource = rememberAsyncImagePainter(product.imageUri),
+                                itemTint = Color.Transparent, // Indicate selection
+                                detailsColor = Color.Black, // Change text color for selected item
+                                onSlidingForward = {
+                                        // Add to selected products
+                                        selectedProducts.add(product)
+                                },
+                                onSlidingBackward = {
+                                        // If already selected, deselect it
+                                        selectedProducts.remove(product)
+                                },
+                                onClick = {
+                                    navigateToDetails(product, navController)
                                 }
-                            },
-                            onSlidingBackward = {
-                                if (isSelected) {
-                                    // If already selected, deselect it
-                                    selectedProducts.remove(product)
-                                }
-                            },
-                            onClick = {
-                                navigateToDetails(product, navController)
-                            }
-                        )
+                            )
+                        }
                     }
                 }
                 item {
