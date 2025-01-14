@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "199886162418",
+    "project_id": "warranty-safe-app",
+    "storage_bucket": "warranty-safe-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:199886162418:android:3c822dc4d6a6672a39836b",
+        "android_client_info": {
+          "package_name": "com.warrantysafe.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkcTDMM3BM-qnr_cHJEkJn1ZdqkF0-mo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

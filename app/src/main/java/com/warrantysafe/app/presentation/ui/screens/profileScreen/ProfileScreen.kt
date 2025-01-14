@@ -230,7 +230,7 @@ fun ProfileScreen(
                     // Profile Details
                     DetailRow(
                         "Name",
-                        updatedValue = user.fullName,
+                        updatedValue = user.fullName!!,
                         enable = false,
                         textColor = colorResource(R.color.purple_500),
                         icon = null,
@@ -238,7 +238,7 @@ fun ProfileScreen(
                     )
                     DetailRow(
                         "Username",
-                        updatedValue = user.userName,
+                        updatedValue = user.userName!!,
                         enable = false,
                         textColor = colorResource(R.color.purple_500),
                         icon = null,
@@ -254,7 +254,7 @@ fun ProfileScreen(
                     )
                     DetailRow(
                         "Phone",
-                        updatedValue = user.phone,
+                        updatedValue = user.phone!!,
                         enable = false,
                         textColor = colorResource(R.color.purple_500),
                         icon = null,

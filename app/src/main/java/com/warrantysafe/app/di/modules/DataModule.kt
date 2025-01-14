@@ -25,4 +25,5 @@ val dataModule = module {
     single<BottomNavigationRepository> { BottomNavigationRepositoryImpl() } // Add data layer dependencies here, e.g., repositories, network clients
     single<UpcomingRepository> { UpcomingRepositoryImpl() } // Add data layer dependencies here, e.g., repositories, network clients
     single<SettingsRepository> { SettingsRepositoryImpl() } // Add data layer dependencies here, e.g., repositories, network clients
+
 }
