@@ -4,4 +4,5 @@ import com.warrantysafe.app.domain.model.User
 
 interface UserRepository {
     suspend fun getUserDetail(): User
+    suspend fun updateUser(user: User)
 }

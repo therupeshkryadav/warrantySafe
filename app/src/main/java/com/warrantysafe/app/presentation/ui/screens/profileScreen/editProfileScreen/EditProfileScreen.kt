@@ -1,6 +1,7 @@
 package com.warrantysafe.app.presentation.ui.screens.profileScreen.editProfileScreen
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -42,10 +43,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
+import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.components.PhoneDetailRow
 import com.warrantysafe.app.presentation.ui.screens.utils.customTopAppBar.CustomTopAppBar
+import com.warrantysafe.app.presentation.viewModel.UserViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun EditProfileScreen(
@@ -60,6 +64,7 @@ fun EditProfileScreen(
     var actualEmailId by remember { mutableStateOf(emailId) }
     var actualPhoneNumber by remember { mutableStateOf(phoneNumber) }
     val scrollState = rememberScrollState()
+    val userViewModel: UserViewModel = koinViewModel()
 
     // State to handle profile image
     var profileImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -68,8 +73,14 @@ fun EditProfileScreen(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        profileImageUri = uri // Update the profile image URI
+        if (uri != null) {
+            profileImageUri = uri // Update the profile image URI // Handle success (uri is not null, content was selected)
+        } else {
+           profileImageUri = null // Handle cancellation (uri is null, no content selected)
+        }
     }
+
+    val imageUri = profileImageUri?: Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.profile_placeholder}")
 
     Column(
         modifier = Modifier
@@ -102,7 +113,16 @@ fun EditProfileScreen(
                 }
             },
             actions = {
-                IconButton(onClick = { navigateToTab(navController, Route.ProfileScreen) }) {
+                IconButton(onClick = {
+                    Log.d("Dagger","$imageUri")
+                    userViewModel.updateUserDetails(User(
+                        fullName = actualFullName,
+                        userName = actualUsername,
+                        emailId = actualEmailId,
+                        profileImageUri = imageUri,
+                        phone = actualPhoneNumber
+                    ))
+                    navigateToTab(navController, Route.ProfileScreen) }) {
                     Icon(
                         imageVector = Icons.Filled.Check,
                         contentDescription = "Check"

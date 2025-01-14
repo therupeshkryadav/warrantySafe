@@ -55,6 +55,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.presentation.navigation.Route
@@ -217,7 +218,7 @@ fun ProfileScreen(
                             .align(Alignment.CenterHorizontally)
                     ) {
                         Image(
-                            painter = painterResource(R.drawable.profile_placeholder),
+                            painter = rememberAsyncImagePainter(user.profileImageUri),
                             modifier = Modifier
                                 .size(198.dp)
                                 .align(Alignment.Center)
