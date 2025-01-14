@@ -74,6 +74,7 @@ import java.util.Calendar
 @Composable
 fun EditProductDetailScreen(
     navController: NavController,
+    productId: String,
     productName: String? = null,
     purchaseDate: String?,
     category: String? = null,
@@ -229,6 +230,7 @@ fun EditProductDetailScreen(
                     onClick = {
                         productViewModel.updateProduct(
                             product = Product(
+                                productId = productId ,
                                 productName = validProductName!!,
                                 purchase = validPurchaseDate!!,
                                 expiry = validExpiryDate!!,
@@ -478,6 +480,7 @@ fun EditProductDetailScreen(
 private fun PreviewProductDetailsScreen() {
     EditProductDetailScreen(
         navController = rememberNavController(),
+        productId = "ProductId",
         productName = "LG WASHING MACHINE",
         purchaseDate = "11/01/2023",
         category = "Electronics",

@@ -56,6 +56,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ProductDetailScreen(
     navController: NavController,
+    productId: String,
     productName: String?,
     purchaseDate: String?,
     category: String?,
@@ -113,6 +114,7 @@ fun ProductDetailScreen(
                 IconButton(onClick = {
                     navigateToEditProductDetailsScreen(
                         navController = navController,
+                        productId = productId,
                         productName = productName,
                         purchaseDate = purchaseDate,
                         category = category,
@@ -286,6 +288,7 @@ fun ProductDetailScreen(
 
 fun navigateToEditProductDetailsScreen(
     navController: NavController,
+    productId: String,
     productName: String?,
     purchaseDate: String?,
     category: String?,
@@ -294,6 +297,7 @@ fun navigateToEditProductDetailsScreen(
     imageUri: Uri? // Image resource ID
 ) {
     val route = Route.EditProductDetailsScreen.createRoute(
+        productId = productId,
         productName = productName,
         purchaseDate = purchaseDate,
         category = category,
@@ -309,6 +313,7 @@ fun navigateToEditProductDetailsScreen(
 private fun PreviewProductDetailsScreen() {
     ProductDetailScreen(
         navController = rememberNavController(),
+        productId = "ProductId",
         productName = "LG WASHING MACHINE",
         purchaseDate = "11/01/2023",
         category = "Electronics",

@@ -9,6 +9,7 @@ class ProductRepositoryImpl : ProductRepository {
 
     private val productsList = mutableListOf<Product>(
         Product(
+            productId = "1",
             productName = "Realme 3 Pro",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
@@ -17,6 +18,7 @@ class ProductRepositoryImpl : ProductRepository {
             imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
         ),
         Product(
+            productId = "2",
             productName = "Honda Sp 125 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
@@ -24,6 +26,7 @@ class ProductRepositoryImpl : ProductRepository {
             imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
         ),
         Product(
+            productId = "3",
             productName = "Titan Watch",
             purchase = "01/10/2024",
             expiry = "01/10/2025",
@@ -31,6 +34,7 @@ class ProductRepositoryImpl : ProductRepository {
             imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
         ),
         Product(
+            productId = "4",
             productName = "Rado Watch",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
@@ -38,6 +42,7 @@ class ProductRepositoryImpl : ProductRepository {
             imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
         ),
         Product(
+            productId = "5",
             productName = "PS5",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
@@ -45,6 +50,7 @@ class ProductRepositoryImpl : ProductRepository {
             imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
         ),
         Product(
+            productId = "6",
             productName = "LG Washing Machine ",
             purchase = "30/11/2023",
             expiry = "01/12/2024",
@@ -52,143 +58,11 @@ class ProductRepositoryImpl : ProductRepository {
             imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
         ),
         Product(
+            productId = "7",
             productName = "Honda Sp 125 ",
             purchase = "30/11/2024",
             expiry = "30/11/2025",
             category = "Vehicles",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "Titan Watch",
-            purchase = "01/10/2024",
-            expiry = "01/10/2025",
-            category = "Wearables",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "Honda Sp 125 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Vehicles",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "Titan Watch",
-            purchase = "01/10/2024",
-            expiry = "01/10/2025",
-            category = "Wearables",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "Honda Sp 125 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Vehicles",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "Titan Watch",
-            purchase = "01/10/2024",
-            expiry = "01/10/2025",
-            category = "Wearables",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "Honda Sp 125 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Vehicles",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "Titan Watch",
-            purchase = "01/10/2024",
-            expiry = "01/10/2025",
-            category = "Wearables",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "Honda Sp 125 ",
-            purchase = "30/11/2024",
-            expiry = "30/11/2025",
-            category = "Vehicles",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "Titan Watch",
-            purchase = "01/10/2024",
-            expiry = "01/10/2025",
-            category = "Wearables",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "Rado Watch",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
-            imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-        ),
-        Product(
-            productName = "PS5",
-            purchase = "30/11/2023",
-            expiry = "01/12/2024",
-            category = "Electronics",
             imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
         )
     )
@@ -204,7 +78,7 @@ class ProductRepositoryImpl : ProductRepository {
     }
 
     override suspend fun updateProduct(product: Product) {
-        val index = productsList.indexOfFirst { it.productName == product.productName }
+        val index = productsList.indexOfFirst { it.productId == product.productId }
         if (index != -1) {
             productsList[index] = product
         }

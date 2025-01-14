@@ -98,8 +98,9 @@ fun AppNavGraph() {
 
         // ProductDetailScreen with arguments
         composable(
-            route = "productDetailsScreen/{productName}/{purchaseDate}/{category}/{expiryDate}/{notes}/{imageUri}",
+            route = "productDetailsScreen/{productId}/{productName}/{purchaseDate}/{category}/{expiryDate}/{notes}/{imageUri}",
             arguments = listOf(
+                navArgument("productId") { type = NavType.StringType },
                 navArgument("productName") { type = NavType.StringType },
                 navArgument("purchaseDate") { type = NavType.StringType },
                 navArgument("expiryDate") { type = NavType.StringType },
@@ -108,6 +109,7 @@ fun AppNavGraph() {
                 navArgument("imageUri") { type = NavType.StringType } // Correct NavType for imageUri
             )
         ) {
+            val productId = it.arguments?.getString("productId") ?: "Unknown"
             val productName = it.arguments?.getString("productName") ?: "Unknown"
             val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
             val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
@@ -126,6 +128,7 @@ fun AppNavGraph() {
 
             ProductDetailScreen(
                 navController = navController,
+                productId = productId,
                 productName = productName,
                 purchaseDate = purchaseDate,
                 category = category,
@@ -138,8 +141,9 @@ fun AppNavGraph() {
 
         // EditProductDetailScreen with arguments
         composable(
-            route = "editProductDetailsScreen/{productName}/{purchaseDate}/{category}/{expiryDate}/{notes}/{imageUri}",
+            route = "editProductDetailsScreen/{productId}/{productName}/{purchaseDate}/{category}/{expiryDate}/{notes}/{imageUri}",
             arguments = listOf(
+                navArgument("productId") { type = NavType.StringType },
                 navArgument("productName") { type = NavType.StringType },
                 navArgument("purchaseDate") { type = NavType.StringType },
                 navArgument("expiryDate") { type = NavType.StringType },
@@ -148,6 +152,7 @@ fun AppNavGraph() {
                 navArgument("imageUri") { type = NavType.StringType } // Correct NavType for imageUri
             )
         ) {
+            val productId = it.arguments?.getString("productId") ?: "Unknown"
             val productName = it.arguments?.getString("productName") ?: "Unknown"
             val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
             val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
@@ -166,6 +171,7 @@ fun AppNavGraph() {
 
             EditProductDetailScreen(
                 navController = navController,
+                productId = productId,
                 productName = productName,
                 purchaseDate = purchaseDate,
                 category = category,
