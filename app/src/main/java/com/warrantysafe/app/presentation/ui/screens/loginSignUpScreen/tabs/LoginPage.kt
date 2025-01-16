@@ -22,27 +22,19 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
-import com.warrantysafe.app.presentation.state.AuthState
-import com.warrantysafe.app.presentation.viewModel.AuthViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginPage(navController: NavController) {
-    val authViewModel: AuthViewModel = koinViewModel()
     val context = LocalContext.current
 
     // Remember state for user input
     val username = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
 
-    // Observe authentication state
-    val authState by authViewModel.authState.collectAsState()
 
     // Form validation check
     val isFormValid = username.value.isNotEmpty() && password.value.isNotEmpty()
 
-    // Show loading indicator
-    val isLoading = authState is AuthState.Loading
 
     Column(modifier = Modifier.wrapContentSize()) {
         Box(modifier = Modifier.fillMaxWidth()) {
@@ -126,51 +118,21 @@ fun LoginPage(navController: NavController) {
                 // Login Button
                 Button(
                     onClick = {
-                        if (isFormValid) {
-                            authViewModel.login(username.value, password.value)
-                        } else {
-                            Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
-                        }
+                        navController.navigate(Route.HomeScreen.route)
                     },
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp),
+                    colors = ButtonColors(
+                        containerColor = Color.DarkGray,
+                        contentColor = Color.White,
+                        disabledContainerColor = Color.DarkGray,
+                        disabledContentColor = Color.White
+                    ),
                     enabled = isFormValid // Disable button if form is invalid
                 ) {
                     Text(text = "Login")
-                }
-
-                // Show loading indicator when auth is in progress
-                if (isLoading) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-                }
-
-                // Show success message after successful login
-                if (authState is AuthState.Success) {
-                    val successMessage = (authState as AuthState.Success).message
-                    Text(
-                        text = successMessage,
-                        color = Color.Green,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                    )
-                    // Optionally, navigate to the next screen
-                    LaunchedEffect(successMessage) {
-                        navController.navigate(Route.HomeScreen.route)
-                    }
-                }
-
-                // Show error message if login fails
-                if (authState is AuthState.Error) {
-                    val errorMessage = (authState as AuthState.Error).errorMessage
-                    Text(
-                        text = errorMessage,
-                        color = Color.Red,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                    )
                 }
 
                 // "OR" Section for alternative login options
@@ -197,7 +159,7 @@ fun LoginPage(navController: NavController) {
                         modifier = Modifier
                             .padding(vertical = 8.dp)
                             .fillMaxWidth()
-                            .border(width = 1.dp, color = Color.DarkGray, shape = RoundedCornerShape(20.dp)),
+                            .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {

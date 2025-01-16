@@ -28,7 +28,9 @@ class AuthViewModel(
             if (result.isSuccess) {
                 _authState.value = AuthState.Success("Login successful")
             } else {
-                _authState.value = AuthState.Error(result.exceptionOrNull()?.message ?: "Unknown error")
+                _authState.value = AuthState.Error(
+                    result.exceptionOrNull()?.message ?: "Login failed due to unknown error"
+                )
             }
         }
     }
@@ -41,7 +43,9 @@ class AuthViewModel(
             if (result.isSuccess) {
                 _authState.value = AuthState.Success("Signup successful")
             } else {
-                _authState.value = AuthState.Error(result.exceptionOrNull()?.message ?: "Unknown error")
+                _authState.value = AuthState.Error(
+                    result.exceptionOrNull()?.message ?: "Signup failed due to unknown error"
+                )
             }
         }
     }
@@ -54,7 +58,9 @@ class AuthViewModel(
             if (result.isSuccess) {
                 _authState.value = AuthState.Success("Sign-out successful")
             } else {
-                _authState.value = AuthState.Error(result.exceptionOrNull()?.message ?: "Unknown error")
+                _authState.value = AuthState.Error(
+                    result.exceptionOrNull()?.message ?: "Sign-out failed due to unknown error"
+                )
             }
         }
     }

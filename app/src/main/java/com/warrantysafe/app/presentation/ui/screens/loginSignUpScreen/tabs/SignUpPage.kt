@@ -1,11 +1,9 @@
 package com.warrantysafe.app.presentation.ui.screens.loginSignUpScreen.tabs
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -18,16 +16,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,8 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -52,18 +46,11 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
-import com.warrantysafe.app.presentation.state.AuthState
-import com.warrantysafe.app.presentation.viewModel.AuthViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SignUpPage(
     navController: NavController
 ) {
-    val authViewModel: AuthViewModel = koinViewModel()
-    val context = LocalContext.current
-    val authState by authViewModel.authState.collectAsState()
-
     // Remember state for user input
     val username = remember { mutableStateOf("") }
     val fullName = remember { mutableStateOf("") }
@@ -75,12 +62,16 @@ fun SignUpPage(
     // State to handle profile image
     var profileImageUri by remember { mutableStateOf<Uri?>(null) }
 
+    // Default profile image URI (when no image is selected)
+    val defaultProfileImage = Uri.parse("android.resource://com.warrantysafe.app/drawable/profile_placeholder")
+
     // Image picker launcher
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? -> profileImageUri = uri }
-
-    val imageUri = profileImageUri ?: Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.profile_placeholder}")
+    ) { uri: Uri? ->
+        // Set the profileImageUri to the chosen URI or the default placeholder if URI is null
+        profileImageUri = uri ?: defaultProfileImage
+    }
 
     Column(modifier = Modifier.padding(8.dp).wrapContentSize()) {
         // Profile Avatar
@@ -88,12 +79,17 @@ fun SignUpPage(
             modifier = Modifier
                 .size(200.dp)
                 .clip(CircleShape)
-                .background(color = colorResource(R.color.black))
+                .border(width = 1.dp,Color.Black, RoundedCornerShape(200.dp))
                 .align(Alignment.CenterHorizontally)
                 .clickable { launcher.launch("image/*") }
         ) {
             Image(
-                painter = rememberAsyncImagePainter(imageUri),
+                painter =
+                if (profileImageUri == null) {
+                    painterResource(R.drawable.profile_placeholder)
+                } else {
+                    rememberAsyncImagePainter(profileImageUri)
+                },
                 modifier = Modifier
                     .size(198.dp)
                     .align(Alignment.Center)
@@ -254,7 +250,7 @@ fun SignUpPage(
             trailingIcon = {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
-                        imageVector = Icons.Default.Warning,
+                        painter = painterResource(R.drawable.ic_eye),
                         contentDescription = "Toggle Password Visibility"
                     )
                 }
@@ -277,42 +273,20 @@ fun SignUpPage(
         // SignUp Button
         Button(
             onClick = {
-                // Perform validation and sign up logic
-                if (username.value.isEmpty() || fullName.value.isEmpty() || emailAddress.value.isEmpty() || phoneNumber.value.isEmpty() || password.value.isEmpty()) {
-                    Toast.makeText(context, "Please fill all the fields", Toast.LENGTH_SHORT).show()
-                } else {
-                    authViewModel.signup(
-                        imageUri,
-                        username.value,
-                        emailAddress.value,
-                        phoneNumber.value,
-                        password.value
-                    )
-                }
+                navController.navigate(Route.HomeScreen.route)
             },
             shape = RoundedCornerShape(20.dp),
+            colors = ButtonColors(
+                containerColor = Color.DarkGray,
+                contentColor = Color.White,
+                disabledContainerColor = Color.DarkGray,
+                disabledContentColor = Color.White
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp)
         ) {
             Text(text = "Sign Up")
-        }
-
-        // Observing AuthState to show appropriate feedback
-        when (authState) {
-            is AuthState.Loading -> {
-                // Show loading indicator
-            }
-            is AuthState.Success -> {
-                // Navigate to next screen or show success message
-                Toast.makeText(context, "Sign up successful", Toast.LENGTH_SHORT).show()
-                navController.navigate(Route.HomeScreen.route) // Navigate to login page
-            }
-            is AuthState.Error -> {
-                val errorMessage = (authState as AuthState.Error).errorMessage
-                Toast.makeText(context, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
-            }
-            else -> { /* Do nothing */ }
         }
     }
 }

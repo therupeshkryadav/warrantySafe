@@ -23,7 +23,7 @@ import org.koin.dsl.module
 val dataModule = module {
     // AppwriteClient
     single { AppwriteClient.createClient(androidContext()) }  // Network client (Appwrite)
-    single<ProductRepository> { ProductRepositoryImpl(get()) } // Add data layer dependencies here, e.g., repositories, network clients
+    single<ProductRepository> { ProductRepositoryImpl() } // Add data layer dependencies here, e.g., repositories, network clients
     single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }// Add data layer dependencies here, e.g., repositories, network clients
     single<NotificationRepository> { NotificationRepositoryImpl() } // Add data layer dependencies here, e.g., repositories, network clients
     single<UserRepository> { UserRepositoryImpl() } // Add data layer dependencies here, e.g., repositories, network clients
