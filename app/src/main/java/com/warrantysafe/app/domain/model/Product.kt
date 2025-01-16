@@ -11,3 +11,6 @@ data class Product(
     val imageUri: Uri,
     val notes: String? = null
 )
+
+
+

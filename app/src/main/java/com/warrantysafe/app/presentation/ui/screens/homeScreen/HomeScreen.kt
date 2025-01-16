@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.homeScreen
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,6 +35,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -42,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -71,6 +74,7 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     val userViewModel: UserViewModel = koinViewModel()
     val productViewModel: ProductViewModel = koinViewModel()
+
 
     LaunchedEffect(Unit){
         userViewModel.loadUserDetails()
@@ -153,13 +157,20 @@ fun HomeScreen(
                             DropDownMenuContent(
                                 navController = navController,
                                 dropDownList = listOf("Logout"),
-                                onItemClicked = {
-                                    // Clear back stack of Route.HomeScreen.route
-                                    navController.popBackStack(Route.HomeScreen.route, inclusive = true)
-                                    navController.navigate(Route.LoginSignUpScreen.route) // Navigating to LoginSignUpScreen
-                                }
+                                onItemClicked = {  }
                             )
                         }
+//                        // Observe the sign-out result to trigger navigation
+//                        LaunchedEffect(signOutState) {
+//                            if (signOutState?.isSuccess == true) {
+//                                // After sign-out, navigate to LoginSignUpScreen
+//                                navController.popBackStack(Route.HomeScreen.route, inclusive = true)
+//                                navController.navigate(Route.LoginSignUpScreen.route)
+//                            } else if (signOutState?.isFailure == true) {
+//                                // Handle failure if needed
+//                                Toast.makeText(context, "Sign out failed", Toast.LENGTH_SHORT).show()
+//                            }
+//                        }
                     }
                 )
 

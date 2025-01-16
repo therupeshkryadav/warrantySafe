@@ -24,6 +24,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.ui.screens.loginSignUpScreen.tabs.LoginPage
 import com.warrantysafe.app.presentation.ui.screens.loginSignUpScreen.tabs.SignUpPage
@@ -31,8 +33,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginSignUpScreen(
-    onLoginSuccess: () -> Unit,
-    onSignUpSuccess: () -> Unit
+    navController: NavController
 ) {
     Column(
         modifier = Modifier
@@ -93,8 +94,8 @@ fun LoginSignUpScreen(
         ) { page ->
             // Content for each page
             when (page) {
-                0 -> LoginPage(onLoginSuccess = { onLoginSuccess() }) // Content for Login Tab
-                1 -> SignUpPage(onSignUpSuccess = { onSignUpSuccess() }) // Content for SignUp Tab
+                0 -> LoginPage(navController = navController) // Content for Login Tab
+                1 -> SignUpPage(navController = navController) // Content for SignUp Tab
             }
         }
     }
@@ -104,7 +105,6 @@ fun LoginSignUpScreen(
 @Composable
 fun PreviewLoginSignUpScreen() {
     LoginSignUpScreen(
-        onLoginSuccess = { /* Mock navigation logic, e.g., print to log or show a message */ },
-        onSignUpSuccess = { }
+       navController = rememberNavController()
     )
 }

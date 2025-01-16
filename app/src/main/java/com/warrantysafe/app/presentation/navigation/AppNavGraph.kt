@@ -12,10 +12,9 @@ import com.warrantysafe.app.presentation.ui.screens.aboutApp.AboutAppScreen
 import com.warrantysafe.app.presentation.ui.screens.addScreen.AddScreen
 import com.warrantysafe.app.presentation.ui.screens.helpSupportScreen.HelpSupportScreen
 import com.warrantysafe.app.presentation.ui.screens.homeScreen.HomeScreen
-import com.warrantysafe.app.presentation.ui.screens.utils.productDetailScreen.ProductDetailScreen
-import com.warrantysafe.app.presentation.ui.screens.utils.productDetailScreen.editProductDetailScreen.EditProductDetailScreen
 import com.warrantysafe.app.presentation.ui.screens.loginSignUpScreen.LoginSignUpScreen
 import com.warrantysafe.app.presentation.ui.screens.notificationScreen.NotificationScreen
+import com.warrantysafe.app.presentation.ui.screens.productCardList.ProductCardList
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.ProfileScreen
 import com.warrantysafe.app.presentation.ui.screens.profileScreen.editProfileScreen.EditProfileScreen
 import com.warrantysafe.app.presentation.ui.screens.searchScreen.SearchScreen
@@ -23,7 +22,8 @@ import com.warrantysafe.app.presentation.ui.screens.settingsScreen.SettingsScree
 import com.warrantysafe.app.presentation.ui.screens.splashScreen.SplashScreen
 import com.warrantysafe.app.presentation.ui.screens.termsPrivacyScreen.TermsPrivacyScreen
 import com.warrantysafe.app.presentation.ui.screens.upcomingFeaturesScreen.UpcomingFeaturesScreen
-import com.warrantysafe.app.presentation.ui.screens.productCardList.ProductCardList
+import com.warrantysafe.app.presentation.ui.screens.utils.productDetailScreen.ProductDetailScreen
+import com.warrantysafe.app.presentation.ui.screens.utils.productDetailScreen.editProductDetailScreen.EditProductDetailScreen
 
 @Composable
 fun AppNavGraph() {
@@ -47,14 +47,7 @@ fun AppNavGraph() {
         // LoginSignUpScreen
         composable(Route.LoginSignUpScreen.route) {
             LoginSignUpScreen(
-                onLoginSuccess = {
-                    navController.navigate(Route.HomeScreen.route) {
-                        popUpTo(Route.LoginSignUpScreen.route) { inclusive = true }
-                    }
-                },
-                onSignUpSuccess = {
-                    navController.navigate(Route.LoginSignUpScreen.route)
-                }
+                navController = navController
             )
         }
 

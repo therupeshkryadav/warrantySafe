@@ -144,7 +144,7 @@ fun EditProfileScreen(
             // Display the selected profile image or a placeholder
             if (profileImageUri != null) {
                 Image(
-                    painter = rememberAsyncImagePainter(profileImageUri),
+                    painter = rememberAsyncImagePainter(imageUri),
                     contentDescription = "Profile Avatar",
                     modifier = Modifier
                         .size(198.dp)
