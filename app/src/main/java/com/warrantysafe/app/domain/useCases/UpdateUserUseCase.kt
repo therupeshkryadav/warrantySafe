@@ -4,5 +4,7 @@ import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.domain.repository.UserRepository
 
 class UpdateUserUseCase(private val userRepository: UserRepository) {
-    suspend operator fun invoke(user: User) = userRepository.updateUser(user)
+    suspend operator fun invoke(user: User): Result<Unit>{
+        return userRepository.updateUser(user)
+    }
 }

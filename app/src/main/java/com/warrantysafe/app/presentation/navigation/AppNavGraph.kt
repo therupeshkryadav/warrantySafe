@@ -8,22 +8,23 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.warrantysafe.app.R
-import com.warrantysafe.app.presentation.ui.screens.aboutApp.AboutAppScreen
-import com.warrantysafe.app.presentation.ui.screens.addScreen.AddScreen
-import com.warrantysafe.app.presentation.ui.screens.helpSupportScreen.HelpSupportScreen
-import com.warrantysafe.app.presentation.ui.screens.homeScreen.HomeScreen
-import com.warrantysafe.app.presentation.ui.screens.loginSignUpScreen.LoginSignUpScreen
-import com.warrantysafe.app.presentation.ui.screens.notificationScreen.NotificationScreen
-import com.warrantysafe.app.presentation.ui.screens.productCardList.ProductCardList
-import com.warrantysafe.app.presentation.ui.screens.profileScreen.ProfileScreen
-import com.warrantysafe.app.presentation.ui.screens.profileScreen.editProfileScreen.EditProfileScreen
-import com.warrantysafe.app.presentation.ui.screens.searchScreen.SearchScreen
-import com.warrantysafe.app.presentation.ui.screens.settingsScreen.SettingsScreen
-import com.warrantysafe.app.presentation.ui.screens.splashScreen.SplashScreen
-import com.warrantysafe.app.presentation.ui.screens.termsPrivacyScreen.TermsPrivacyScreen
-import com.warrantysafe.app.presentation.ui.screens.upcomingFeaturesScreen.UpcomingFeaturesScreen
-import com.warrantysafe.app.presentation.ui.screens.utils.productDetailScreen.ProductDetailScreen
-import com.warrantysafe.app.presentation.ui.screens.utils.productDetailScreen.editProductDetailScreen.EditProductDetailScreen
+import com.warrantysafe.app.presentation.ui.screens.auth.LoginScreen
+import com.warrantysafe.app.presentation.ui.screens.auth.SignUpScreen
+import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.aboutApp.AboutAppScreen
+import com.warrantysafe.app.presentation.ui.screens.main.addScreen.AddScreen
+import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.helpSupportScreen.HelpSupportScreen
+import com.warrantysafe.app.presentation.ui.screens.main.homeScreen.HomeScreen
+import com.warrantysafe.app.presentation.ui.screens.main.utils.notificationScreen.NotificationScreen
+import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList.ProductCardList
+import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.ProfileScreen
+import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.editProfileScreen.EditProfileScreen
+import com.warrantysafe.app.presentation.ui.screens.main.utils.searchScreen.SearchScreen
+import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.settingsScreen.SettingsScreen
+import com.warrantysafe.app.presentation.ui.screens.splash.SplashScreen
+import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.termsPrivacyScreen.TermsPrivacyScreen
+import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.upcomingFeaturesScreen.UpcomingFeaturesScreen
+import com.warrantysafe.app.presentation.ui.screens.main.utils.productDetailScreen.ProductDetailScreen
+import com.warrantysafe.app.presentation.ui.screens.main.utils.productDetailScreen.editProductDetailScreen.EditProductDetailScreen
 
 @Composable
 fun AppNavGraph() {
@@ -37,18 +38,21 @@ fun AppNavGraph() {
         composable(Route.SplashScreen.route) {
             SplashScreen(
                 onFinish = {
-                    navController.navigate(Route.LoginSignUpScreen.route) {
+                    navController.navigate(Route.LoginScreen.route) {
                         popUpTo(Route.SplashScreen.route) { inclusive = true }
                     }
                 }
             )
         }
 
-        // LoginSignUpScreen
-        composable(Route.LoginSignUpScreen.route) {
-            LoginSignUpScreen(
-                navController = navController
-            )
+        // LoginScreen
+        composable(Route.LoginScreen.route) {
+            LoginScreen(navController = navController)
+        }
+
+        // SignUpScreen
+        composable(Route.SignUpScreen.route) {
+            SignUpScreen(navController = navController)
         }
 
         // HomeScreen

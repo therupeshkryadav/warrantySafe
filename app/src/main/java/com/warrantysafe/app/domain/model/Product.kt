@@ -8,8 +8,8 @@ data class Product(
     val purchase: String,
     val expiry: String,
     val category: String,
-    val imageUri: Uri,
-    val notes: String? = null
+    val productImageUri: Uri,
+    val notes: String
 )
 
 
