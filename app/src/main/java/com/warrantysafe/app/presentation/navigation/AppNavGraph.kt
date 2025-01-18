@@ -10,21 +10,21 @@ import androidx.navigation.navArgument
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.ui.screens.auth.LoginScreen
 import com.warrantysafe.app.presentation.ui.screens.auth.SignUpScreen
-import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.aboutApp.AboutAppScreen
 import com.warrantysafe.app.presentation.ui.screens.main.addScreen.AddScreen
-import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.helpSupportScreen.HelpSupportScreen
 import com.warrantysafe.app.presentation.ui.screens.main.homeScreen.HomeScreen
-import com.warrantysafe.app.presentation.ui.screens.main.utils.notificationScreen.NotificationScreen
-import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList.ProductCardList
 import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.ProfileScreen
 import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.editProfileScreen.EditProfileScreen
-import com.warrantysafe.app.presentation.ui.screens.main.utils.searchScreen.SearchScreen
+import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.aboutApp.AboutAppScreen
+import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.helpSupportScreen.HelpSupportScreen
+import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList.ProductCardList
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.settingsScreen.SettingsScreen
-import com.warrantysafe.app.presentation.ui.screens.splash.SplashScreen
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.termsPrivacyScreen.TermsPrivacyScreen
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.upcomingFeaturesScreen.UpcomingFeaturesScreen
+import com.warrantysafe.app.presentation.ui.screens.main.utils.notificationScreen.NotificationScreen
 import com.warrantysafe.app.presentation.ui.screens.main.utils.productDetailScreen.ProductDetailScreen
 import com.warrantysafe.app.presentation.ui.screens.main.utils.productDetailScreen.editProductDetailScreen.EditProductDetailScreen
+import com.warrantysafe.app.presentation.ui.screens.main.utils.searchScreen.SearchScreen
+import com.warrantysafe.app.presentation.ui.screens.splash.SplashScreen
 
 @Composable
 fun AppNavGraph() {
@@ -36,13 +36,7 @@ fun AppNavGraph() {
     ) {
         // SplashScreen
         composable(Route.SplashScreen.route) {
-            SplashScreen(
-                onFinish = {
-                    navController.navigate(Route.LoginScreen.route) {
-                        popUpTo(Route.SplashScreen.route) { inclusive = true }
-                    }
-                }
-            )
+            SplashScreen(navController = navController)
         }
 
         // LoginScreen
@@ -195,9 +189,9 @@ fun AppNavGraph() {
 
             EditProfileScreen(
                 navController = navController,
-                fullName = fullName,
-                userName = userName,
-                emailId = emailId,
+                name = fullName,
+                username = userName,
+                email = emailId,
                 phoneNumber = phone
             )
         }

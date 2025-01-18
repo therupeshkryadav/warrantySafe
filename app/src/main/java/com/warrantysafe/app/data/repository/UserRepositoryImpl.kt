@@ -1,5 +1,6 @@
 package com.warrantysafe.app.data.repository
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.warrantysafe.app.domain.model.User
@@ -12,6 +13,10 @@ class UserRepositoryImpl(
 ) : UserRepository {
 
     private val usersCollection = firestore.collection("users")
+
+    override suspend fun checkUser(): Boolean {
+        return firebaseAuth.currentUser != null
+    }
 
     override suspend fun signUpUser(user: User): Result<User> {
         return try {
@@ -45,7 +50,7 @@ class UserRepositoryImpl(
 
             if (firebaseUser != null) {
                 // Fetch additional user data from Firestore
-                val userDocument = firestore.collection("users").document(firebaseUser.uid).get().await()
+                val userDocument = usersCollection.document(firebaseUser.uid).get().await()
 
                 if (userDocument.exists()) {
                     // Map Firestore document to the User object
@@ -68,11 +73,54 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun updateUser(user: User): Result<Unit> {
+    override suspend fun getUser(): Result<User> {
         return try {
-            val userId = firebaseAuth.currentUser?.uid ?: throw Exception("User not logged in")
-            usersCollection.document(userId).set(user).await()
-            Result.success(Unit)
+            // Get the currently authenticated Firebase user
+            val firebaseUser = firebaseAuth.currentUser
+
+            // Check if the user is logged in
+            if (firebaseUser != null) {
+                // Fetch user data from Firestore
+                val userDocument = usersCollection.document(firebaseUser.uid).get().await()
+
+                // Check if the document exists
+                if (userDocument.exists()) {
+                    // Map Firestore document to the User object
+                    val user = User(
+                        name = userDocument.getString("name") ?: "",
+                        email = userDocument.getString("email") ?: "",
+                        username = userDocument.getString("username") ?: "",
+                        phoneNumber = userDocument.getString("phoneNumber") ?: "",
+                        profileImageUri = userDocument.getString("profileImageUri") ?: ""
+                    )
+                    Result.success(user)
+                } else {
+                    Result.failure(Exception("User data not found in Firestore"))
+                }
+            } else {
+                Result.failure(Exception("No authenticated user found"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun updateUser(user: User): Result<User> {
+        return try {
+            val userId = firebaseAuth.currentUser?.uid
+            if (userId != null) {
+                val userData = mapOf(
+                    "username" to user.username,
+                    "name" to user.name,
+                    "email" to user.email,
+                    "phoneNumber" to user.phoneNumber,
+                    "profileImageUri" to user.profileImageUri
+                )
+                usersCollection.document(userId).update(userData).await()
+                Result.success(user)
+            } else {
+                Result.failure(Exception("No authenticated user found"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -80,10 +128,12 @@ class UserRepositoryImpl(
 
     override suspend fun signOutUser(): Result<Unit> {
         return try {
+            // Sign out the user using Firebase Authentication
             firebaseAuth.signOut()
-            Result.success(Unit)
+            Log.d("SignOut","${firebaseAuth.signOut()}")
+            Result.success(Unit) // Return a successful result
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(e) // Return a failure result in case of an exception
         }
     }
 }

@@ -11,6 +11,7 @@ import com.warrantysafe.app.domain.useCases.GetNotificationsUseCase
 import com.warrantysafe.app.domain.useCases.GetRecentsUseCase
 import com.warrantysafe.app.domain.useCases.GetSettingsUseCase
 import com.warrantysafe.app.domain.useCases.GetUpcomingUseCase
+import com.warrantysafe.app.domain.useCases.GetUserUseCase
 import com.warrantysafe.app.domain.useCases.LoginUserUseCase
 import com.warrantysafe.app.domain.useCases.SignOutUserUseCase
 import com.warrantysafe.app.domain.useCases.SignUpUserUseCase
@@ -25,11 +26,12 @@ val domainModule = module {
     single { GetExpiredProductsUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
     single { UpdateProductUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
     single { DeleteProductsUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
-    single { CheckUserUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
     single { SignUpUserUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
+    single { CheckUserUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
     single { LoginUserUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
-    single { SignOutUserUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
+    single { GetUserUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
     single { UpdateUserUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
+    single { SignOutUserUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
     single { GetNotificationsUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
     single { AddProductUseCase(get()) }
     single { GetRecentsUseCase(get()) }

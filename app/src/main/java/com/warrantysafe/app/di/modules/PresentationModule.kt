@@ -13,7 +13,7 @@ import org.koin.dsl.module
 val presentationModule = module {
     viewModel { ProductViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { NotificationViewModel(get()) }
-    viewModel { UserViewModel(get(),get(), get(), get(), get()) }
+    viewModel { UserViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { RecentViewModel(get()) }
     viewModel { BottomNavigationViewModel(get()) }
     viewModel { UpcomingViewModel(get()) }

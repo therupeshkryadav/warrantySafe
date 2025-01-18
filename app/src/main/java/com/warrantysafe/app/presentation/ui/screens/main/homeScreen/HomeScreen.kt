@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.main.homeScreen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,6 +35,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -73,10 +75,42 @@ fun HomeScreen(
     val userViewModel: UserViewModel = koinViewModel()
     val productViewModel: ProductViewModel = koinViewModel()
 
-
     LaunchedEffect(Unit){
+        userViewModel.getUser()
         productViewModel.loadActiveProducts()
         productViewModel.loadExpiredProducts()
+    }
+    // States to handle loading and errors
+    val userState = userViewModel.userState.observeAsState()
+    Log.d("UserState","${userState.value}")
+    var username = "username"
+    val result = userState.value
+    if (result != null) {
+        if (result.isSuccess) {
+            username = (result.getOrNull() as? User)?.username ?: "username"
+        } else if (result.isFailure) {
+            val errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
+            Text(text = errorMessage, color = Color.Red)
+        }
+    }
+
+    val signOutState by userViewModel.signOutState.observeAsState()
+    signOutState?.let { task ->
+        when {
+            task.isSuccess -> {
+                // Navigate to LoginScreen or show a success message
+                Text("Signed out successfully!")
+                navController.navigate(Route.LoginScreen.route) {
+                    popUpTo(Route.HomeScreen.route) { inclusive = true }
+                }
+                // Example: navigation logic
+                // navController.navigate(Route.LoginScreen.route)
+            }
+            task.isFailure -> {
+                // Show error message
+                Text("Sign out failed: ${task.exceptionOrNull()?.message}")
+            }
+        }
     }
     // State to manage the visibility of the dropdown menu
     var isMenuExpanded by remember { mutableStateOf(false) }
@@ -109,7 +143,7 @@ fun HomeScreen(
                 CustomTopAppBar(
                     title = {
                         Text(
-                            text = "Welcome, username!!",
+                            text = "Welcome, $username !!",
                             style = MaterialTheme.typography.titleLarge,
                             textAlign = TextAlign.Start,
                             fontWeight = FontWeight.Bold,
@@ -153,20 +187,11 @@ fun HomeScreen(
                             DropDownMenuContent(
                                 navController = navController,
                                 dropDownList = listOf("Logout"),
-                                onItemClicked = {  }
+                                onItemClicked = {
+                                    userViewModel.signOutUser()
+                                }
                             )
                         }
-//                        // Observe the sign-out result to trigger navigation
-//                        LaunchedEffect(signOutState) {
-//                            if (signOutState?.isSuccess == true) {
-//                                // After sign-out, navigate to LoginSignUpScreen
-//                                navController.popBackStack(Route.HomeScreen.route, inclusive = true)
-//                                navController.navigate(Route.LoginSignUpScreen.route)
-//                            } else if (signOutState?.isFailure == true) {
-//                                // Handle failure if needed
-//                                Toast.makeText(context, "Sign out failed", Toast.LENGTH_SHORT).show()
-//                            }
-//                        }
                     }
                 )
 
