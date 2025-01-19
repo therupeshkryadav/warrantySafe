@@ -163,7 +163,7 @@ fun SignUpScreen(
         // fullName Field
         TextField(
             value = name.value,
-            onValueChange = { name.value },
+            onValueChange = { name.value = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -300,9 +300,7 @@ fun SignUpScreen(
         // Password Field with Visibility Toggle
         TextField(
             value = password.value,
-            onValueChange = {
-                password.value = it
-            },
+            onValueChange = { password.value = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)

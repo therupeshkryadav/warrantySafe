@@ -52,13 +52,12 @@ fun ExpiredTab(
     )
     val expandedSort = remember { mutableStateOf(false) }
     val selectedSortOption = remember { mutableStateOf("Sort By") }
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 6.dp)) {
         if (expiredProducts.isNotEmpty()) {
 
             Box(
                 modifier = Modifier
                     .wrapContentWidth()
-                    .padding(start = 18.dp)
             ) {
                 // First Box (Sort By Section)
                 Box(

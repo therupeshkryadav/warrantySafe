@@ -30,7 +30,7 @@ fun SideDrawerContent(onItemClicked: (String) -> Unit) {
         modifier = Modifier
             .fillMaxHeight()
             .width(280.dp)
-            .background(color = MaterialTheme.colorScheme.surface)
+            .background(color = Color.White)
     ) {
         // Header
         Box(

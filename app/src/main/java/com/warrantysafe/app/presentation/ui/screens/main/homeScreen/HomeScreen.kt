@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
@@ -116,6 +118,7 @@ fun HomeScreen(
     var isMenuExpanded by remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(
+        modifier = Modifier.systemBarsPadding().statusBarsPadding(),
         drawerState = drawerState,
         drawerContent = {
             SideDrawerContent(
@@ -134,7 +137,11 @@ fun HomeScreen(
         },
         gesturesEnabled = true
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier
+            .background(Color.White)
+            .fillMaxSize()
+            .statusBarsPadding()
+            .systemBarsPadding()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -278,7 +285,7 @@ fun HomeScreen(
 
                 HorizontalPager(
                     state = pagerState,
-                    modifier = Modifier.fillMaxHeight(0.84f)
+                    modifier = Modifier.fillMaxSize()
                 ) { page ->
                     when (page) {
                         0 ->
