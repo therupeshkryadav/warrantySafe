@@ -1,9 +1,12 @@
 package com.warrantysafe.app.presentation.ui.screens.auth
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +17,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -79,40 +84,45 @@ fun LoginScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .scrollable(rememberScrollState(), orientation = Orientation.Vertical)
             .statusBarsPadding()
+            .systemBarsPadding()
+            .background(color = Color.White)
     ) {
-
-        Text(
-            text = "Login",
-            fontSize = 28.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth()
+        Image(
+            modifier = Modifier.fillMaxWidth().height(250.dp),
+            alignment = Alignment.Center,
+            painter = painterResource(R.drawable.warranty_logo),
+            contentDescription = null
         )
-
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = "Log in",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Username Field
+        // Email Field
         TextField(
             value = email.value,
             onValueChange = { email.value = it },
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 16.dp)
                 .border(
                     width = 1.dp,
                     color = Color.LightGray,
                     shape = RoundedCornerShape(20.dp)
                 ),
             placeholder = {
-                Text("Enter Username", color = Color.Gray)
+                Text("Enter Email", color = Color.Gray)
             },
             shape = RoundedCornerShape(20.dp),
             leadingIcon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.username),
-                    contentDescription = "Username Icon"
+                    painter = painterResource(id = R.drawable.email_pp),
+                    contentDescription = "Email Icon"
                 )
             },
             singleLine = true,
@@ -137,6 +147,7 @@ fun LoginScreen(navController: NavController) {
             onValueChange = { password.value = it },
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 16.dp)
                 .border(
                     width = 1.dp,
                     color = Color.LightGray,
@@ -181,7 +192,9 @@ fun LoginScreen(navController: NavController) {
                 }
             },
             shape = RoundedCornerShape(20.dp),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
             colors = ButtonColors(
                 containerColor = Color.DarkGray,
                 contentColor = Color.White,
@@ -197,7 +210,10 @@ fun LoginScreen(navController: NavController) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null // Disables ripple effect
+                ) {
                     navController.navigate(Route.SignUpScreen.route) {
                         popUpTo(Route.LoginScreen.route) { inclusive = true }
                     }
@@ -207,24 +223,12 @@ fun LoginScreen(navController: NavController) {
             color = Color.Red,
             textAlign = TextAlign.Center
         )
-
-        Spacer(modifier = Modifier.height(48.dp))
-
-        // "OR" Section for alternative login options
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            text = "OR",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Gray
-        )
-
         Spacer(modifier = Modifier.height(48.dp))
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 16.dp)
                 .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center

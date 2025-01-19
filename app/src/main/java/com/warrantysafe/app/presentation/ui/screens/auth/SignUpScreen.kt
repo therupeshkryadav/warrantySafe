@@ -4,10 +4,10 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,9 +17,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
@@ -50,10 +54,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.presentation.navigation.Route
+import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -93,7 +97,8 @@ fun SignUpScreen(
     var profileImageUri by remember { mutableStateOf<Uri?>(null) }
 
     // Default profile image URI (when no image is selected)
-    val defaultProfileImage = Uri.parse("android.resource://com.warrantysafe.app/drawable/profile_placeholder")
+    val defaultProfileImage =
+        Uri.parse("android.resource://com.warrantysafe.app/drawable/profile_placeholder")
 
     // Image picker launcher
     val launcher = rememberLauncherForActivityResult(
@@ -102,59 +107,75 @@ fun SignUpScreen(
         profileImageUri = uri ?: defaultProfileImage
     }
 
-    Column(modifier = Modifier
-        .padding(16.dp)
-        .fillMaxSize()
-        .scrollable(rememberScrollState(), orientation = Orientation.Vertical)
-        .statusBarsPadding()) {
-
-        Text(
-            text = "Sign Up",
-            fontSize = 28.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .systemBarsPadding()
+            .background(color = Color.White)
+            .verticalScroll(rememberScrollState())
+    ) {
+        CustomTopAppBar(
+            title = {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Sign Up",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+            },
+            navigationIcon = {
+                IconButton(
+                    onClick = {
+                        navController.navigate(Route.LoginScreen.route) {
+                            popUpTo(Route.SignUpScreen.route) { inclusive = true }
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowLeft,
+                        contentDescription = "Back"
+                    )
+                }
+            },
+            actions = {}
         )
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Profile Avatar
         Box(
             modifier = Modifier
-                .size(200.dp)
+                .size(160.dp)
                 .clip(CircleShape)
-                .border(width = 1.dp,Color.Black, RoundedCornerShape(200.dp))
+                .fillMaxWidth()
+                .border(width = 1.dp, Color.Black, CircleShape)
                 .align(Alignment.CenterHorizontally)
-                .clickable { launcher.launch("image/*") }
+                .clickable { launcher.launch("image/*") },
         ) {
             Image(
-                painter =
-                if (profileImageUri == null) {
-                    painterResource(R.drawable.profile_placeholder)
-                } else {
-                    rememberAsyncImagePainter(profileImageUri)
-                },
-                modifier = Modifier
-                    .size(198.dp)
-                    .align(Alignment.Center)
-                    .clip(CircleShape),
-                contentDescription = "Profile Avatar",
+                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(R.drawable.profile_placeholder),
+                contentDescription = null,
                 contentScale = ContentScale.Crop
             )
         }
-
         Spacer(modifier = Modifier.height(16.dp))
-
-        // FullName Field
+        // fullName Field
         TextField(
             value = name.value,
-            onValueChange = { name.value = it },
+            onValueChange = { name.value },
             modifier = Modifier
                 .fillMaxWidth()
-                .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
+                .padding(horizontal = 16.dp)
+                .border(
+                    width = 1.dp,
+                    color = Color.LightGray,
+                    shape = RoundedCornerShape(20.dp)
+                ),
             placeholder = {
                 Text("Enter Your Full Name", color = Color.Gray)
             },
+            shape = RoundedCornerShape(20.dp),
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.username),
@@ -183,6 +204,7 @@ fun SignUpScreen(
             onValueChange = { username.value = it },
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 16.dp)
                 .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
             placeholder = {
                 Text("Choose Your username", color = Color.Gray)
@@ -215,6 +237,7 @@ fun SignUpScreen(
             onValueChange = { email.value = it },
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 16.dp)
                 .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
             placeholder = {
                 Text("Enter Your Email Address", color = Color.Gray)
@@ -247,6 +270,7 @@ fun SignUpScreen(
             onValueChange = { phoneNumber.value = it },
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 16.dp)
                 .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
             placeholder = {
                 Text("Enter Your Phone Number", color = Color.Gray)
@@ -276,9 +300,12 @@ fun SignUpScreen(
         // Password Field with Visibility Toggle
         TextField(
             value = password.value,
-            onValueChange = { password.value = it },
+            onValueChange = {
+                password.value = it
+            },
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 16.dp)
                 .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
             placeholder = {
                 Text("Enter Your Password", color = Color.Gray)
@@ -341,22 +368,28 @@ fun SignUpScreen(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
+                .padding(horizontal = 16.dp)
         ) {
             Text(text = "Sign Up")
         }
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            modifier = Modifier.fillMaxWidth().clickable {
-                navController.navigate(Route.LoginScreen.route) {
-                    popUpTo(Route.SignUpScreen.route) { inclusive = true }
-                }
-            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null // Disables ripple effect
+                ) {
+                    navController.navigate(Route.LoginScreen.route) {
+                        popUpTo(Route.SignUpScreen.route) { inclusive = true }
+                    }
+                },
             text = "Already have an account ? Login",
             fontSize = 12.sp,
             color = Color.DarkGray,
-            textAlign = TextAlign.Center)
+            textAlign = TextAlign.Center
+        )
     }
 }
 
@@ -365,7 +398,6 @@ fun SignUpScreen(
 fun PreviewSignUpPage() {
     SignUpScreen(navController = rememberNavController()) // You can use a mock NavController here
 }
-
 
 
 // Helper function to validate input
