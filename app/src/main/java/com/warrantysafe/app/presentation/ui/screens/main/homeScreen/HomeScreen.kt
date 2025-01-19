@@ -13,11 +13,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeGesturesPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -117,193 +120,200 @@ fun HomeScreen(
     // State to manage the visibility of the dropdown menu
     var isMenuExpanded by remember { mutableStateOf(false) }
 
-    ModalNavigationDrawer(
-        modifier = Modifier.systemBarsPadding().statusBarsPadding(),
-        drawerState = drawerState,
-        drawerContent = {
-            SideDrawerContent(
-                onItemClicked = { item ->
-                    coroutineScope.launch { drawerState.close() }
-                    when (item) {
-                        "List of Product Cards" -> navigateToTab(navController, Route.ProductCardList)
-                        "Help & Support" -> navigateToTab(navController, Route.HelpSupportScreen)
-                        "Terms & Privacy" -> navigateToTab(navController, Route.TermsPrivacyScreen)
-                        "About the App" -> navigateToTab(navController, Route.AboutAppScreen)
-                        "Upcoming Features" -> navigateToTab(navController, Route.UpcomingFeaturesScreen)
-                        "Settings" -> navigateToTab(navController, Route.SettingsScreen)
-                    }
-                }
-            )
-        },
-        gesturesEnabled = true
-    ) {
-        Box(modifier = Modifier
-            .background(Color.White)
-            .fillMaxSize()
-            .statusBarsPadding()
-            .systemBarsPadding()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                // Custom Top App Bar
-                CustomTopAppBar(
-                    title = {
-                        Text(
-                            text = "Welcome, $username !!",
-                            style = MaterialTheme.typography.titleLarge,
-                            textAlign = TextAlign.Start,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentHeight()
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = { coroutineScope.launch { drawerState.open() } }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Menu,
-                                contentDescription = "Menu"
-                            )
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = { navController.navigate(route = Route.NotificationScreen.route) }) {
-                            Icon(
-                                imageVector = Icons.Filled.Notifications,
-                                contentDescription = "Notifications"
-                            )
-                        }
-                        IconButton(onClick = {isMenuExpanded = !isMenuExpanded}) {
-                            Icon(
-                                imageVector = Icons.Filled.MoreVert,
-                                contentDescription = "More Options"
-                            )
-                        }
-                        // Dropdown Menu
-                        DropdownMenu(
-                            expanded = isMenuExpanded,
-                            containerColor = Color.LightGray,
-                            onDismissRequest = { isMenuExpanded = false }
-                        ) {
-                            DropDownMenuContent(
-                                navController = navController,
-                                dropDownList = listOf("Logout"),
-                                onItemClicked = {
-                                    userViewModel.signOutUser()
-                                }
-                            )
+    Box(
+        modifier = Modifier.fillMaxSize()
+        .systemBarsPadding()
+        .statusBarsPadding()){
+
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                SideDrawerContent(
+                    modifier = Modifier.fillMaxHeight(1f),
+                    onItemClicked = { item ->
+                        coroutineScope.launch { drawerState.close() }
+                        when (item) {
+                            "List of Product Cards" -> navigateToTab(navController, Route.ProductCardList)
+                            "Help & Support" -> navigateToTab(navController, Route.HelpSupportScreen)
+                            "Terms & Privacy" -> navigateToTab(navController, Route.TermsPrivacyScreen)
+                            "About the App" -> navigateToTab(navController, Route.AboutAppScreen)
+                            "Upcoming Features" -> navigateToTab(navController, Route.UpcomingFeaturesScreen)
+                            "Settings" -> navigateToTab(navController, Route.SettingsScreen)
                         }
                     }
                 )
-
-                Box(
+            },
+            gesturesEnabled = true
+        ) {
+            Box(modifier = Modifier
+                .background(Color.White)
+                .fillMaxSize()
+                .statusBarsPadding()
+                .systemBarsPadding()) {
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .fillMaxSize()
                 ) {
+                    // Custom Top App Bar
+                    CustomTopAppBar(
+                        title = {
+                            Text(
+                                text = "Welcome, $username !!",
+                                style = MaterialTheme.typography.titleLarge,
+                                textAlign = TextAlign.Start,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentHeight()
+                            )
+                        },
+                        navigationIcon = {
+                            IconButton(
+                                onClick = { coroutineScope.launch { drawerState.open() } }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Menu,
+                                    contentDescription = "Menu"
+                                )
+                            }
+                        },
+                        actions = {
+                            IconButton(onClick = { navController.navigate(route = Route.NotificationScreen.route) }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Notifications,
+                                    contentDescription = "Notifications"
+                                )
+                            }
+                            IconButton(onClick = {isMenuExpanded = !isMenuExpanded}) {
+                                Icon(
+                                    imageVector = Icons.Filled.MoreVert,
+                                    contentDescription = "More Options"
+                                )
+                            }
+                            // Dropdown Menu
+                            DropdownMenu(
+                                expanded = isMenuExpanded,
+                                containerColor = Color.LightGray,
+                                onDismissRequest = { isMenuExpanded = false }
+                            ) {
+                                DropDownMenuContent(
+                                    navController = navController,
+                                    dropDownList = listOf("Logout"),
+                                    onItemClicked = {
+                                        userViewModel.signOutUser()
+                                    }
+                                )
+                            }
+                        }
+                    )
+
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(50))
-                            .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(50) )
-                            .background(Color.White) // Soft background for better aesthetics
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null // Disables ripple effect
-                            ) {
-                                navController.navigate(route = Route.SearchScreen.route)
-                            }
-                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.search_warranty),
-                                contentDescription = null,
-                                tint = Color.DarkGray, // Subtle color for the icon
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(12.dp)) // Space between icon and text
-                            Text(
-                                text = "Search ",
-                                fontSize = 18.sp,
-                                color = Color.DarkGray, // Subtle text color
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-                }
-
-
-                // Main Content
-                val tabTitles = listOf("Active", "Expired")
-                val pagerState = rememberPagerState(initialPage = 0, pageCount = { tabTitles.size })
-                val scope = rememberCoroutineScope()
-
-                // TabRow and Pager
-                TabRow(
-                    selectedTabIndex = pagerState.currentPage,
-                    containerColor = colorResource(R.color.transparent),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                ) {
-                    tabTitles.forEachIndexed { index, title ->
                         Box(
                             modifier = Modifier
-                                .weight(1f)
-                                .padding(4.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(Color.Transparent)
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(50))
+                                .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(50) )
+                                .background(Color.White) // Soft background for better aesthetics
                                 .clickable(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null // Disables ripple effect
                                 ) {
-                                    scope.launch { pagerState.animateScrollToPage(index) }
+                                    navController.navigate(route = Route.SearchScreen.route)
                                 }
-                                .padding(8.dp),
-                            contentAlignment = Alignment.Center
+                                .padding(horizontal = 16.dp, vertical = 12.dp)
                         ) {
-                            Text(
-                                text = title,
-                                fontWeight = FontWeight.Bold,
-                                color = if (pagerState.currentPage == index) MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.onSurface,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.search_warranty),
+                                    contentDescription = null,
+                                    tint = Color.DarkGray, // Subtle color for the icon
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(12.dp)) // Space between icon and text
+                                Text(
+                                    text = "Search ",
+                                    fontSize = 18.sp,
+                                    color = Color.DarkGray, // Subtle text color
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                        }
+                    }
+
+
+                    // Main Content
+                    val tabTitles = listOf("Active", "Expired")
+                    val pagerState = rememberPagerState(initialPage = 0, pageCount = { tabTitles.size })
+                    val scope = rememberCoroutineScope()
+
+                    // TabRow and Pager
+                    TabRow(
+                        selectedTabIndex = pagerState.currentPage,
+                        containerColor = colorResource(R.color.transparent),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    ) {
+                        tabTitles.forEachIndexed { index, title ->
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(4.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Color.Transparent)
+                                    .clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null // Disables ripple effect
+                                    ) {
+                                        scope.launch { pagerState.animateScrollToPage(index) }
+                                    }
+                                    .padding(8.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = title,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (pagerState.currentPage == index) MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onSurface,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    }
+
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier.fillMaxSize()
+                    ) { page ->
+                        when (page) {
+                            0 ->
+                                ActiveTab(navController = navController, activeProducts = productViewModel.activeProducts.value)
+                            1 ->
+                                ExpiredTab(navController = navController, expiredProducts = productViewModel.expiredProducts.value)
                         }
                     }
                 }
 
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier.fillMaxSize()
-                ) { page ->
-                    when (page) {
-                        0 ->
-                            ActiveTab(navController = navController, activeProducts = productViewModel.activeProducts.value)
-                        1 ->
-                            ExpiredTab(navController = navController, expiredProducts = productViewModel.expiredProducts.value)
-                    }
-                }
+                // Bottom Navigation fixed at the bottom
+                CustomBottomNavigation(
+                    currentRoute = Route.HomeScreen,
+                    onItemClick = { route -> navigateToTab(navController, route) },
+                    modifier = Modifier.align(Alignment.BottomCenter) // Fix at the bottom of the screen
+                )
             }
-
-            // Bottom Navigation fixed at the bottom
-            CustomBottomNavigation(
-                currentRoute = Route.HomeScreen,
-                onItemClick = { route -> navigateToTab(navController, route) },
-                modifier = Modifier.align(Alignment.BottomCenter) // Fix at the bottom of the screen
-            )
         }
     }
+
 }
 
 

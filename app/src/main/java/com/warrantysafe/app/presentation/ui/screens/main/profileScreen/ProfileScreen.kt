@@ -116,6 +116,7 @@ fun ProfileScreen(
         drawerState = drawerState,
         drawerContent = {
             SideDrawerContent(
+                modifier = Modifier,
                 onItemClicked = { item ->
                     coroutineScope.launch { drawerState.close() }
                     // Perform navigation or actions based on the clicked item

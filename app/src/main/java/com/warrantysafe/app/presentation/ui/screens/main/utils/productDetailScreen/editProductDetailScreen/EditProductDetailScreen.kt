@@ -230,7 +230,6 @@ fun EditProductDetailScreen(
                     onClick = {
                         productViewModel.updateProduct(
                             product = Product(
-                                productId = productId ,
                                 productName = validProductName!!,
                                 purchase = validPurchaseDate!!,
                                 expiry = validExpiryDate!!,

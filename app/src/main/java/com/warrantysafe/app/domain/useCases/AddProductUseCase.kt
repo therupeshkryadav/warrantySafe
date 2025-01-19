@@ -9,7 +9,6 @@ class AddProductUseCase(private val productRepository: ProductRepository) {
     suspend operator fun invoke(productName: String, purchase: String, expiry: String, category: String, notes: String, productImageUri: Uri) {
         // Create new product
         val newProduct = Product(
-            productId = generateProductId(), // Assume you have a method for generating unique IDs
             productName = productName,
             purchase = purchase,
             expiry = expiry,

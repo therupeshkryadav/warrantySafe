@@ -342,7 +342,11 @@ fun SignUpScreen(
         // SignUp Button
         Button(
             onClick = {
-                if (isValidInput()) {
+                if (!name.value.isNullOrEmpty() &&
+                    !username.value.isNullOrEmpty() &&
+                    !password.value.isNullOrEmpty() &&
+                    !email.value.isNotEmpty() &&
+                    !phoneNumber.value.isNotEmpty()) {
                     userViewModel.signUpUser(
                         User(
                             name = name.value,
@@ -395,11 +399,4 @@ fun SignUpScreen(
 @Composable
 fun PreviewSignUpPage() {
     SignUpScreen(navController = rememberNavController()) // You can use a mock NavController here
-}
-
-
-// Helper function to validate input
-fun isValidInput(): Boolean {
-    // Add validation checks
-    return true
 }

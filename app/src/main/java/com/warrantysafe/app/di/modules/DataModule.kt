@@ -23,7 +23,7 @@ val dataModule = module {
     single { FirebaseAuth.getInstance() }
     // Provide FirebaseFirestore instance
     single { FirebaseFirestore.getInstance() }
-    single<ProductRepository> { ProductRepositoryImpl() } // Add data layer dependencies here, e.g., repositories, network clients
+    single<ProductRepository> { ProductRepositoryImpl(get(), get()) } // Add data layer dependencies here, e.g., repositories, network clients
     single<NotificationRepository> { NotificationRepositoryImpl() } // Add data layer dependencies here, e.g., repositories, network clients
     single<UserRepository> { UserRepositoryImpl(get(), get()) } // Add data layer dependencies here, e.g., repositories, network clients
     single<RecentRepository> { RecentRepositoryImpl() } // Add data layer dependencies here, e.g., repositories, network clients

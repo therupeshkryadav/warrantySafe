@@ -2,14 +2,20 @@ package com.warrantysafe.app.presentation.ui.screens.main.utils.sideDrawer
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -25,29 +31,25 @@ import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.ui.screens.main.utils.sideDrawer.components.SideDrawerItem
 
 @Composable
-fun SideDrawerContent(onItemClicked: (String) -> Unit) {
+fun SideDrawerContent(
+    modifier: Modifier,
+    onItemClicked: (String) -> Unit
+) {
     Column(
-        modifier = Modifier
-            .fillMaxHeight()
+        modifier = modifier
             .width(280.dp)
+            .systemBarsPadding()
+            .statusBarsPadding()
+            .border(width = 1.dp,Color.Black)
             .background(color = Color.White)
     ) {
         // Header
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .statusBarsPadding()
-                .padding(start = 8.dp, end = 8.dp, top = 16.dp, bottom = 16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                modifier = Modifier
-                    .size(200.dp)
-                    .align(Alignment.Center),
-                painter = painterResource(R.drawable.warranty_logo), // Replace with your logo or avatar
-                contentDescription = "Drawer Header"
-            )
-        }
+        Image(
+            modifier = Modifier.fillMaxWidth().height(200.dp),
+            alignment = Alignment.Center,
+            painter = painterResource(R.drawable.warranty_logo),
+            contentDescription = null
+        )
 
         HorizontalDivider(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -76,12 +78,6 @@ fun SideDrawerContent(onItemClicked: (String) -> Unit) {
                 })
         }
 
-        HorizontalDivider(
-            modifier = Modifier.padding(top = 158.dp, bottom = 16.dp),
-            thickness = 1.dp,
-            color = Color.Gray
-        )
-
         SideDrawerItem(
             item = "Settings",
             fontSize = 26.sp,
@@ -95,5 +91,5 @@ fun SideDrawerContent(onItemClicked: (String) -> Unit) {
 @Preview
 @Composable
 fun SideDrawerContentPreview() {
-    SideDrawerContent(onItemClicked = {})
+    SideDrawerContent(modifier = Modifier.fillMaxHeight(1f), onItemClicked = {})
 }

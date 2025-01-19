@@ -163,7 +163,7 @@ fun ExpiredTab(
 private fun navigateToDetails(product: Product, navController: NavController) {
 
     val route = Route.ProductDetailsScreen.createRoute(
-        productId = product.productId,
+        productId = "",
         productName = product.productName,  // Correct property name
         purchaseDate = product.purchase,
         category = product.category,
