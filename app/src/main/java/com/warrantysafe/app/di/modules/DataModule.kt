@@ -2,6 +2,7 @@ package com.warrantysafe.app.di.modules
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.warrantysafe.app.data.remote.appWrite.AppwriteClient
 import com.warrantysafe.app.data.repository.BottomNavigationRepositoryImpl
 import com.warrantysafe.app.data.repository.NotificationRepositoryImpl
 import com.warrantysafe.app.data.repository.ProductRepositoryImpl
@@ -23,6 +24,7 @@ val dataModule = module {
     single { FirebaseAuth.getInstance() }
     // Provide FirebaseFirestore instance
     single { FirebaseFirestore.getInstance() }
+    single { AppwriteClient.getClient() }
     single<ProductRepository> { ProductRepositoryImpl(get(), get()) } // Add data layer dependencies here, e.g., repositories, network clients
     single<NotificationRepository> { NotificationRepositoryImpl() } // Add data layer dependencies here, e.g., repositories, network clients
     single<UserRepository> { UserRepositoryImpl(get(), get()) } // Add data layer dependencies here, e.g., repositories, network clients

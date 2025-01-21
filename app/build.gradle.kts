@@ -68,6 +68,14 @@ dependencies {
     // Coil
     implementation(libs.coil.compose)
 
+    implementation("io.appwrite:sdk-for-kotlin:6.1.0")
+
+    // Ktor Client
+    implementation (libs.io.ktor.ktor.client.core2)
+    implementation (libs.ktor.client.cio) // CIO engine for network requests
+    implementation (libs.ktor.client.content.negotiation)
+    implementation (libs.ktor.serialization.kotlinx.json)
+
     // Koin
     implementation (libs.koin.androidx.compose)
 

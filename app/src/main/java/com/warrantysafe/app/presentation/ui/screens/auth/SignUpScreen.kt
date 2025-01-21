@@ -1,6 +1,7 @@
 package com.warrantysafe.app.presentation.ui.screens.auth
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -300,7 +301,9 @@ fun SignUpScreen(
         // Password Field with Visibility Toggle
         TextField(
             value = password.value,
-            onValueChange = { password.value = it },
+            onValueChange = {
+                password.value = it
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -342,11 +345,7 @@ fun SignUpScreen(
         // SignUp Button
         Button(
             onClick = {
-                if (!name.value.isNullOrEmpty() &&
-                    !username.value.isNullOrEmpty() &&
-                    !password.value.isNullOrEmpty() &&
-                    !email.value.isNotEmpty() &&
-                    !phoneNumber.value.isNotEmpty()) {
+                if (isValidInput()) {
                     userViewModel.signUpUser(
                         User(
                             name = name.value,
@@ -370,10 +369,11 @@ fun SignUpScreen(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp)
         ) {
             Text(text = "Sign Up")
         }
+        
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
@@ -399,4 +399,11 @@ fun SignUpScreen(
 @Composable
 fun PreviewSignUpPage() {
     SignUpScreen(navController = rememberNavController()) // You can use a mock NavController here
+}
+
+
+// Helper function to validate input
+fun isValidInput(): Boolean {
+    // Add validation checks
+    return true
 }

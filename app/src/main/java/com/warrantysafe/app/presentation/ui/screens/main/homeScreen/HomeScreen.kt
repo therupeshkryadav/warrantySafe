@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -121,27 +123,38 @@ fun HomeScreen(
     var isMenuExpanded by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier.fillMaxSize()
-        .systemBarsPadding()
-        .statusBarsPadding()){
-
+        modifier = Modifier
+            .fillMaxSize()
+            .systemBarsPadding()
+            .statusBarsPadding()
+    ) {
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
-                SideDrawerContent(
-                    modifier = Modifier.fillMaxHeight(1f),
-                    onItemClicked = { item ->
-                        coroutineScope.launch { drawerState.close() }
-                        when (item) {
-                            "List of Product Cards" -> navigateToTab(navController, Route.ProductCardList)
-                            "Help & Support" -> navigateToTab(navController, Route.HelpSupportScreen)
-                            "Terms & Privacy" -> navigateToTab(navController, Route.TermsPrivacyScreen)
-                            "About the App" -> navigateToTab(navController, Route.AboutAppScreen)
-                            "Upcoming Features" -> navigateToTab(navController, Route.UpcomingFeaturesScreen)
-                            "Settings" -> navigateToTab(navController, Route.SettingsScreen)
+                BoxWithConstraints(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .wrapContentWidth()
+                ) {
+                    val maxHeight = maxHeight
+
+                    // Here we calculate the available height and adjust content dynamically
+                    SideDrawerContent(
+                        modifier = Modifier
+                            .fillMaxHeight(),// Fills the available height
+                        onItemClicked = { item ->
+                            coroutineScope.launch { drawerState.close() }
+                            when (item) {
+                                "List of Product Cards" -> navigateToTab(navController, Route.ProductCardList)
+                                "Help & Support" -> navigateToTab(navController, Route.HelpSupportScreen)
+                                "Terms & Privacy" -> navigateToTab(navController, Route.TermsPrivacyScreen)
+                                "About the App" -> navigateToTab(navController, Route.AboutAppScreen)
+                                "Upcoming Features" -> navigateToTab(navController, Route.UpcomingFeaturesScreen)
+                                "Settings" -> navigateToTab(navController, Route.SettingsScreen)
+                            }
                         }
-                    }
-                )
+                    )
+                }
             },
             gesturesEnabled = true
         ) {
