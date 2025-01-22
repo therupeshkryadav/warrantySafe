@@ -110,16 +110,14 @@ fun AddScreen(navController: NavController) {
     var selectedProductImageUri by remember { mutableStateOf<Uri?>(null) }
 
     // Activity Result Launcher for Image Picker
-    val launcher1 = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    val productReceiptLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri != null) {
             selectedProductReceiptImageUri = uri // Handle success (uri is not null, content was selected)
-        } else {
-            selectedProductReceiptImageUri = null // Handle cancellation (uri is null, no content selected)
         }
     }
 
     // Activity Result Launcher for Image Picker
-    val launcher2 = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    val productImgLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri != null) {
             selectedProductImageUri = uri // Handle success (uri is not null, content was selected)
         } 
@@ -253,7 +251,7 @@ fun AddScreen(navController: NavController) {
 
                 IconButton(
                     onClick = {
-                        launcher2.launch("image/*") // Open the gallery to select an image
+                        productImgLauncher.launch("image/*") // Open the gallery to select an image
                     //i want to open the gallery and want to select the image and the selected image should be set to the above image composable!!
                     },
                     modifier = Modifier
@@ -378,7 +376,7 @@ fun AddScreen(navController: NavController) {
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null // Disables ripple effect
                     ) {
-                        launcher1.launch("image/*") // Open gallery for image selection
+                        productReceiptLauncher.launch("image/*") // Open gallery for image selection
                     }
                     .padding(horizontal = 8.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,

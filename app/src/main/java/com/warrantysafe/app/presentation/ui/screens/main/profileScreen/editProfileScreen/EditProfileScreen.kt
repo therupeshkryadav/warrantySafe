@@ -75,14 +75,12 @@ fun EditProfileScreen(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        updatedProfileUri = uri
+        if (uri != null) {
+            updatedProfileUri = uri// Handle success (uri is not null, content was selected)
+        }
     }
 
-    val imageUri = updatedProfileUri
-        ?: profileImgUri
-        ?: Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.profile_placeholder}")
     val updateUserState by userViewModel.updateUserState.observeAsState()
-    // Handle state
     // Handle state changes for user updates
     updateUserState?.let { result ->
         when {
@@ -165,7 +163,7 @@ fun EditProfileScreen(
             ) {
                 // Display the selected profile image or a placeholder
                 Image(
-                    painter = rememberAsyncImagePainter(imageUri),
+                    painter = rememberAsyncImagePainter(updatedProfileUri),
                     contentDescription = "Profile Avatar",
                     modifier = Modifier
                         .size(198.dp)

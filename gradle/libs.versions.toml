@@ -2,7 +2,6 @@
 agp = "8.7.3"
 ccp = "2.7.1"
 coilCompose = "2.2.2"
-ioKtorKtorClientCore = "2.3.3"
 koinAndroidxComposeVersion = "3.5.0"
 kotlin = "2.1.0"
 coreKtx = "1.15.0"
@@ -24,7 +23,6 @@ googleGmsGoogleServices = "4.4.2"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 ccp = { module = "com.hbb20:ccp", version.ref = "ccp" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
-io-ktor-ktor-client-core2 = { module = "io.ktor:ktor-client-core", version.ref = "ioKtorKtorClientCore" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -46,10 +44,6 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
-ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ioKtorKtorClientCore" }
-ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ioKtorKtorClientCore" }
-ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ioKtorKtorClientCore" }
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
