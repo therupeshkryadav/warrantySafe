@@ -1,7 +1,6 @@
 package com.warrantysafe.app.presentation.navigation
 
 import android.net.Uri
-import androidx.compose.ui.graphics.painter.Painter
 
 sealed class Route(
     val route : String
@@ -66,8 +65,9 @@ sealed class Route(
         }
     }
 
-    object EditProfileScreen : Route("editProfileScreen/{fullName}/{userName}/{emailId}/{phone}") {
+    object EditProfileScreen : Route("editProfileScreen/{profileImgUrl}/{fullName}/{userName}/{emailId}/{phone}") {
         fun createRoute(
+            profileImgUri : Uri?,
             fullName: String?,
             userName: String?,
             emailId: String?,
@@ -75,10 +75,11 @@ sealed class Route(
         ) :String{
             // Provide safe defaults and encode the values
             val safeFullName = Uri.encode(fullName ?: "----")
+            val safeProfileImgUri = Uri.encode(profileImgUri?.toString() ?: "N/A")
             val safeUserName = Uri.encode(userName ?: "----")
             val safeEmailId = Uri.encode(emailId ?: "----")
             val safePhone = Uri.encode(phone ?: "----")
-            return "editProfileScreen/$safeFullName/$safeUserName/$safeEmailId/$safePhone"}
+            return "editProfileScreen/$safeProfileImgUri/$safeFullName/$safeUserName/$safeEmailId/$safePhone"}
     }
 
     object NotificationScreen : Route(route = "notificationScreen")

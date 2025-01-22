@@ -45,12 +45,8 @@ class UserViewModel(
     // Check if user is logged in and set the initial route
     fun checkUser() {
         viewModelScope.launch {
-            val isUserLoggedIn = checkUserUseCase()
-            _navigationRoute.value = if (isUserLoggedIn) {
-                Route.HomeScreen.route
-            } else {
-                Route.LoginScreen.route
-            }
+            val route = checkUserUseCase()
+            _navigationRoute.value = route
         }
     }
 

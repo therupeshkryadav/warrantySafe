@@ -2,6 +2,7 @@ package com.warrantysafe.app.presentation.navigation
 
 import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.core.net.toUri
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -174,14 +175,25 @@ fun AppNavGraph() {
 
         // EditProfileScreen with arguments
         composable(
-            route = "editProfileScreen/{fullName}/{userName}/{emailId}/{phone}",
+            route = "editProfileScreen/{profileImgUri}/{fullName}/{userName}/{emailId}/{phone}",
             arguments = listOf(
+                navArgument("profileImgUri") { type = NavType.StringType },
                 navArgument("fullName") { type = NavType.StringType },
                 navArgument("userName") { type = NavType.StringType },
                 navArgument("emailId") { type = NavType.StringType },
                 navArgument("phone") { type = NavType.StringType }
             )
         ) {
+            // Handle the default image URI logic
+            val profileImgUriString = it.arguments?.getString("profileImgUri")
+            val profileImgUri = if (profileImgUriString != null) {
+                Uri.parse(profileImgUriString)
+            } else {
+                // Default image (placeholder) is provided as a resource ID
+                // To use it with Image composable, you need to provide a painter or drawable resource.
+                // For example, this is just a placeholder for the case when imageUri is null
+                Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.profile_placeholder}")
+            }
             val fullName = it.arguments?.getString("fullName") ?: "----"
             val userName = it.arguments?.getString("userName") ?: "----"
             val emailId = it.arguments?.getString("emailId") ?: "----"
@@ -189,6 +201,7 @@ fun AppNavGraph() {
 
             EditProfileScreen(
                 navController = navController,
+                profileImgUri = profileImgUri,
                 name = fullName,
                 username = userName,
                 email = emailId,

@@ -51,6 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
@@ -88,8 +89,7 @@ fun ProfileScreen(
             Text(text = errorMessage, color = Color.Red)
         }
     }
-    val imageUri =
-        Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.profile_placeholder}")
+    val imageUri = user.profileImageUrl ?: Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.profile_placeholder}")
     val signOutState by userViewModel.signOutState.observeAsState()
     signOutState?.let { task ->
         when {
@@ -343,11 +343,13 @@ fun navigateToEditProfile(
     user: User
 ) {
     val route = Route.EditProfileScreen.createRoute(
+        profileImgUri = user.profileImageUrl.toUri(),
         fullName = user.name,
         userName = user.username,
         emailId = user.email,
         phone = user.phoneNumber
     )
+    Log.d("AppWriteUpload","URL ->> ${user.profileImageUrl.toUri()}")
     navController.navigate(route)
 }
 

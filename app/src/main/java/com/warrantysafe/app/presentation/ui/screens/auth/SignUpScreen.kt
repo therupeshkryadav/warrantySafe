@@ -1,7 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.auth
 
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -55,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.presentation.navigation.Route
@@ -76,7 +76,8 @@ fun SignUpScreen(
         if (result.isSuccess) {
             // Navigate to the next screen
             LaunchedEffect(result.isSuccess) {
-                navController.navigate(Route.LoginScreen.route) {
+
+                navController.navigate(Route.HomeScreen.route) {
                     popUpTo(Route.SignUpScreen.route) { inclusive = true }
                 }
             }
@@ -94,12 +95,12 @@ fun SignUpScreen(
     val password = remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    // State to handle profile image
-    var profileImageUri by remember { mutableStateOf<Uri?>(null) }
-
     // Default profile image URI (when no image is selected)
     val defaultProfileImage =
         Uri.parse("android.resource://com.warrantysafe.app/drawable/profile_placeholder")
+
+    // State to handle profile image
+    var profileImageUri by remember { mutableStateOf<Uri?>(defaultProfileImage) }
 
     // Image picker launcher
     val launcher = rememberLauncherForActivityResult(
@@ -155,7 +156,7 @@ fun SignUpScreen(
         ) {
             Image(
                 modifier = Modifier.fillMaxSize(),
-                painter = painterResource(R.drawable.profile_placeholder),
+                painter = rememberAsyncImagePainter(profileImageUri),
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
@@ -352,7 +353,7 @@ fun SignUpScreen(
                             username = username.value,
                             email = email.value,
                             phoneNumber = phoneNumber.value,
-                            profileImageUri = profileImageUri.toString(),
+                            profileImageUrl = profileImageUri.toString(),
                             password = password.value
                         )
                     )

@@ -1,6 +1,7 @@
 package com.warrantysafe.app.presentation.ui.screens.main.profileScreen.editProfileScreen
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -24,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -54,6 +55,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun EditProfileScreen(
     navController: NavController,
+    profileImgUri: Uri,
     name: String,
     username: String,
     email: String,
@@ -66,36 +68,39 @@ fun EditProfileScreen(
     val scrollState = rememberScrollState()
     val userViewModel: UserViewModel = koinViewModel()
 
-    // State to handle profile image
-    var profileImageUri by remember { mutableStateOf<Uri?>(null) }
+    // State to handle updated profile image
+    var updatedProfileUri by remember { mutableStateOf<Uri?>(profileImgUri) }
 
     // Image picker launcher
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        if (uri != null) {
-            profileImageUri = uri // Update the profile image URI // Handle success (uri is not null, content was selected)
-        } else {
-           profileImageUri = null // Handle cancellation (uri is null, no content selected)
-        }
+        updatedProfileUri = uri
     }
 
-    val imageUri = profileImageUri?: Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.profile_placeholder}")
-
+    val imageUri = updatedProfileUri
+        ?: profileImgUri
+        ?: Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.profile_placeholder}")
     val updateUserState by userViewModel.updateUserState.observeAsState()
     // Handle state
+    // Handle state changes for user updates
     updateUserState?.let { result ->
         when {
             result.isSuccess -> {
-                Text("User updated successfully: ${result.getOrNull()?.name}")
-                navigateToTab(navController, Route.ProfileScreen)
+                LaunchedEffect(Unit) {
+                    Log.d("ProfileUpdate", "User updated successfully: ${result.getOrNull()?.name}")
+                    navigateToTab(navController, Route.ProfileScreen)
+                }
             }
+
             result.isFailure -> {
-                Text("Failed to update user: ${result.exceptionOrNull()?.message}")
+                LaunchedEffect(Unit) {
+                    Log.e("ProfileUpdate", "Failed to update user: ${result.exceptionOrNull()?.message}")
+                }
             }
         }
     }
-    Column(modifier = Modifier.fillMaxSize()){
+    Column(modifier = Modifier.fillMaxSize()) {
         CustomTopAppBar(
             title = {
                 Text(
@@ -123,8 +128,17 @@ fun EditProfileScreen(
             },
             actions = {
                 IconButton(onClick = {
-                    userViewModel.updateUser(user = User(actualName,actualUsername,actualEmail,actualPhoneNumber))
-                     }) {
+                    Log.d("AppwriteUpload", "updatedProfileUri ->> ${updatedProfileUri.toString()}")
+                    userViewModel.updateUser(
+                        user = User(
+                            name = actualName,
+                            username = actualUsername,
+                            email = actualEmail,
+                            phoneNumber = actualPhoneNumber,
+                            profileImageUrl = updatedProfileUri.toString()
+                        )
+                    )
+                }) {
                     Icon(
                         imageVector = Icons.Filled.Check,
                         contentDescription = "Check"
@@ -150,30 +164,16 @@ fun EditProfileScreen(
                     .clickable { launcher.launch("image/*") } // Open gallery on click
             ) {
                 // Display the selected profile image or a placeholder
-                if (profileImageUri != null) {
-                    Image(
-                        painter = rememberAsyncImagePainter(imageUri),
-                        contentDescription = "Profile Avatar",
-                        modifier = Modifier
-                            .size(198.dp)
-                            .align(Alignment.Center)
-                            .clickable { launcher.launch("image/*") } // Open gallery on icon click
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-
-                } else {
-                    Image(
-                        painter = painterResource(R.drawable.profile_placeholder),
-                        contentDescription = "Profile Placeholder",
-                        modifier = Modifier
-                            .size(198.dp)
-                            .align(Alignment.Center)
-                            .clip(CircleShape)
-                            .clickable { launcher.launch("image/*") },// Open gallery on icon click,
-                        contentScale = ContentScale.Crop
-                    )
-                }
+                Image(
+                    painter = rememberAsyncImagePainter(imageUri),
+                    contentDescription = "Profile Avatar",
+                    modifier = Modifier
+                        .size(198.dp)
+                        .align(Alignment.Center)
+                        .clickable { launcher.launch("image/*") } // Open gallery on icon click
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
             }
 
             Spacer(modifier = Modifier.size(16.dp))

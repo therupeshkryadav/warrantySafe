@@ -11,12 +11,26 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val presentationModule = module {
+    // Product
     viewModel { ProductViewModel(get(), get(), get(), get(), get(), get()) }
-    viewModel { NotificationViewModel(get()) }
+
+    // User
     viewModel { UserViewModel(get(), get(), get(), get(), get(), get()) }
+
+    // Notifications
+    viewModel { NotificationViewModel(get()) }
+
+    // Recents
     viewModel { RecentViewModel(get()) }
+
+    // Bottom Navigation
     viewModel { BottomNavigationViewModel(get()) }
+
+    // Upcoming
     viewModel { UpcomingViewModel(get()) }
+
+    // Settings
     viewModel { SettingsViewModel(get()) }
 }
+
 

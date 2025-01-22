@@ -20,22 +20,27 @@ import com.warrantysafe.app.domain.useCases.UpdateUserUseCase
 import org.koin.dsl.module
 
 val domainModule = module {
-    // Provide Use Cases
-    single { GetAllProductsUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
-    single { GetActiveProductsUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
-    single { GetExpiredProductsUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
-    single { UpdateProductUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
-    single { DeleteProductsUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
-    single { SignUpUserUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
-    single { CheckUserUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
-    single { LoginUserUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
-    single { GetUserUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
-    single { UpdateUserUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
-    single { SignOutUserUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
-    single { GetNotificationsUseCase(get()) } // Add domain layer dependencies here, e.g., use cases
+    // Product Use Cases
+    single { GetAllProductsUseCase(get()) }
+    single { GetActiveProductsUseCase(get()) }
+    single { GetExpiredProductsUseCase(get()) }
+    single { UpdateProductUseCase(get()) }
+    single { DeleteProductsUseCase(get()) }
     single { AddProductUseCase(get()) }
+
+    // User Use Cases
+    single { SignUpUserUseCase(get()) }
+    single { CheckUserUseCase(get()) }
+    single { LoginUserUseCase(get()) }
+    single { GetUserUseCase(get()) }
+    single { UpdateUserUseCase(get()) }
+    single { SignOutUserUseCase(get()) }
+
+    // Miscellaneous Use Cases
+    single { GetNotificationsUseCase(get()) }
     single { GetRecentsUseCase(get()) }
     single { GetBottomNavigationIconsUseCase(get()) }
     single { GetUpcomingUseCase(get()) }
     single { GetSettingsUseCase(get()) }
 }
+

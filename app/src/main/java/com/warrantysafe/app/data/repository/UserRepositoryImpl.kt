@@ -1,21 +1,35 @@
 package com.warrantysafe.app.data.repository
 
+import android.content.ContentResolver
+import android.content.Context
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.domain.repository.UserRepository
+import com.warrantysafe.app.presentation.navigation.Route
+import io.appwrite.Client
+import io.appwrite.ID
+import io.appwrite.models.InputFile
+import io.appwrite.services.Storage
 import kotlinx.coroutines.tasks.await
+import java.io.File
 
 class UserRepositoryImpl(
+    private val context: Context,
     private val firebaseAuth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val appwriteClient: Client,
+    private val appwriteStorage: Storage
 ) : UserRepository {
 
     private val usersCollection = firestore.collection("users")
 
-    override suspend fun checkUser(): Boolean {
-        return firebaseAuth.currentUser != null
+    override suspend fun checkUser(): String {
+        return if (firebaseAuth.currentUser != null)
+            Route.HomeScreen.route
+        else
+            Route.LoginScreen.route
     }
 
     override suspend fun signUpUser(user: User): Result<User> {
@@ -23,6 +37,14 @@ class UserRepositoryImpl(
             val authResult = firebaseAuth.createUserWithEmailAndPassword(user.email, user.password).await()
             val firebaseUser = authResult.user
             if (firebaseUser != null) {
+                // Upload profile image to Appwrite (if provided)
+                val profileImageUri = user.profileImageUrl
+                val uploadedProfileImageUrl = if (profileImageUri.isNotEmpty()) {
+                    uploadProfileImageToAppwrite(profileImageUri)
+                } else {
+                    ""
+                }
+
                 // Save user data to Firestore
                 val userId = firebaseUser.uid
                 val userData = mapOf(
@@ -30,10 +52,11 @@ class UserRepositoryImpl(
                     "name" to user.name,
                     "email" to user.email,
                     "phoneNumber" to user.phoneNumber,
-                    "profileImageUri" to user.profileImageUri
+                    "profileImageUrl" to uploadedProfileImageUrl
                 )
                 usersCollection.document(userId).set(userData).await()
-                Result.success(user.copy(username = user.username))
+
+                Result.success(user.copy(profileImageUrl = uploadedProfileImageUrl))
             } else {
                 Result.failure(Exception("User creation failed"))
             }
@@ -44,22 +67,19 @@ class UserRepositoryImpl(
 
     override suspend fun loginUser(email: String, password: String): Result<User> {
         return try {
-            // Sign in the user using Firebase Authentication
             val authResult = firebaseAuth.signInWithEmailAndPassword(email, password).await()
             val firebaseUser = authResult.user
 
             if (firebaseUser != null) {
-                // Fetch additional user data from Firestore
                 val userDocument = usersCollection.document(firebaseUser.uid).get().await()
 
                 if (userDocument.exists()) {
-                    // Map Firestore document to the User object
                     val user = User(
                         name = userDocument.getString("name") ?: "",
                         email = userDocument.getString("email") ?: "",
-                        username = userDocument.getString("username") ?: "" ,
-                        phoneNumber = userDocument.getString("phoneNumber") ?: "" ,
-                        profileImageUri = userDocument.getString("profileImageUri") ?: ""// Example additional field
+                        username = userDocument.getString("username") ?: "",
+                        phoneNumber = userDocument.getString("phoneNumber") ?: "",
+                        profileImageUrl = userDocument.getString("profileImageUrl") ?: ""
                     )
                     Result.success(user)
                 } else {
@@ -75,23 +95,18 @@ class UserRepositoryImpl(
 
     override suspend fun getUser(): Result<User> {
         return try {
-            // Get the currently authenticated Firebase user
             val firebaseUser = firebaseAuth.currentUser
 
-            // Check if the user is logged in
             if (firebaseUser != null) {
-                // Fetch user data from Firestore
                 val userDocument = usersCollection.document(firebaseUser.uid).get().await()
 
-                // Check if the document exists
                 if (userDocument.exists()) {
-                    // Map Firestore document to the User object
                     val user = User(
                         name = userDocument.getString("name") ?: "",
                         email = userDocument.getString("email") ?: "",
                         username = userDocument.getString("username") ?: "",
                         phoneNumber = userDocument.getString("phoneNumber") ?: "",
-                        profileImageUri = userDocument.getString("profileImageUri") ?: ""
+                        profileImageUrl = userDocument.getString("profileImageUrl") ?: ""
                     )
                     Result.success(user)
                 } else {
@@ -108,32 +123,76 @@ class UserRepositoryImpl(
     override suspend fun updateUser(user: User): Result<User> {
         return try {
             val userId = firebaseAuth.currentUser?.uid
-            if (userId != null) {
-                val userData = mapOf(
-                    "username" to user.username,
-                    "name" to user.name,
-                    "email" to user.email,
-                    "phoneNumber" to user.phoneNumber,
-                    "profileImageUri" to user.profileImageUri
-                )
-                usersCollection.document(userId).update(userData).await()
-                Result.success(user)
+                ?: return Result.failure(Exception("No authenticated user found"))
+            Log.d("AppWriteUpload", "upload profile image: ${user.profileImageUrl}")
+            // Upload profile image to Appwrite (if provided)
+            val updatedProfileImageUrl = if (user.profileImageUrl.isNotEmpty()) {
+                try {
+                    uploadProfileImageToAppwrite(user.profileImageUrl)
+                } catch (e: Exception) {
+                    Log.e("AppWriteUpload", "Failed to upload profile image: ${e.message}")
+                    return Result.failure(e)
+                }
             } else {
-                Result.failure(Exception("No authenticated user found"))
+                ""
             }
+
+            // Prepare user data for update
+            val userData = mapOf(
+                "username" to user.username,
+                "name" to user.name,
+                "email" to user.email,
+                "phoneNumber" to user.phoneNumber,
+                "profileImageUrl" to updatedProfileImageUrl
+            )
+
+            // Update Firestore database
+            usersCollection.document(userId).update(userData).await()
+
+            Result.success(user.copy(profileImageUrl = updatedProfileImageUrl))
         } catch (e: Exception) {
+            Log.e("UpdateUser", "Error updating user: ${e.message}")
             Result.failure(e)
         }
     }
 
     override suspend fun signOutUser(): Result<Unit> {
         return try {
-            // Sign out the user using Firebase Authentication
             firebaseAuth.signOut()
-            Log.d("SignOut","${firebaseAuth.signOut()}")
-            Result.success(Unit) // Return a successful result
+            Result.success(Unit)
         } catch (e: Exception) {
-            Result.failure(e) // Return a failure result in case of an exception
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * Helper function to upload a profile image to Appwrite storage
+     */
+    private suspend fun uploadProfileImageToAppwrite(uri: String): String {
+        return try {
+            // Resolve the content:// URI using ContentResolver
+            val contentResolver: ContentResolver = context.contentResolver
+            val tempFile = File.createTempFile("profile_image", ".jpg", context.cacheDir)
+
+            // Open the input stream and copy to the temporary file
+            contentResolver.openInputStream(android.net.Uri.parse(uri)).use { inputStream ->
+                tempFile.outputStream().use { outputStream ->
+                    inputStream?.copyTo(outputStream)
+                }
+            }
+
+            // Upload the temporary file to Appwrite storage
+            val file = appwriteStorage.createFile(
+                bucketId = "678fd444002f3d3c4897",
+                fileId = ID.unique(),
+                file = InputFile.fromFile(tempFile)
+            )
+
+            // Return the file's public URL
+            "${appwriteClient.endPoint}/storage/buckets/${file.bucketId}/files/${file.id}/view?project=warranty-safe&project=warranty-safe&mode=admin"
+        } catch (e: Exception) {
+            Log.e("AppwriteUpload", "Error uploading profile image", e)
+            ""
         }
     }
 }

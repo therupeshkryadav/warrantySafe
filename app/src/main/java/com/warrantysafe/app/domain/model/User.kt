@@ -6,6 +6,6 @@ data class User(
     val email: String = "",       // User's email address
     val phoneNumber: String = "", // User's phone number
     val password: String = "",    // User's password (hashed in a real application)
-    val profileImageUri: String = "", // URL to the user's profile image
+    val profileImageUrl: String = "", // URL to the user's profile image
 )
 
