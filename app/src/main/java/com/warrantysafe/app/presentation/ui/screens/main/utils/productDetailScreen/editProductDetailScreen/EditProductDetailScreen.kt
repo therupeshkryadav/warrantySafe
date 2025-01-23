@@ -234,7 +234,7 @@ fun EditProductDetailScreen(
                                 purchase = validPurchaseDate!!,
                                 expiry = validExpiryDate!!,
                                 category = updatedCategory!!,
-                                productImageUri = updatedImageUri,
+                                productImageUri = updatedImageUri.toString(),
                                 notes = validNotes!!
                             )
                         )

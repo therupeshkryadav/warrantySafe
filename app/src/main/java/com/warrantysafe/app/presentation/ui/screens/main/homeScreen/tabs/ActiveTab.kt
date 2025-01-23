@@ -21,6 +21,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -31,6 +33,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
@@ -38,12 +41,24 @@ import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList.components.ProductCard
 import com.warrantysafe.app.presentation.ui.screens.main.utils.dropDownMenu.components.dropDownMenuItem
+import com.warrantysafe.app.presentation.viewModel.ProductViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ActiveTab(
-    navController: NavController,
-    activeProducts: List<Product>
+    navController: NavController
 ) {
+    val productViewModel: ProductViewModel = koinViewModel()
+
+    LaunchedEffect(Unit){
+        productViewModel.loadActiveProducts()
+    }
+
+    // Observe the active products state from the view model
+    val activeState = productViewModel.activeProductsState.observeAsState()
+    val activeProducts = activeState.value?.getOrNull() as? List<Product> ?: emptyList() // Safe casting and defaulting to empty list
+
+    Log.d("ActiveProducts","in Tab:  $activeProducts")
     val sortOptions = listOf(
         "Old to Recent",
         "Recent to Old"
@@ -172,7 +187,7 @@ private fun navigateToDetails(product: Product, navController: NavController) {
         category = product.category,
         expiryDate = product.expiry,
         notes = product.notes,
-        imageUri = product.productImageUri
+        imageUri = product.productImageUri.toUri()
     ) // Placeholder for expiry logic
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)

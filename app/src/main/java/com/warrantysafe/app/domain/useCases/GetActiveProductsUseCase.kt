@@ -9,9 +9,17 @@ class GetActiveProductsUseCase(
     private val productRepository: ProductRepository
 ) {
     suspend operator fun invoke(currentDate: String): List<Product> {
-        val products = productRepository.getProducts()
-        return products.filter { product ->
-            isDateBefore(currentDate, product.expiry)
+        // Fetch products and handle the result
+        val result = productRepository.getProducts()
+
+        return if (result.isSuccess) {
+            val products = result.getOrDefault(emptyList())
+            products.filter { product ->
+                isDateBefore(currentDate, product.expiry)
+            }
+        } else {
+            // Handle failure scenario, like logging or returning an empty list
+            emptyList()
         }
     }
 

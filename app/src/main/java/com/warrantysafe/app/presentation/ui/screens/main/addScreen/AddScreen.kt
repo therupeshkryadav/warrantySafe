@@ -35,7 +35,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -55,6 +57,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.warrantysafe.app.R
+import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.main.utils.categorySection.CategorySection
@@ -108,6 +111,25 @@ fun AddScreen(navController: NavController) {
     // States for selected image URI
     var selectedProductReceiptImageUri by remember { mutableStateOf<Uri?>(null) }
     var selectedProductImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    // Observe the sign-up state
+    val addState = productViewModel.addProductState.observeAsState()
+
+    val result = addState.value
+    if (result != null) {
+        if (result.isSuccess) {
+            // Navigate to the next screen
+            LaunchedEffect(result.isSuccess) {
+
+                navController.navigate(Route.HomeScreen.route) {
+                    popUpTo(Route.AddScreen.route) { inclusive = true }
+                }
+            }
+        } else if (result.isFailure) {
+            val errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
+            Text(text = errorMessage, color = Color.Red)
+        }
+    }
 
     // Activity Result Launcher for Image Picker
     val productReceiptLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -206,15 +228,15 @@ fun AddScreen(navController: NavController) {
                         ).show()
                     } else {
                         productViewModel.addProduct(
-                            productName = productName,
-                            purchase = purchaseDate,
-                            expiry = expiryDate,
-                            category = updatedCategory,
-                            notes = notes,
-                            imageUri = imageUri
+                            Product(
+                                productName = productName,
+                                purchase = purchaseDate,
+                                expiry = expiryDate,
+                                category = updatedCategory,
+                                notes = notes,
+                                productImageUri = imageUri.toString()
+                            )
                         )
-                        navController.popBackStack()
-                        navController.navigate(Route.HomeScreen.route)
                     }
                 }) {
                     Icon(
@@ -239,9 +261,12 @@ fun AddScreen(navController: NavController) {
                     .padding(8.dp)
                     .border(width = 2.dp, color = colorResource(R.color.black))
             ) {
+                // Displaying the product image
                 Image(
-                    painter = rememberAsyncImagePainter(imageUri),
-                    contentDescription = null,
+                    painter = rememberAsyncImagePainter(
+                        selectedProductImageUri ?: Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
+                    ),
+                    contentDescription = "Product Image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()

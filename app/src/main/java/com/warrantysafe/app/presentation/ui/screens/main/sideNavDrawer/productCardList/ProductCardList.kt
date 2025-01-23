@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
@@ -63,7 +65,11 @@ fun ProductCardList(
     LaunchedEffect(Unit) {
         productViewModel.loadAllProducts()
     }
-    val productList = productViewModel.allProducts.value
+    // Observe the active products state from the view model
+    val allProductState = productViewModel.allProductsState.observeAsState()
+    val allProducts = allProductState.value?.getOrNull() as? List<Product> ?: emptyList() // Safe casting and defaulting to empty list
+
+    Log.d("ActiveProducts","in Tab:  $allProducts")
     val sortOptions = listOf(
         "Old to Recent",
         "Recent to Old"
@@ -101,7 +107,7 @@ fun ProductCardList(
             },
             actions = {}
         )
-        if (productList.isNotEmpty()) {
+        if (allProducts.isNotEmpty()) {
 
             Row(
                 modifier = Modifier
@@ -151,7 +157,7 @@ fun ProductCardList(
                                 onClick = {
                                     selectedSortOption.value = option
                                     expandedSort.value = false
-                                    applySorting(option, productList) // Sorting logic
+                                    applySorting(option, allProducts) // Sorting logic
                                 }
                             )
                         }
@@ -176,7 +182,7 @@ fun ProductCardList(
                     .padding(bottom = 16.dp)
                     .padding(horizontal = 8.dp)
             ) {
-                items(productList) { product ->
+                items(allProducts) { product ->
                     val isSelected = selectedProducts.contains(product)
 
                     Row {
@@ -282,7 +288,7 @@ private fun navigateToDetails(product: Product, navController: NavController) {
         category = product.category,
         expiryDate = product.expiry,
         notes = product.notes,
-        imageUri = product.productImageUri
+        imageUri = product.productImageUri.toUri()
     ) // Placeholder for expiry logic
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)

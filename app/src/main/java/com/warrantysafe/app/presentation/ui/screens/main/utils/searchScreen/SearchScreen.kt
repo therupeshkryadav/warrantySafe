@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
@@ -175,7 +176,7 @@ private fun navigateToDetails(product: Product, navController: NavController) {
         category = product.category,
         expiryDate = product.expiry, // Placeholder for expiry logic
         notes = product.notes,
-        imageUri = product.productImageUri
+        imageUri = product.productImageUri.toUri()
     )
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)

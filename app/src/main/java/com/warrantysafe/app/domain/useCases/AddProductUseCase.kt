@@ -1,20 +1,19 @@
 package com.warrantysafe.app.domain.useCases
 
-import android.net.Uri
 import android.util.Log
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.domain.repository.ProductRepository
 
 class AddProductUseCase(private val productRepository: ProductRepository) {
-    suspend operator fun invoke(productName: String, purchase: String, expiry: String, category: String, notes: String, productImageUri: Uri) {
+    suspend operator fun invoke(product: Product) {
         // Create new product
         val newProduct = Product(
-            productName = productName,
-            purchase = purchase,
-            expiry = expiry,
-            category = category,
-            productImageUri = productImageUri,
-            notes = notes
+            productName = product.productName,
+            purchase = product.purchase,
+            expiry = product.expiry,
+            category = product.category,
+            productImageUri = product.productImageUri,
+            notes = product.notes
         )
         Log.d("ProductID", generateProductId())
         productRepository.addProduct(newProduct)

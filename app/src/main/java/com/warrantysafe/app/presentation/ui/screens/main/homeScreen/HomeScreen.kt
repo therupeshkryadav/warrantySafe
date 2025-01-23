@@ -80,12 +80,9 @@ fun HomeScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     val userViewModel: UserViewModel = koinViewModel()
-    val productViewModel: ProductViewModel = koinViewModel()
 
     LaunchedEffect(Unit){
         userViewModel.getUser()
-        productViewModel.loadActiveProducts()
-        productViewModel.loadExpiredProducts()
     }
     // States to handle loading and errors
     val userState = userViewModel.userState.observeAsState()
@@ -310,9 +307,9 @@ fun HomeScreen(
                     ) { page ->
                         when (page) {
                             0 ->
-                                ActiveTab(navController = navController, activeProducts = productViewModel.activeProducts.value)
+                                ActiveTab(navController = navController)
                             1 ->
-                                ExpiredTab(navController = navController, expiredProducts = productViewModel.expiredProducts.value)
+                                ExpiredTab(navController = navController)
                         }
                     }
                 }
