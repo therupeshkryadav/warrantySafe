@@ -181,13 +181,7 @@ fun applySorting(option: String, products: List<Product>): List<Product> {
 private fun navigateToDetails(product: Product, navController: NavController) {
 
     val route = Route.ProductDetailsScreen.createRoute(
-        productId = "",
-        productName = product.productName,  // Correct property name
-        purchaseDate = product.purchase,
-        category = product.category,
-        expiryDate = product.expiry,
-        notes = product.notes,
-        imageUri = product.productImageUri.toUri()
+        id = product.id
     ) // Placeholder for expiry logic
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)

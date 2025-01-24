@@ -8,6 +8,7 @@ import com.warrantysafe.app.domain.useCases.GetAllProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetBottomNavigationIconsUseCase
 import com.warrantysafe.app.domain.useCases.GetExpiredProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetNotificationsUseCase
+import com.warrantysafe.app.domain.useCases.GetProductDetailUseCase
 import com.warrantysafe.app.domain.useCases.GetRecentsUseCase
 import com.warrantysafe.app.domain.useCases.GetSettingsUseCase
 import com.warrantysafe.app.domain.useCases.GetUpcomingUseCase
@@ -21,6 +22,7 @@ import org.koin.dsl.module
 
 val domainModule = module {
     // Product Use Cases
+    single { GetProductDetailUseCase(get()) }
     single { GetAllProductsUseCase(get()) }
     single { GetActiveProductsUseCase(get()) }
     single { GetExpiredProductsUseCase(get()) }

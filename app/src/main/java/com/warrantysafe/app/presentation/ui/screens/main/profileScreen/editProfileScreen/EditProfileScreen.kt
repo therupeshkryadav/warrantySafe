@@ -86,7 +86,7 @@ fun EditProfileScreen(
         when {
             result.isSuccess -> {
                 LaunchedEffect(Unit) {
-                    Log.d("ProfileUpdate", "User updated successfully: ${result.getOrNull()?.name}")
+                    Log.d("AppWriteUpload", "User updated successfully: ${result.getOrNull()?.profileImageUrl}")
                     navigateToTab(navController, Route.ProfileScreen)
                 }
             }
@@ -214,7 +214,7 @@ fun EditProfileScreen(
 
 }
 
-private fun navigateToTab(navController: NavController, route: Route) {
+fun navigateToTab(navController: NavController, route: Route) {
     navController.navigate(route.route) {
         popUpTo(navController.graph.startDestinationId) {
             saveState = true // Save state for tabs

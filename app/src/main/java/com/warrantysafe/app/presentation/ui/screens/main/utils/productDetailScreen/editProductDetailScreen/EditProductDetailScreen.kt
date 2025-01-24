@@ -3,6 +3,7 @@ package com.warrantysafe.app.presentation.ui.screens.main.utils.productDetailScr
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -65,10 +67,8 @@ import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.C
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
 
 @SuppressLint("NewApi")
 @Composable
@@ -114,23 +114,59 @@ fun EditProductDetailScreen(
     // Create a DatePickerDialog callback inside the composable context
     val context = LocalContext.current
 
+    // States for selected image URI
+    var selectedProductImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    // Observe the updateProductState LiveData
+    val updateProductsState by productViewModel.updateProductState.observeAsState()
+
+    // Handle state changes for user updates
+    updateProductsState?.let { result ->
+        when {
+            result.isSuccess -> {
+                LaunchedEffect(Unit) {
+                    val updatedProduct = result.getOrNull()
+                    if (updatedProduct != null) {
+                        Log.d("ProfileUpdate", "Product updated successfully: ${updatedProduct.id}")
+                        // Navigate to the Product Details screen with updated product information
+                        navController.navigate("productDetailsScreen/${updatedProduct.id}") {
+                            // Pop the current screen from the backstack
+                            popUpTo(Route.EditProductDetailsScreen.route) { inclusive = true }
+                        }
+                    } else {
+                        Log.e("ProfileUpdate", "Updated product is null")
+                    }
+                }
+            }
+
+            result.isFailure -> {
+                LaunchedEffect(Unit) {
+                    Log.e(
+                        "ProfileUpdate",
+                        "Failed to update Products: $productId ${result.exceptionOrNull()?.message}"
+                    )
+                }
+            }
+        }
+    }
+
     // State for showing the date picker
     val showPurchaseDatePicker = remember { mutableStateOf(false) }
     val showExpiryDatePicker = remember { mutableStateOf(false) }
 
-    // States for selected image URI
-    var selectedProductImageUri by remember { mutableStateOf<Uri?>(null) }
 
     // Activity Result Launcher for Image Picker
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        if (uri != null) {
-            selectedProductImageUri = uri // Handle success (uri is not null, content was selected)
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            if (uri != null) {
+                selectedProductImageUri =
+                    uri // Handle success (uri is not null, content was selected)
+            }
         }
-    }
 
     if (showPurchaseDatePicker.value) {
         // Parse the validPurchaseDate or use the current date as default
-         val selectedPurchaseDate = runCatching {
+        val selectedPurchaseDate = runCatching {
             LocalDate.parse(validPurchaseDate, dateFormatter)
         }.getOrElse {
             LocalDate.now()
@@ -156,7 +192,8 @@ fun EditProductDetailScreen(
     }
 
     if (showExpiryDatePicker.value) {
-        val selectedPurchaseDate = purchaseDateLocalDate ?: LocalDate.now() // Default to purchaseDateLocalDate
+        val selectedPurchaseDate =
+            purchaseDateLocalDate ?: LocalDate.now() // Default to purchaseDateLocalDate
         val selectedExpiryDate = runCatching {
             LocalDate.parse(validExpiryDate, dateFormatter)
         }.getOrElse {
@@ -184,7 +221,8 @@ fun EditProductDetailScreen(
             selectedExpiryDate.dayOfMonth
         ).apply {
             // Properly set the minimum date using time in milliseconds
-            datePicker.minDate = selectedPurchaseDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+            datePicker.minDate =
+                selectedPurchaseDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
 
             setOnCancelListener {
                 showExpiryDatePicker.value = false
@@ -192,7 +230,7 @@ fun EditProductDetailScreen(
         }.show()
     }
 
-    val updatedImageUri = selectedProductImageUri?: imageUri
+    val updatedImageUri = selectedProductImageUri ?: imageUri
 
     Column(
         modifier = Modifier
@@ -228,8 +266,10 @@ fun EditProductDetailScreen(
             actions = {
                 IconButton(
                     onClick = {
+                        Log.d("ProfileUpdate", "fetched Product Id 1-->  $productId")
                         productViewModel.updateProduct(
                             product = Product(
+                                id = productId,
                                 productName = validProductName!!,
                                 purchase = validPurchaseDate!!,
                                 expiry = validExpiryDate!!,
@@ -237,11 +277,6 @@ fun EditProductDetailScreen(
                                 productImageUri = updatedImageUri.toString(),
                                 notes = validNotes!!
                             )
-                        )
-                        // Clear back stack of Route.EditProductDetailsScreen.route
-                        navController.popBackStack(
-                            Route.ProductDetailsScreen.route,
-                            inclusive = true
                         )
                     }
                 ) {

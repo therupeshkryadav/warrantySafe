@@ -3,6 +3,7 @@ package com.warrantysafe.app.data.repository
 import android.content.ContentResolver
 import android.content.Context
 import android.util.Log
+import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.warrantysafe.app.domain.model.User

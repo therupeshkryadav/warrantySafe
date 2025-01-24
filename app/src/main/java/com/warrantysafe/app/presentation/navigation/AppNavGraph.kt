@@ -2,7 +2,6 @@ package com.warrantysafe.app.presentation.navigation
 
 import android.net.Uri
 import androidx.compose.runtime.Composable
-import androidx.core.net.toUri
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -90,52 +89,24 @@ fun AppNavGraph() {
 
         // ProductDetailScreen with arguments
         composable(
-            route = "productDetailsScreen/{productId}/{productName}/{purchaseDate}/{category}/{expiryDate}/{notes}/{imageUri}",
+            route = "productDetailsScreen/{id}",
             arguments = listOf(
-                navArgument("productId") { type = NavType.StringType },
-                navArgument("productName") { type = NavType.StringType },
-                navArgument("purchaseDate") { type = NavType.StringType },
-                navArgument("expiryDate") { type = NavType.StringType },
-                navArgument("category") { type = NavType.StringType },
-                navArgument("notes") { type = NavType.StringType },
-                navArgument("imageUri") { type = NavType.StringType } // Correct NavType for imageUri
+                navArgument("id") { type = NavType.StringType }
             )
         ) {
-            val productId = it.arguments?.getString("productId") ?: "Unknown"
-            val productName = it.arguments?.getString("productName") ?: "Unknown"
-            val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
-            val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
-            val category = it.arguments?.getString("category") ?: "N/A"
-            val notes = it.arguments?.getString("notes") ?: "N/A"
-            // Handle the default image URI logic
-            val imageUriString = it.arguments?.getString("imageUri")
-            val imageUri = if (imageUriString != null) {
-                Uri.parse(imageUriString)
-            } else {
-                // Default image (placeholder) is provided as a resource ID
-                // To use it with Image composable, you need to provide a painter or drawable resource.
-                // For example, this is just a placeholder for the case when imageUri is null
-                Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-            }
-
+            val id = it.arguments?.getString("id") ?: "Unknown"
             ProductDetailScreen(
                 navController = navController,
-                productId = productId,
-                productName = productName,
-                purchaseDate = purchaseDate,
-                category = category,
-                expiryDate = expiryDate,
-                notes = notes,
-                imageUri = imageUri
+                productId = id
             )
         }
 
 
         // EditProductDetailScreen with arguments
         composable(
-            route = "editProductDetailsScreen/{productId}/{productName}/{purchaseDate}/{category}/{expiryDate}/{notes}/{imageUri}",
+            route = "editProductDetailsScreen/{id}/{productName}/{purchaseDate}/{category}/{expiryDate}/{notes}/{imageUri}",
             arguments = listOf(
-                navArgument("productId") { type = NavType.StringType },
+                navArgument("id") { type = NavType.StringType },
                 navArgument("productName") { type = NavType.StringType },
                 navArgument("purchaseDate") { type = NavType.StringType },
                 navArgument("expiryDate") { type = NavType.StringType },
@@ -144,7 +115,7 @@ fun AppNavGraph() {
                 navArgument("imageUri") { type = NavType.StringType } // Correct NavType for imageUri
             )
         ) {
-            val productId = it.arguments?.getString("productId") ?: "Unknown"
+            val id = it.arguments?.getString("id") ?: "Unknown"
             val productName = it.arguments?.getString("productName") ?: "Unknown"
             val purchaseDate = it.arguments?.getString("purchaseDate") ?: "N/A"
             val expiryDate = it.arguments?.getString("expiryDate") ?: "N/A"
@@ -163,7 +134,7 @@ fun AppNavGraph() {
 
             EditProductDetailScreen(
                 navController = navController,
-                productId = productId,
+                productId = id,
                 productName = productName,
                 purchaseDate = purchaseDate,
                 category = category,

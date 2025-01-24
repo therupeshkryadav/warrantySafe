@@ -19,32 +19,20 @@ sealed class Route(
     object UpcomingFeaturesScreen : Route(route = "upcomingFeaturesScreen")
     object SettingsScreen : Route(route = "settingsScreen")
 
-    object ProductDetailsScreen : Route("productDetailsScreen/{productId}/{productName}/{purchaseDate}/{category}/{expiryDate}/{notes}/{imageUri}") {
+    object ProductDetailsScreen : Route("productDetailsScreen/{id}") {
         fun createRoute(
-            productId: String?,
-            productName: String?,
-            purchaseDate: String?,
-            category: String?,
-            expiryDate: String?,
-            notes: String?,
-            imageUri: Uri?
+            id: String?
         ): String {
             // Provide safe defaults and encode the values
-            val safeProductName = Uri.encode(productName ?: "Unknown")
-            val safeProductId = Uri.encode(productId ?: "Unknown")
-            val safePurchaseDate = Uri.encode(purchaseDate ?: "N/A")
-            val safeExpiryDate = Uri.encode(expiryDate ?: "N/A")
-            val safeCategory = Uri.encode(category ?: "N/A")
-            val safeNotes = Uri.encode(notes ?: "N/A")
-            val safeImageUri = Uri.encode(imageUri?.toString() ?: "N/A")
+            val safeProductId = Uri.encode(id ?: "Unknown")
 
-            return "productDetailsScreen/$safeProductId/$safeProductName/$safePurchaseDate/$safeCategory/$safeExpiryDate/$safeNotes/$safeImageUri"
+            return "productDetailsScreen/$safeProductId"
         }
     }
 
-    object EditProductDetailsScreen : Route("editProductDetailsScreen/{productId}/{productName}/{purchaseDate}/{category}/{expiryDate}/{notes}/{imageUri}") {
+    object EditProductDetailsScreen : Route("editProductDetailsScreen/{id}/{productName}/{purchaseDate}/{category}/{expiryDate}/{notes}/{imageUri}") {
         fun createRoute(
-            productId: String?,
+            id: String?,
             productName: String?,
             purchaseDate: String?,
             expiryDate: String?,
@@ -53,7 +41,7 @@ sealed class Route(
             imageUri: Uri?
         ): String {
             // Provide safe defaults and encode the values
-            val safeProductId = Uri.encode(productId)?: "Unknown"
+            val safeProductId = Uri.encode(id)?: "Unknown"
             val safeProductName = Uri.encode(productName ?: "Unknown")
             val safePurchaseDate = Uri.encode(purchaseDate ?: "N/A")
             val safeExpiryDate = Uri.encode(expiryDate ?: "N/A")

@@ -170,13 +170,7 @@ fun SearchScreen(
 private fun navigateToDetails(product: Product, navController: NavController) {
 
     val route = Route.ProductDetailsScreen.createRoute(
-        productId = "",
-        productName = product.productName,  // Correct property name
-        purchaseDate = product.purchase,
-        category = product.category,
-        expiryDate = product.expiry, // Placeholder for expiry logic
-        notes = product.notes,
-        imageUri = product.productImageUri.toUri()
+        id = product.id
     )
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)

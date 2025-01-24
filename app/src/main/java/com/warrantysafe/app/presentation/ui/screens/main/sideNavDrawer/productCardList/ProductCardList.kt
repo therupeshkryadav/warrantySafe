@@ -69,7 +69,8 @@ fun ProductCardList(
     val allProductState = productViewModel.allProductsState.observeAsState()
     val allProducts = allProductState.value?.getOrNull() as? List<Product> ?: emptyList() // Safe casting and defaulting to empty list
 
-    Log.d("ActiveProducts","in Tab:  $allProducts")
+    Log.d("AllProducts","in Tab:  $allProducts")
+
     val sortOptions = listOf(
         "Old to Recent",
         "Recent to Old"
@@ -168,7 +169,9 @@ fun ProductCardList(
                         modifier = Modifier.clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null // Disables ripple effect
-                        ) { },
+                        ) {
+                            productViewModel.deleteProducts(selectedProducts)
+                        },
                         imageVector = Icons.Default.Delete,
                         contentDescription = null
                     )
@@ -282,13 +285,7 @@ fun applySorting(option: String, products: List<Product>): List<Product> {
 private fun navigateToDetails(product: Product, navController: NavController) {
 
     val route = Route.ProductDetailsScreen.createRoute(
-        productId = "",
-        productName = product.productName,  // Correct property name
-        purchaseDate = product.purchase,
-        category = product.category,
-        expiryDate = product.expiry,
-        notes = product.notes,
-        imageUri = product.productImageUri.toUri()
+        id = product.id
     ) // Placeholder for expiry logic
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)
