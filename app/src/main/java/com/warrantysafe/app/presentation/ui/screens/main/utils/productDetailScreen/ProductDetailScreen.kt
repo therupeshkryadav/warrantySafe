@@ -308,7 +308,7 @@ fun ProductDetailScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.LightGray),
+                    .background(Color.LightGray).statusBarsPadding().navigationBarsPadding(),
                 contentAlignment = Alignment.Center
             ) {
                 Text(text = "Loading...", fontSize = 18.sp, fontWeight = FontWeight.Bold)

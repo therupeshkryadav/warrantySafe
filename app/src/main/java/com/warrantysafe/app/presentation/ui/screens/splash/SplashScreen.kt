@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.splash
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,11 +16,13 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.theme.WarrantySafeTheme
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
@@ -51,7 +54,7 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF6200EE)), // Primary color
+            .background(Color.White), // Primary color
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -59,11 +62,8 @@ fun SplashScreen(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(
-                text = "Welcome to WarrantySafe",
-                style = MaterialTheme.typography.titleLarge.copy(fontSize = 24.sp),
-                color = Color.White
-            )
+            Image(painter = painterResource(R.drawable.warranty_logo),
+                contentDescription = null)
         }
     }
 }
