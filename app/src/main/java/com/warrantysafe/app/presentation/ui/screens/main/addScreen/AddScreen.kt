@@ -30,6 +30,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -58,6 +59,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
+import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.main.utils.categorySection.CategorySection
@@ -112,22 +114,35 @@ fun AddScreen(navController: NavController) {
     var selectedProductReceiptImageUri by remember { mutableStateOf<Uri?>(null) }
     var selectedProductImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    // Observe the sign-up state
+    // Observe the add product state
     val addState = productViewModel.addProductState.observeAsState()
 
+    // Handle loading, success, and failure states
     val result = addState.value
     if (result != null) {
-        if (result.isSuccess) {
-            // Navigate to the next screen
-            LaunchedEffect(result.isSuccess) {
-
-                navController.navigate(Route.HomeScreen.route) {
-                    popUpTo(Route.AddScreen.route) { inclusive = true }
+        when {
+            result is Results.Loading -> {
+                // Show loading indicator
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
                 }
             }
-        } else if (result.isFailure) {
-            val errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
-            Text(text = errorMessage, color = Color.Red)
+            result is Results.Success -> {
+                // Navigate to home screen after success
+                LaunchedEffect(result) {
+                    navController.navigate(Route.HomeScreen.route) {
+                        popUpTo(Route.AddScreen.route) { inclusive = true }
+                    }
+                }
+            }
+            result is Results.Failure -> {
+                // Show error message on failure
+                val errorMessage = result.exception.message ?: "Unknown error"
+                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -186,8 +201,6 @@ fun AddScreen(navController: NavController) {
         }.show()
     }
 
-    val imageUri = selectedProductImageUri?: Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-
     Column(
         modifier = Modifier
             .padding(start = 8.dp, end = 8.dp)
@@ -234,7 +247,7 @@ fun AddScreen(navController: NavController) {
                                 expiry = expiryDate,
                                 category = updatedCategory,
                                 notes = notes,
-                                productImageUri = imageUri.toString()
+                                productImageUri = selectedProductImageUri.toString()
                             )
                         )
                     }

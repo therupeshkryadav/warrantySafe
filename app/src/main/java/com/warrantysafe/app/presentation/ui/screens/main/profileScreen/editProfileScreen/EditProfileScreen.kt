@@ -20,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +47,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.User
+import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.components.PhoneDetailRow
@@ -83,21 +86,50 @@ fun EditProfileScreen(
     val updateUserState by userViewModel.updateUserState.observeAsState()
     // Handle state changes for user updates
     updateUserState?.let { result ->
-        when {
-            result.isSuccess -> {
+        when (result) {
+            is Results.Loading -> {
+                // Display a loading indicator while the update is in progress
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            is Results.Success -> {
+                // Handle successful user update
                 LaunchedEffect(Unit) {
-                    Log.d("AppWriteUpload", "User updated successfully: ${result.getOrNull()?.profileImageUrl}")
+                    Log.d("AppWriteUpload", "User updated successfully: ${result.data.profileImageUrl}")
                     navigateToTab(navController, Route.ProfileScreen)
                 }
             }
 
-            result.isFailure -> {
-                LaunchedEffect(Unit) {
-                    Log.e("ProfileUpdate", "Failed to update user: ${result.exceptionOrNull()?.message}")
+            is Results.Failure -> {
+                // Handle failure during user update
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    val errorMessage = result.exception.message ?: "An error occurred"
+                    Log.e("ProfileUpdate", "Failed to update user: $errorMessage")
+
+                    // Display an error message on the screen
+                    Text(
+                        text = errorMessage,
+                        color = Color.Red,
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center
+                    )
                 }
+            }
+
+            else -> {
+                // Handle any undefined state (optional, based on your design)
             }
         }
     }
+
     Column(modifier = Modifier.fillMaxSize()) {
         CustomTopAppBar(
             title = {

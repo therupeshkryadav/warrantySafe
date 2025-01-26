@@ -11,6 +11,7 @@ import com.warrantysafe.app.domain.useCases.LoginUserUseCase
 import com.warrantysafe.app.domain.useCases.SignOutUserUseCase
 import com.warrantysafe.app.domain.useCases.SignUpUserUseCase
 import com.warrantysafe.app.domain.useCases.UpdateUserUseCase
+import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import kotlinx.coroutines.launch
 
@@ -23,24 +24,27 @@ class UserViewModel(
     private val signOutUserUseCase: SignOutUserUseCase
 ) : ViewModel() {
 
-    private val _loginState = MutableLiveData<Result<User>>()
-    val loginState: LiveData<Result<User>> get() = _loginState
+    private val _loginState = MutableLiveData<Results<User>>()
+    val loginState: LiveData<Results<User>> get() = _loginState
 
-    private val _signUpState = MutableLiveData<Result<User>>()
-    val signUpState: LiveData<Result<User>> get() = _signUpState
+    private val _signUpState = MutableLiveData<Results<User>>()
+    val signUpState: LiveData<Results<User>> get() = _signUpState
 
     // LiveData to emit the initial navigation route
     private val _navigationRoute = MutableLiveData<String>()
     val navigationRoute: LiveData<String> get() = _navigationRoute
 
-    private val _userState = MutableLiveData<Result<User>>()
-    val userState: LiveData<Result<User>> get() = _userState
+    private val _userState = MutableLiveData<Results<User>>()
+    val userState: LiveData<Results<User>> get() = _userState
 
-    private val _signOutState = MutableLiveData<Result<Unit>>()
-    val signOutState: LiveData<Result<Unit>> get() = _signOutState
+    private val _signOutState = MutableLiveData<Results<Unit>>()
+    val signOutState: LiveData<Results<Unit>> get() = _signOutState
 
-    private val _updateUserState = MutableLiveData<Result<User>>()
-    val updateUserState: LiveData<Result<User>> get() = _updateUserState
+    private val _updateUserState = MutableLiveData<Results<User>>()
+    val updateUserState: LiveData<Results<User>> get() = _updateUserState
+
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
     // Check if user is logged in and set the initial route
     fun checkUser() {
@@ -54,10 +58,12 @@ class UserViewModel(
     fun signUpUser(user: User) {
         viewModelScope.launch {
             try {
+                _isLoading.value = true // Start loading
                 val result = signUpUserUseCase.invoke(user)
                 _signUpState.value = result
+                _isLoading.value = false // Stop loading
             } catch (e: Exception) {
-                _signUpState.value = Result.failure(e)
+                _signUpState.value = Results.Failure(e)
             }
         }
     }
@@ -66,10 +72,12 @@ class UserViewModel(
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
             try {
+                _isLoading.value = true // Start loading
                 val result = loginUserUseCase.invoke(email, password)
                 _loginState.value = result
+                _isLoading.value = false // Stop loading
             } catch (e: Exception) {
-                _loginState.value = Result.failure(e)
+                _loginState.value = Results.Failure(e)
             }
         }
     }
@@ -77,11 +85,12 @@ class UserViewModel(
     // Get user details
     fun getUser() {
         viewModelScope.launch {
+            _userState.value = Results.Loading
             try {
                 val result = getUserUseCase.invoke()
                 _userState.value = result
             } catch (e: Exception) {
-                _userState.value = Result.failure(e)
+                _userState.value = Results.Failure(e)
             }
         }
     }
@@ -93,7 +102,7 @@ class UserViewModel(
                 val result = updateUserUseCase.invoke(user)
                 _updateUserState.value = result
             } catch (e: Exception) {
-                _updateUserState.value = Result.failure(e)
+                _updateUserState.value = Results.Failure(e)
             }
         }
     }
@@ -105,7 +114,7 @@ class UserViewModel(
                 val result = signOutUserUseCase.invoke()
                 _signOutState.value = result // Notify the UI about success
             } catch (e: Exception) {
-                _signOutState.value = Result.failure(e) // Notify the UI about failure
+                _signOutState.value = Results.Failure(e) // Notify the UI about failure
             }
         }
     }

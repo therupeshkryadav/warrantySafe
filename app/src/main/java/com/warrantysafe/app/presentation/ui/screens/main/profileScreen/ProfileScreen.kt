@@ -1,19 +1,23 @@
 package com.warrantysafe.app.presentation.ui.screens.main.profileScreen
 
-import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,6 +28,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
@@ -56,6 +61,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.User
+import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customBottomNavigation.CustomBottomNavigation
@@ -72,111 +78,50 @@ fun ProfileScreen(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
-    // State to manage the visibility of the dropdown menu
+
+    // User ViewModel
     val userViewModel: UserViewModel = koinViewModel()
+
+    // Fetch user data when this composable is launched
     LaunchedEffect(Unit) {
         userViewModel.getUser()
     }
-    // States to handle loading and errors
-    val userState = userViewModel.userState.observeAsState()
-    var user = User()
-    val result = userState.value
-    if (result != null) {
-        if (result.isSuccess) {
-            user = (result.getOrNull() as? User)!!
-        } else if (result.isFailure) {
-            val errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
-            Text(text = errorMessage, color = Color.Red)
-        }
-    }
-    val imageUri = user.profileImageUrl ?: Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.profile_placeholder}")
-    val signOutState by userViewModel.signOutState.observeAsState()
-    signOutState?.let { task ->
-        when {
-            task.isSuccess -> {
-                // Navigate to LoginScreen or show a success message
-                Text("Signed out successfully!")
-                navController.navigate(Route.LoginScreen.route) {
-                    popUpTo(Route.ProfileScreen.route) { inclusive = true }
-                }
-                // Example: navigation logic
-                // navController.navigate(Route.LoginScreen.route)
-            }
 
-            task.isFailure -> {
-                // Show error message
-                Text("Sign out failed: ${task.exceptionOrNull()?.message}")
-            }
-        }
-    }
+    // Observe user state (loading, success, failure)
+    val userState = userViewModel.userState.observeAsState()
+
+    var user by remember { mutableStateOf(User()) }
     var isMenuExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            SideDrawerContent(
-                modifier = Modifier,
-                onItemClicked = { item ->
-                    coroutineScope.launch { drawerState.close() }
-                    // Perform navigation or actions based on the clicked item
-                    when (item) {
-                        "List of Product Cards" -> {
-                            navigateToTab(
-                                navController = navController,
-                                route = Route.ProductCardList
-                            ) // Handle List of Product navigation
-                        }
-
-                        "Help & Support" -> {
-                            navigateToTab(
-                                navController = navController,
-                                route = Route.HelpSupportScreen
-                            ) // Handle Help & Support navigation
-                        }
-
-                        "Rate and Review" -> {
-                            // Handle Rate and Review navigation
-                        }
-
-                        "Share with Friends" -> {
-                            // Handle Share with Friends navigation
-                        }
-
-                        "Terms & Privacy" -> {
-                            navigateToTab(
-                                navController = navController,
-                                route = Route.TermsPrivacyScreen
-                            )// Handle Terms & Privacy navigation
-                        }
-
-                        "About the App" -> {
-                            navigateToTab(
-                                navController = navController,
-                                route = Route.AboutAppScreen
-                            )// Handle About the App navigation
-                        }
-
-                        "Upcoming Features" -> {
-                            navigateToTab(
-                                navController = navController,
-                                route = Route.UpcomingFeaturesScreen
-                            )// Handle Upcoming Features navigation
-                        }
-
-                        "Settings" -> {
-                            navigateToTab(
-                                navController = navController,
-                                route = Route.SettingsScreen
-                            )//  Handle Settings navigation
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .systemBarsPadding()
+            .statusBarsPadding()
+    ) {
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                SideDrawerContent(
+                    modifier = Modifier
+                        .fillMaxHeight(),
+                    onItemClicked = { item ->
+                        coroutineScope.launch { drawerState.close() }
+                        when (item) {
+                            "List of Product Cards" -> navigateToTab(navController, Route.ProductCardList)
+                            "Help & Support" -> navigateToTab(navController, Route.HelpSupportScreen)
+                            "Terms & Privacy" -> navigateToTab(navController, Route.TermsPrivacyScreen)
+                            "About the App" -> navigateToTab(navController, Route.AboutAppScreen)
+                            "Upcoming Features" -> navigateToTab(navController, Route.UpcomingFeaturesScreen)
+                            "Settings" -> navigateToTab(navController, Route.SettingsScreen)
                         }
                     }
-                }
-            )
-        },
-        gesturesEnabled = true
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+                )
+            },
+            gesturesEnabled = true
+        ) {
             Column(modifier = Modifier.fillMaxSize()) {
                 CustomTopAppBar(
                     title = {
@@ -187,7 +132,7 @@ fun ProfileScreen(
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
                             maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,  // Handling overflow text
+                            overflow = TextOverflow.Ellipsis,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
@@ -231,101 +176,132 @@ fun ProfileScreen(
                     }
                 )
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight(1f)
-                        .padding(horizontal = 16.dp)
-                        .verticalScroll(scrollState)
-                ) {
-
-                    Spacer(modifier = Modifier.size(16.dp))
-                    // Profile Avatar
-                    Box(
-                        modifier = Modifier
-                            .size(200.dp)
-                            .clip(CircleShape)
-                            .background(color = colorResource(R.color.black))
-                            .align(Alignment.CenterHorizontally)
-                    ) {
-                        Image(
-                            painter = rememberAsyncImagePainter(imageUri),
+                // Loading State
+                when (val result = userState.value) {
+                    is Results.Loading -> {
+                        // Show loading state
+                        Box(
                             modifier = Modifier
-                                .size(198.dp)
-                                .align(Alignment.Center)
-                                .clip(CircleShape),
-                            contentDescription = "Profile Avatar",
-                            contentScale = ContentScale.Crop
-                        )
+                                .fillMaxSize()
+                                .background(Color.White)
+                                .statusBarsPadding()
+                                .navigationBarsPadding(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
 
-                    // Profile Details
-                    DetailRow(
-                        "Name",
-                        updatedValue = user.name,
-                        enable = false,
-                        textColor = colorResource(R.color.purple_500),
-                        icon = null,
-                        onValueChange = { }
-                    )
-                    DetailRow(
-                        "Username",
-                        updatedValue = user.username,
-                        enable = false,
-                        textColor = colorResource(R.color.purple_500),
-                        icon = null,
-                        onValueChange = { }
-                    )
-                    DetailRow(
-                        "Email",
-                        updatedValue = user.email,
-                        enable = false,
-                        textColor = colorResource(R.color.purple_500),
-                        icon = null,
-                        onValueChange = { }
-                    )
-                    DetailRow(
-                        "Phone",
-                        updatedValue = user.phoneNumber,
-                        enable = false,
-                        textColor = colorResource(R.color.purple_500),
-                        icon = null,
-                        onValueChange = { }
-                    )
+                    is Results.Success -> {
+                        user = result.data
+                        val imageUri = user.profileImageUrl
 
-                    //Edit Profile Button
-                    Button(
-                        onClick = {
-                            navigateToEditProfile(
-                                navController = navController,
-                                user = user
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight(1f)
+                                .padding(horizontal = 16.dp)
+                                .verticalScroll(scrollState)
+                        ) {
+                            Spacer(modifier = Modifier.size(16.dp))
+                            // Profile Avatar
+                            Box(
+                                modifier = Modifier
+                                    .size(200.dp)
+                                    .clip(CircleShape)
+                                    .background(color = colorResource(R.color.black))
+                                    .align(Alignment.CenterHorizontally)
+                            ) {
+                                Image(
+                                    painter = rememberAsyncImagePainter(imageUri),
+                                    modifier = Modifier
+                                        .size(198.dp)
+                                        .align(Alignment.Center)
+                                        .clip(CircleShape),
+                                    contentDescription = "Profile Avatar",
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+
+                            // Profile Details
+                            DetailRow(
+                                "Name",
+                                updatedValue = user.name,
+                                enable = false,
+                                textColor = colorResource(R.color.purple_500),
+                                icon = null,
+                                onValueChange = { }
                             )
-                        },
-                        shape = RoundedCornerShape(20.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp)
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically),
-                            text = "Edit Profile",
-                            fontSize = 18.sp,
-                            color = colorResource(R.color.white)
-                        )
-                        Icon(
-                            modifier = Modifier
-                                .width(18.dp)
-                                .padding(start = 4.dp)
-                                .fillMaxHeight(),
-                            imageVector = Icons.Filled.Edit,
-                            tint = colorResource(R.color.white),
-                            contentDescription = "Edit Profile"
-                        )
+                            DetailRow(
+                                "Username",
+                                updatedValue = user.username,
+                                enable = false,
+                                textColor = colorResource(R.color.purple_500),
+                                icon = null,
+                                onValueChange = { }
+                            )
+                            DetailRow(
+                                "Email",
+                                updatedValue = user.email,
+                                enable = false,
+                                textColor = colorResource(R.color.purple_500),
+                                icon = null,
+                                onValueChange = { }
+                            )
+                            DetailRow(
+                                "Phone",
+                                updatedValue = user.phoneNumber,
+                                enable = false,
+                                textColor = colorResource(R.color.purple_500),
+                                icon = null,
+                                onValueChange = { }
+                            )
+
+                            // Edit Profile Button
+                            Button(
+                                onClick = {
+                                    navigateToEditProfile(
+                                        navController = navController,
+                                        user = user
+                                    )
+                                },
+                                shape = RoundedCornerShape(20.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 16.dp)
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterVertically),
+                                    text = "Edit Profile",
+                                    fontSize = 18.sp,
+                                    color = colorResource(R.color.white)
+                                )
+                                Icon(
+                                    modifier = Modifier
+                                        .width(18.dp)
+                                        .padding(start = 4.dp)
+                                        .fillMaxHeight(),
+                                    imageVector = Icons.Filled.Edit,
+                                    tint = colorResource(R.color.white),
+                                    contentDescription = "Edit Profile"
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.size(120.dp))
+                        }
                     }
 
-                    Spacer(modifier = Modifier.size(120.dp))
+                    is Results.Failure -> {
+                        val errorMessage = result.exception.message ?: "Unknown error"
+                        Text(text = errorMessage, color = Color.Red)
+                    }
+
+                    else -> {
+                        // No-op for null or undefined states
+                    }
                 }
             }
+
             // Bottom Navigation fixed at the bottom
             CustomBottomNavigation(
                 currentRoute = Route.ProfileScreen,
@@ -333,10 +309,42 @@ fun ProfileScreen(
                 modifier = Modifier.align(Alignment.BottomCenter) // Fix at the bottom of the screen
             )
         }
+    }
+    val signOutState = userViewModel.signOutState.observeAsState()
+    when (val result = signOutState.value) {
+        is Results.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
 
+        is Results.Success -> {
+            // Navigate to LoginScreen or show a success message
+            navController.navigate(Route.LoginScreen.route) {
+                popUpTo(Route.HomeScreen.route) { inclusive = true }
+            }
+        }
 
+        is Results.Failure -> {
+            val errorMessage =
+                result.exception.message ?: "Sign out failed due to an unknown error."
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = errorMessage, color = Color.Red, textAlign = TextAlign.Center)
+            }
+        }
+
+        else -> {
+            // No-op for null or undefined states
+        }
     }
 }
+
 
 fun navigateToEditProfile(
     navController: NavController,
@@ -349,7 +357,7 @@ fun navigateToEditProfile(
         emailId = user.email,
         phone = user.phoneNumber
     )
-    Log.d("AppWriteUpload","URL ->> ${user.profileImageUrl.toUri()}")
+    Log.d("AppWriteUpload", "URL ->> ${user.profileImageUrl.toUri()}")
     navController.navigate(route)
 }
 

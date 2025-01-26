@@ -66,7 +66,8 @@ fun SideDrawerContent(
                 "Share with Friends" to R.drawable.share_warranty,
                 "Terms & Privacy" to R.drawable.policy_warranty,
                 "About the App" to R.drawable.about_app,
-                "Upcoming Features" to R.drawable.upcoming_features
+                "Upcoming Features" to R.drawable.upcoming_features,
+                "Settings" to R.drawable.settings
             ).forEach { (item, iconRes) ->
                 SideDrawerItem(
                     item = item,
@@ -77,14 +78,6 @@ fun SideDrawerContent(
                         onItemClicked(item)
                     })
             }
-
-            SideDrawerItem(
-                item = "Settings",
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                itemImg = R.drawable.settings,
-                onClick = { onItemClicked("Settings") }
-            )
         }
     }
 }

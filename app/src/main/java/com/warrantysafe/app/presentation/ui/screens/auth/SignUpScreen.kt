@@ -1,6 +1,7 @@
 package com.warrantysafe.app.presentation.ui.screens.auth
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -26,8 +28,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -43,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -57,6 +62,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.User
+import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
@@ -67,26 +73,28 @@ fun SignUpScreen(
     navController: NavController
 ) {
     val userViewModel: UserViewModel = koinViewModel()
+    val context = LocalContext.current
 
     // Observe the sign-up state
     val signUpState = userViewModel.signUpState.observeAsState()
-
-    val result = signUpState.value
-    if (result != null) {
-        if (result.isSuccess) {
-            // Navigate to the next screen
-            LaunchedEffect(result.isSuccess) {
-
+    val isLoading = userViewModel.isLoading.observeAsState(initial = false)
+    // Handle login state
+    when (val result = signUpState.value) {
+        is Results.Success -> {
+            LaunchedEffect(Unit) {
                 navController.navigate(Route.HomeScreen.route) {
                     popUpTo(Route.SignUpScreen.route) { inclusive = true }
                 }
             }
-        } else if (result.isFailure) {
-            val errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
-            Text(text = errorMessage, color = Color.Red)
         }
-    }
 
+        is Results.Failure -> {
+            val errorMessage = result.exception.message ?: "No account found with these credentials"
+            Toast.makeText(context,errorMessage, Toast.LENGTH_SHORT).show()
+        }
+
+        else -> { /* No-op for initial or null state */ }
+    }
     // Remember state for user input
     val username = remember { mutableStateOf("") }
     val name = remember { mutableStateOf("") }
@@ -109,13 +117,14 @@ fun SignUpScreen(
         profileImageUri = uri ?: defaultProfileImage
     }
 
+    val isValidInput = name.value.isNotEmpty() && username.value.isNotEmpty() && email.value.isNotEmpty() && phoneNumber.value.isNotEmpty() && password.value.isNotEmpty()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
             .systemBarsPadding()
             .background(color = Color.White)
-            .verticalScroll(rememberScrollState())
     ) {
         CustomTopAppBar(
             title = {
@@ -143,256 +152,267 @@ fun SignUpScreen(
             },
             actions = {}
         )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Box(
-            modifier = Modifier
-                .size(160.dp)
-                .clip(CircleShape)
-                .fillMaxWidth()
-                .border(width = 1.dp, Color.Black, CircleShape)
-                .align(Alignment.CenterHorizontally)
-                .clickable { launcher.launch("image/*") },
-        ) {
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = rememberAsyncImagePainter(profileImageUri),
-                contentDescription = null,
-                contentScale = ContentScale.Crop
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        // fullName Field
-        TextField(
-            value = name.value,
-            onValueChange = { name.value = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .border(
-                    width = 1.dp,
-                    color = Color.LightGray,
-                    shape = RoundedCornerShape(20.dp)
-                ),
-            placeholder = {
-                Text("Enter Your Full Name", color = Color.Gray)
-            },
-            shape = RoundedCornerShape(20.dp),
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.username),
-                    contentDescription = "Username Icon"
+        Column(Modifier.fillMaxSize() .verticalScroll(rememberScrollState())){
+            Spacer(modifier = Modifier.height(16.dp))
+            Box(
+                modifier = Modifier
+                    .size(160.dp)
+                    .clip(CircleShape)
+                    .fillMaxWidth()
+                    .border(width = 1.dp, Color.Black, CircleShape)
+                    .align(Alignment.CenterHorizontally)
+                    .clickable { launcher.launch("image/*") },
+            ) {
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    painter = rememberAsyncImagePainter(profileImageUri),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
                 )
-            },
-            singleLine = true,
-            textStyle = TextStyle(
-                fontSize = 16.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Normal
-            ),
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White
-            )
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Username Field
-        TextField(
-            value = username.value,
-            onValueChange = { username.value = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
-            placeholder = {
-                Text("Choose Your username", color = Color.Gray)
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.username_pp),
-                    contentDescription = "Username Icon"
-                )
-            },
-            singleLine = true,
-            textStyle = TextStyle(
-                fontSize = 16.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Normal
-            ),
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White
-            )
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Email Address Field
-        TextField(
-            value = email.value,
-            onValueChange = { email.value = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
-            placeholder = {
-                Text("Enter Your Email Address", color = Color.Gray)
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.email_pp),
-                    contentDescription = "Email Icon"
-                )
-            },
-            singleLine = true,
-            textStyle = TextStyle(
-                fontSize = 16.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Normal
-            ),
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White
-            )
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Phone Number Field
-        TextField(
-            value = phoneNumber.value,
-            onValueChange = { phoneNumber.value = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
-            placeholder = {
-                Text("Enter Your Phone Number", color = Color.Gray)
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.phone_pp),
-                    contentDescription = "Phone Number Icon"
-                )
-            },
-            singleLine = true,
-            textStyle = TextStyle(
-                fontSize = 16.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Normal
-            ),
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White
-            )
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Password Field with Visibility Toggle
-        TextField(
-            value = password.value,
-            onValueChange = {
-                password.value = it
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
-            placeholder = {
-                Text("Enter Your Password", color = Color.Gray)
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.password),
-                    contentDescription = "Password Icon"
-                )
-            },
-            singleLine = true,
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            // fullName Field
+            TextField(
+                value = name.value,
+                onValueChange = { name.value = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .border(
+                        width = 1.dp,
+                        color = Color.LightGray,
+                        shape = RoundedCornerShape(20.dp)
+                    ),
+                placeholder = {
+                    Text("Enter Your Full Name", color = Color.Gray)
+                },
+                shape = RoundedCornerShape(20.dp),
+                leadingIcon = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_eye),
-                        contentDescription = "Toggle Password Visibility"
+                        painter = painterResource(id = R.drawable.username),
+                        contentDescription = "Username Icon"
                     )
-                }
-            },
-            textStyle = TextStyle(
-                fontSize = 16.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Normal
-            ),
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White
+                },
+                singleLine = true,
+                textStyle = TextStyle(
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Normal
+                ),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
             )
-        )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // SignUp Button
-        Button(
-            onClick = {
-                if (isValidInput()) {
-                    userViewModel.signUpUser(
-                        User(
-                            name = name.value,
-                            username = username.value,
-                            email = email.value,
-                            phoneNumber = phoneNumber.value,
-                            profileImageUrl = profileImageUri.toString(),
-                            password = password.value
-                        )
+            // Username Field
+            TextField(
+                value = username.value,
+                onValueChange = { username.value = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
+                placeholder = {
+                    Text("Choose Your username", color = Color.Gray)
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.username_pp),
+                        contentDescription = "Username Icon"
                     )
-                } else {
-                    // Show validation errors
-                }
-            },
-            shape = RoundedCornerShape(20.dp),
-            colors = ButtonColors(
-                containerColor = Color.DarkGray,
-                contentColor = Color.White,
-                disabledContainerColor = Color.DarkGray,
-                disabledContentColor = Color.White
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
-        ) {
-            Text(text = "Sign Up")
-        }
-        
-        Spacer(modifier = Modifier.height(8.dp))
+                },
+                singleLine = true,
+                textStyle = TextStyle(
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Normal
+                ),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
+            )
 
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null // Disables ripple effect
-                ) {
-                    navController.navigate(Route.LoginScreen.route) {
-                        popUpTo(Route.SignUpScreen.route) { inclusive = true }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Email Address Field
+            TextField(
+                value = email.value,
+                onValueChange = { email.value = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
+                placeholder = {
+                    Text("Enter Your Email Address", color = Color.Gray)
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.email_pp),
+                        contentDescription = "Email Icon"
+                    )
+                },
+                singleLine = true,
+                textStyle = TextStyle(
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Normal
+                ),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Phone Number Field
+            TextField(
+                value = phoneNumber.value,
+                onValueChange = { phoneNumber.value = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
+                placeholder = {
+                    Text("Enter Your Phone Number", color = Color.Gray)
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.phone_pp),
+                        contentDescription = "Phone Number Icon"
+                    )
+                },
+                singleLine = true,
+                textStyle = TextStyle(
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Normal
+                ),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Password Field with Visibility Toggle
+            TextField(
+                value = password.value,
+                onValueChange = {
+                    password.value = it
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
+                placeholder = {
+                    Text("Enter Your Password", color = Color.Gray)
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.password),
+                        contentDescription = "Password Icon"
+                    )
+                },
+                singleLine = true,
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_eye),
+                            contentDescription = "Toggle Password Visibility"
+                        )
                     }
                 },
-            text = "Already have an account ? Login",
-            fontSize = 12.sp,
-            color = Color.DarkGray,
-            textAlign = TextAlign.Center
-        )
+                textStyle = TextStyle(
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Normal
+                ),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // SignUp Button
+            Button(
+                onClick = {
+                    if (isValidInput) {
+                        userViewModel.signUpUser(
+                            User(
+                                name = name.value,
+                                username = username.value,
+                                email = email.value,
+                                phoneNumber = phoneNumber.value,
+                                profileImageUrl = profileImageUri.toString(),
+                                password = password.value
+                            )
+                        )
+                    } else {
+                        Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT)
+                            .show()// Show validation errors
+                    }
+                },
+                shape = RoundedCornerShape(20.dp),
+                colors = ButtonColors(
+                    containerColor = Color.DarkGray,
+                    contentColor = Color.White,
+                    disabledContainerColor = Color.DarkGray,
+                    disabledContentColor = Color.White
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+                    .padding(horizontal = 16.dp),
+                enabled = !isLoading.value, // Disable the button while loading
+            ) {
+                if (isLoading.value) {
+                    CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))
+                } else {
+                    Text("Sign Up")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null // Disables ripple effect
+                    ) {
+                        navController.navigate(Route.LoginScreen.route) {
+                            popUpTo(Route.SignUpScreen.route) { inclusive = true }
+                        }
+                    },
+                text = "Already have an account ? Login",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.DarkGray,
+                textAlign = TextAlign.Center
+            )
+        }
+
+
     }
 }
 
@@ -400,11 +420,4 @@ fun SignUpScreen(
 @Composable
 fun PreviewSignUpPage() {
     SignUpScreen(navController = rememberNavController()) // You can use a mock NavController here
-}
-
-
-// Helper function to validate input
-fun isValidInput(): Boolean {
-    // Add validation checks
-    return true
 }

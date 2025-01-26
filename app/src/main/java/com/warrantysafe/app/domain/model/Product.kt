@@ -1,7 +1,5 @@
 package com.warrantysafe.app.domain.model
 
-import android.net.Uri
-
 data class Product(
     val id: String = "",
     val productName: String,

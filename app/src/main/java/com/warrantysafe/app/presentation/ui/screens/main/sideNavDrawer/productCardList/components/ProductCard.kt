@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -56,12 +57,13 @@ fun ProductCard(
     expiry: String,
     imageResource: Painter // Image resource ID
 ) {
+    val currentDate = getCurrentDate()
     val period = periodCalculator(
         purchaseDate = purchase,
         expiryDate = expiry,
-        currentDate = "28/12/2024"
+        currentDate = currentDate
     )
-    val progress = calculateProgress(purchase, expiry, "28/12/2024")
+    val progress = calculateProgress(purchase, expiry, currentDate)
 
     Box(modifier = Modifier
         .wrapContentSize()
@@ -82,7 +84,7 @@ fun ProductCard(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .zIndex(1f) // Ensures it is drawn above the card
-                .offset(y= (-12).dp,x=(-18).dp)
+                .offset(y = (-12).dp, x = (-18).dp)
                 .background(Color.Yellow, shape = RoundedCornerShape(8.dp))
                 .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(8.dp))
                 .padding(horizontal = 12.dp, vertical = 4.dp) //text Box design
@@ -145,7 +147,7 @@ fun ProductCard(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Expiry in $period",
+                        text = period,
                         style = MaterialTheme.typography.labelSmall,
                         color = detailsColor.copy(alpha = 0.7f)
                     )
@@ -169,7 +171,13 @@ fun ProductCard(
             }
         }
     }
+}
 
+// Helper function to get the current date in "dd/MM/yyyy" format
+@SuppressLint("NewApi")
+private fun getCurrentDate(): String {
+    return java.time.LocalDate.now()
+        .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 }
 
 @Preview(showBackground = true)
@@ -185,6 +193,6 @@ fun ProductCardPreview() {
         detailsColor = Color.Black,
         purchase = "30/11/2023",
         expiry = "01/12/2025",
-        imageResource = painterResource( R.drawable.product_placeholder )
+        imageResource = painterResource(R.drawable.product_placeholder)
     )
 }

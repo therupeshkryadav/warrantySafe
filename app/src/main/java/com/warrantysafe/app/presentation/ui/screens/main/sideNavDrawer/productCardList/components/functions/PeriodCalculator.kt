@@ -21,7 +21,7 @@ fun periodCalculator(
 
         // If the current date is after the expiry date
         if (current.isAfter(expiry)) {
-            return "0 years, 0 months, 0 days"
+            return "Item Expired!!"
         }
 
         // Calculate the difference in years, months, and days
@@ -32,7 +32,7 @@ fun periodCalculator(
         ).toInt()
 
         // Return formatted period
-        return "$years years, $months months, $days days"
+        return "Expiry in $years years, $months months, $days days"
 
      //   if(current date is bigger than expiry date then return  0 years 0 months 0 days)
     } catch (e: Exception) {

@@ -14,14 +14,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeGesturesPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -30,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
@@ -60,7 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.warrantysafe.app.R
-import com.warrantysafe.app.domain.model.User
+import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.homeScreen.tabs.ActiveTab
 import com.warrantysafe.app.presentation.ui.screens.main.homeScreen.tabs.ExpiredTab
@@ -68,7 +66,6 @@ import com.warrantysafe.app.presentation.ui.screens.main.utils.customBottomNavig
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.main.utils.dropDownMenu.DropDownMenuContent
 import com.warrantysafe.app.presentation.ui.screens.main.utils.sideDrawer.SideDrawerContent
-import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -84,44 +81,65 @@ fun HomeScreen(
     LaunchedEffect(Unit){
         userViewModel.getUser()
     }
+
     // States to handle loading and errors
     val userState = userViewModel.userState.observeAsState()
     Log.d("UserState","${userState.value}")
-    var username = "username"
-    val result = userState.value
-    if (result != null) {
-        if (result.isSuccess) {
-            username = (result.getOrNull() as? User)?.username ?: "username"
-        } else if (result.isFailure) {
-            val errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
+    var username by remember { mutableStateOf("") }
+    // Handle user state
+    when (val result = userState.value) {
+        is Results.Loading -> {
+            username= "----"
+        }
+        is Results.Success -> {
+            username = (result.data).username
+        }
+        is Results.Failure -> {
+            val errorMessage = result.exception.message?: "Unknown error"
             Text(text = errorMessage, color = Color.Red)
+        }
+        else -> {
+            // No-op for null or undefined states
         }
     }
 
-    val signOutState by userViewModel.signOutState.observeAsState()
-    signOutState?.let { task ->
-        when {
-            task.isSuccess -> {
-                // Navigate to LoginScreen or show a success message
-                Text("Signed out successfully!")
-                navController.navigate(Route.LoginScreen.route) {
-                    popUpTo(Route.HomeScreen.route) { inclusive = true }
-                }
-                // Example: navigation logic
-                // navController.navigate(Route.LoginScreen.route)
-            }
-            task.isFailure -> {
-                // Show error message
-                Text("Sign out failed: ${task.exceptionOrNull()?.message}")
+    val signOutState = userViewModel.signOutState.observeAsState()
+    when (val result = signOutState.value) {
+        is Results.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
         }
+        is Results.Success -> {
+            // Navigate to LoginScreen or show a success message
+            navController.navigate(Route.LoginScreen.route) {
+                popUpTo(Route.HomeScreen.route) { inclusive = true }
+            }
+        }
+        is Results.Failure -> {
+            val errorMessage = result.exception.message ?: "Sign out failed due to an unknown error."
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = errorMessage, color = Color.Red, textAlign = TextAlign.Center)
+            }
+        }
+        else -> {
+            // No-op for null or undefined states
+        }
     }
+
     // State to manage the visibility of the dropdown menu
     var isMenuExpanded by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.White)
             .systemBarsPadding()
             .statusBarsPadding()
     ) {
@@ -156,7 +174,6 @@ fun HomeScreen(
             gesturesEnabled = true
         ) {
             Box(modifier = Modifier
-                .background(Color.White)
                 .fillMaxSize()
                 .statusBarsPadding()
                 .systemBarsPadding()) {
@@ -318,16 +335,15 @@ fun HomeScreen(
                 CustomBottomNavigation(
                     currentRoute = Route.HomeScreen,
                     onItemClick = { route -> navigateToTab(navController, route) },
-                    modifier = Modifier.align(Alignment.BottomCenter) // Fix at the bottom of the screen
+                    modifier = Modifier.align(Alignment.BottomCenter).wrapContentHeight() // Fix at the bottom of the screen
                 )
             }
         }
     }
-
 }
 
 
-private fun navigateToTab(navController: NavController, route: Route) {
+fun navigateToTab(navController: NavController, route: Route) {
     navController.navigate(route.route) {
         popUpTo(navController.graph.startDestinationId) {
             saveState = true // Save state for tabs

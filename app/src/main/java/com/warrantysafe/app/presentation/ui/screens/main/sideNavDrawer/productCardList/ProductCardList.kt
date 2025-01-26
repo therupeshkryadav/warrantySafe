@@ -23,6 +23,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -50,6 +52,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
+import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList.components.ProductCard
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
@@ -62,14 +65,11 @@ fun ProductCardList(
     navController: NavController
 ) {
     val productViewModel: ProductViewModel = koinViewModel()
+    // Observe the result state
+    val productState by productViewModel.allProductsState.observeAsState(initial = Results.Loading)
     LaunchedEffect(Unit) {
         productViewModel.loadAllProducts()
     }
-    // Observe the active products state from the view model
-    val allProductState = productViewModel.allProductsState.observeAsState()
-    val allProducts = allProductState.value?.getOrNull() as? List<Product> ?: emptyList() // Safe casting and defaulting to empty list
-
-    Log.d("AllProducts","in Tab:  $allProducts")
 
     val sortOptions = listOf(
         "Old to Recent",
@@ -108,168 +108,186 @@ fun ProductCardList(
             },
             actions = {}
         )
-        if (allProducts.isNotEmpty()) {
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // First Box (Sort By Section)
+        when (productState) {
+            is Results.Loading -> {
+                // Loading state UI
                 Box(
-                    modifier = Modifier
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null // Disables ripple effect
-                        ) { expandedSort.value = true }
-                        .border(
-                            width = 1.dp,
-                            shape = RectangleShape,
-                            color = colorResource(R.color.black)
-                        )
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
+                    CircularProgressIndicator()
+                }
+            }
+            is Results.Success -> {
+                // Display products when the state is success
+                val allProducts = (productState as Results.Success).data
+                if (allProducts.isNotEmpty()) {
                     Row(
-                        modifier = Modifier.padding(4.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 32.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "Sort By",
-                            modifier = Modifier.padding(end = 4.dp)
-                        )
-                        Icon(
-                            modifier = Modifier.size(24.dp),
-                            painter = painterResource(R.drawable.drop_down),
-                            contentDescription = null
-                        )
-                    }
-
-                    DropdownMenu(
-                        modifier = Modifier.wrapContentWidth(),
-                        containerColor = Color.White,
-                        expanded = expandedSort.value,
-                        onDismissRequest = { expandedSort.value = false }
-                    ) {
-                        sortOptions.forEach { option ->
-                            dropDownMenuItem(
-                                item = option,
-                                onClick = {
-                                    selectedSortOption.value = option
-                                    expandedSort.value = false
-                                    applySorting(option, allProducts) // Sorting logic
-                                }
-                            )
-                        }
-                    }
-                }
-                if (selectedProducts.size > 0) {
-                    Icon(
-                        modifier = Modifier.clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null // Disables ripple effect
+                        // First Box (Sort By Section)
+                        Box(
+                            modifier = Modifier
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null // Disables ripple effect
+                                ) { expandedSort.value = true }
+                                .border(
+                                    width = 1.dp,
+                                    shape = RectangleShape,
+                                    color = colorResource(R.color.black)
+                                )
                         ) {
-                            productViewModel.deleteProducts(selectedProducts)
-                        },
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = null
-                    )
-                }
+                            Row(
+                                modifier = Modifier.padding(4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = "Sort By",
+                                    modifier = Modifier.padding(end = 4.dp)
+                                )
+                                Icon(
+                                    modifier = Modifier.size(24.dp),
+                                    painter = painterResource(R.drawable.drop_down),
+                                    contentDescription = null
+                                )
+                            }
 
-            }
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 16.dp)
-                    .padding(horizontal = 8.dp)
-            ) {
-                items(allProducts) { product ->
-                    val isSelected = selectedProducts.contains(product)
-
-                    Row {
-                        if (isSelected) {
-                            Icon(
-                                modifier = Modifier.align(Alignment.CenterVertically),
-                                imageVector = Icons.Filled.Check,
-                                contentDescription = "Selected",
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            ProductCard(
-                                productName = product.productName,
-                                purchase = product.purchase,
-                                expiry = product.expiry,
-                                category = product.category,
-                                imageResource = rememberAsyncImagePainter(product.productImageUri),
-                                itemTint = Color.Transparent, // Indicate selection
-                                detailsColor = Color.Black, // Change text color for selected item
-                                onSlidingForward = {
-                                        // Add to selected products
-                                        selectedProducts.add(product)
-                                },
-                                onSlidingBackward = {
-                                        // If already selected, deselect it
-                                        selectedProducts.remove(product)
-                                },
-                                onClick = {
-                                    navigateToDetails(product, navController)
+                            DropdownMenu(
+                                modifier = Modifier.wrapContentWidth(),
+                                containerColor = Color.White,
+                                expanded = expandedSort.value,
+                                onDismissRequest = { expandedSort.value = false }
+                            ) {
+                                sortOptions.forEach { option ->
+                                    dropDownMenuItem(
+                                        item = option,
+                                        onClick = {
+                                            selectedSortOption.value = option
+                                            expandedSort.value = false
+                                            applySorting(option, allProducts) // Sorting logic
+                                        }
+                                    )
                                 }
+                            }
+                        }
+                        if (selectedProducts.size > 0) {
+                            Icon(
+                                modifier = Modifier.clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null // Disables ripple effect
+                                ) {
+                                    productViewModel.deleteProducts(selectedProducts)
+                                },
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = null
                             )
                         }
-                        else{
-                            ProductCard(
-                                productName = product.productName,
-                                purchase = product.purchase,
-                                expiry = product.expiry,
-                                category = product.category,
-                                imageResource = rememberAsyncImagePainter(product.productImageUri),
-                                itemTint = Color.Transparent, // Indicate selection
-                                detailsColor = Color.Black, // Change text color for selected item
-                                onSlidingForward = {
-                                        // Add to selected products
-                                        selectedProducts.add(product)
-                                },
-                                onSlidingBackward = {
-                                        // If already selected, deselect it
-                                        selectedProducts.remove(product)
-                                },
-                                onClick = {
-                                    navigateToDetails(product, navController)
+
+                    }
+
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = 16.dp)
+                            .padding(horizontal = 8.dp)
+                    ) {
+                        items(allProducts) { product ->
+                            val isSelected = selectedProducts.contains(product)
+
+                            Row {
+                                if (isSelected) {
+                                    Icon(
+                                        modifier = Modifier.align(Alignment.CenterVertically),
+                                        imageVector = Icons.Filled.Check,
+                                        contentDescription = "Selected",
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                    ProductCard(
+                                        productName = product.productName,
+                                        purchase = product.purchase,
+                                        expiry = product.expiry,
+                                        category = product.category,
+                                        imageResource = rememberAsyncImagePainter(product.productImageUri),
+                                        itemTint = Color.Transparent, // Indicate selection
+                                        detailsColor = Color.Black, // Change text color for selected item
+                                        onSlidingForward = {
+                                            // Add to selected products
+                                            selectedProducts.add(product)
+                                        },
+                                        onSlidingBackward = {
+                                            // If already selected, deselect it
+                                            selectedProducts.remove(product)
+                                        },
+                                        onClick = {
+                                            navigateToDetails(product, navController)
+                                        }
+                                    )
                                 }
-                            )
+                                else{
+                                    ProductCard(
+                                        productName = product.productName,
+                                        purchase = product.purchase,
+                                        expiry = product.expiry,
+                                        category = product.category,
+                                        imageResource = rememberAsyncImagePainter(product.productImageUri),
+                                        itemTint = Color.Transparent, // Indicate selection
+                                        detailsColor = Color.Black, // Change text color for selected item
+                                        onSlidingForward = {
+                                            // Add to selected products
+                                            selectedProducts.add(product)
+                                        },
+                                        onSlidingBackward = {
+                                            // If already selected, deselect it
+                                            selectedProducts.remove(product)
+                                        },
+                                        onClick = {
+                                            navigateToDetails(product, navController)
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                        item {
+                            Spacer(modifier = Modifier.height(16.dp))
                         }
                     }
-                }
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
+                } else {
+                    // Empty state if no products are available
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ShoppingCart,
+                            contentDescription = "No Products",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(64.dp)
+                        )
+                        Text(
+                            text = "No Products, Add to display.",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(top = 16.dp)
+                        )
+                    }
                 }
             }
-        } else {
-            // Empty state UI
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ShoppingCart,
-                    contentDescription = "No Products",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(64.dp)
-                )
-                Text(
-                    text = "No Products, Add to display.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 16.dp)
-                )
+            is Results.Failure -> {
+                // Error state UI
+                val errorMessage = (productState as Results.Failure).exception
+                Log.d("Error","error why failure occurred? $errorMessage")
             }
         }
-
     }
 }
 

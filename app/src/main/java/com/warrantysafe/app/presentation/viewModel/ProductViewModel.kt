@@ -14,6 +14,7 @@ import com.warrantysafe.app.domain.useCases.GetAllProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetExpiredProductsUseCase
 import com.warrantysafe.app.domain.useCases.UpdateProductUseCase
 import com.warrantysafe.app.domain.useCases.GetProductDetailUseCase
+import com.warrantysafe.app.domain.utils.Results
 import kotlinx.coroutines.launch
 
 class ProductViewModel(
@@ -28,36 +29,37 @@ class ProductViewModel(
 
     private val currentDate = getCurrentDate()
 
-    private val _allProductsState = MutableLiveData<Result<List<Product>>>()
-    val allProductsState: LiveData<Result<List<Product>>> get() = _allProductsState
+    private val _allProductsState = MutableLiveData<Results<List<Product>>>()
+    val allProductsState: LiveData<Results<List<Product>>> get() = _allProductsState
 
-    private val _productDetailState = MutableLiveData<Result<Product>>()
-    val productDetailState: LiveData<Result<Product>> get() = _productDetailState
+    private val _productDetailState = MutableLiveData<Results<Product>>()
+    val productDetailState: LiveData<Results<Product>> get() = _productDetailState
 
-    private val _activeProductsState = MutableLiveData<Result<List<Product>>>()
-    val activeProductsState: LiveData<Result<List<Product>>> get() = _activeProductsState
+    private val _activeProductsState = MutableLiveData<Results<List<Product>>>()
+    val activeProductsState: LiveData<Results<List<Product>>> get() = _activeProductsState
 
-    private val _expiredProductsState = MutableLiveData<Result<List<Product>>>()
-    val expiredProductsState: LiveData<Result<List<Product>>> get() = _expiredProductsState
+    private val _expiredProductsState = MutableLiveData<Results<List<Product>>>()
+    val expiredProductsState: LiveData<Results<List<Product>>> get() = _expiredProductsState
 
-    private val _addProductState = MutableLiveData<Result<Unit>>()
-    val addProductState: LiveData<Result<Unit>> get() = _addProductState
+    private val _addProductState = MutableLiveData<Results<Unit>>()
+    val addProductState: LiveData<Results<Unit>> get() = _addProductState
 
-    private val _updateProductState = MutableLiveData<Result<Product>>()
-    val updateProductState: LiveData<Result<Product>> get() = _updateProductState
+    private val _updateProductState = MutableLiveData<Results<Product>>()
+    val updateProductState: LiveData<Results<Product>> get() = _updateProductState
 
-    private val _deleteProductsState = MutableLiveData<Result<Unit>>()
-    val deleteProductsState: LiveData<Result<Unit>> get() = _deleteProductsState
+    private val _deleteProductsState = MutableLiveData<Results<Unit>>()
+    val deleteProductsState: LiveData<Results<Unit>> get() = _deleteProductsState
 
     // Load Product Detail
     fun loadProductDetail(productId: String) {
         viewModelScope.launch {
             try {
+                _productDetailState.value = Results.Loading
                 val result = getProductDetailUseCase(productId)
                 _productDetailState.value = result
                 Log.d("ProductDetail", "Product Detail Loaded: $result") // Debugging log
             } catch (e: Exception) {
-                _productDetailState.value = Result.failure(e)
+                _productDetailState.value = Results.Failure(e)
                 Log.e("ProductDetail", "Error Loading Product Detail: ${e.message}", e) // Debugging log
             }
         }
@@ -66,11 +68,12 @@ class ProductViewModel(
     // Load all products
     fun loadAllProducts() {
         viewModelScope.launch {
+            _allProductsState.value=Results.Loading
             try {
                 val products = getAllProductsUseCase()
                 _allProductsState.value = products
             } catch (e: Exception) {
-                _allProductsState.value = Result.failure(e)
+                _allProductsState.value = Results.Failure(e)
             }
         }
     }
@@ -80,10 +83,10 @@ class ProductViewModel(
         viewModelScope.launch {
             try {
                 val products = getActiveProductsUseCase(currentDate)
-                _activeProductsState.value = Result.success(products)
+                _activeProductsState.value = Results.Success(products)
                Log.d("ActiveProducts","Active Products Loaded: $products") // Debugging log
             } catch (e: Exception) {
-                _activeProductsState.value = Result.failure(e)
+                _activeProductsState.value = Results.Failure(e)
                 Log.e("ActiveProducts","Error Loading Active Products: ${e.message}",e) // Debugging log
             }
         }
@@ -92,11 +95,12 @@ class ProductViewModel(
     // Load expired products
     fun loadExpiredProducts() {
         viewModelScope.launch {
+            _expiredProductsState.value = Results.Loading
             try {
                 val products = getExpiredProductsUseCase(currentDate)
-                _expiredProductsState.value = Result.success(products)
+                _expiredProductsState.value = Results.Success(products)
             } catch (e: Exception) {
-                _expiredProductsState.value = Result.failure(e)
+                _expiredProductsState.value = Results.Failure(e)
             }
         }
     }
@@ -105,11 +109,12 @@ class ProductViewModel(
     fun addProduct(product: Product) {
         viewModelScope.launch {
             try {
+                _addProductState.value= Results.Loading
                 addProductUseCase(product)
-                _addProductState.value = Result.success(Unit)
+                _addProductState.value = Results.Success(Unit)
                 refreshAllProducts()
             } catch (e: Exception) {
-                _addProductState.value = Result.failure(e)
+                _addProductState.value = Results.Failure(e)
             }
         }
     }
@@ -117,12 +122,13 @@ class ProductViewModel(
     // Update an existing product
     fun updateProduct(product: Product) {
         viewModelScope.launch {
+            _updateProductState.value= Results.Loading
             try {
                 val result = updateProductUseCase.invoke(product)
                 _updateProductState.value = result
                 refreshAllProducts()
             } catch (e: Exception) {
-                _updateProductState.value = Result.failure(e)
+                _updateProductState.value = Results.Failure(e)
             }
         }
     }
@@ -132,10 +138,10 @@ class ProductViewModel(
         viewModelScope.launch {
             try {
                 deleteProductsUseCase(products)
-                _deleteProductsState.value = Result.success(Unit)
+                _deleteProductsState.value = Results.Success(Unit)
                 refreshAllProducts()
             } catch (e: Exception) {
-                _deleteProductsState.value = Result.failure(e)
+                _deleteProductsState.value = Results.Failure(e)
             }
         }
     }

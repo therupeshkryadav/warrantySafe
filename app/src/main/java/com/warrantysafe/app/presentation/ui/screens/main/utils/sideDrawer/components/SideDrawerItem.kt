@@ -36,12 +36,12 @@ fun SideDrawerItem(
         modifier = Modifier
             .fillMaxWidth()
             .height(36.dp)
-            .padding(end = 32.dp)
+            .padding(horizontal = 16.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null // Disables ripple effect
             ) { onClick(item) },
-        horizontalArrangement = Arrangement.Absolute.Right,
+        horizontalArrangement = Arrangement.Absolute.Left,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(

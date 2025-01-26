@@ -3,11 +3,11 @@ package com.warrantysafe.app.data.repository
 import android.content.ContentResolver
 import android.content.Context
 import android.util.Log
-import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.domain.repository.UserRepository
+import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import io.appwrite.Client
 import io.appwrite.ID
@@ -33,7 +33,7 @@ class UserRepositoryImpl(
             Route.LoginScreen.route
     }
 
-    override suspend fun signUpUser(user: User): Result<User> {
+    override suspend fun signUpUser(user: User): Results<User> {
         return try {
             val authResult = firebaseAuth.createUserWithEmailAndPassword(user.email, user.password).await()
             val firebaseUser = authResult.user
@@ -57,16 +57,16 @@ class UserRepositoryImpl(
                 )
                 usersCollection.document(userId).set(userData).await()
 
-                Result.success(user.copy(profileImageUrl = uploadedProfileImageUrl))
+                Results.Success(user.copy(profileImageUrl = uploadedProfileImageUrl))
             } else {
-                Result.failure(Exception("User creation failed"))
+                Results.Failure(Exception("User creation failed"))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Results.Failure(e)
         }
     }
 
-    override suspend fun loginUser(email: String, password: String): Result<User> {
+    override suspend fun loginUser(email: String, password: String): Results<User> {
         return try {
             val authResult = firebaseAuth.signInWithEmailAndPassword(email, password).await()
             val firebaseUser = authResult.user
@@ -82,19 +82,19 @@ class UserRepositoryImpl(
                         phoneNumber = userDocument.getString("phoneNumber") ?: "",
                         profileImageUrl = userDocument.getString("profileImageUrl") ?: ""
                     )
-                    Result.success(user)
+                    Results.Success(user)
                 } else {
-                    Result.failure(Exception("User data not found in Firestore"))
+                    Results.Failure(Exception("User data not found in Firestore"))
                 }
             } else {
-                Result.failure(Exception("Authentication failed: Firebase user is null"))
+                Results.Failure(Exception("Authentication failed: Firebase user is null"))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Results.Failure(e)
         }
     }
 
-    override suspend fun getUser(): Result<User> {
+    override suspend fun getUser(): Results<User> {
         return try {
             val firebaseUser = firebaseAuth.currentUser
 
@@ -109,22 +109,22 @@ class UserRepositoryImpl(
                         phoneNumber = userDocument.getString("phoneNumber") ?: "",
                         profileImageUrl = userDocument.getString("profileImageUrl") ?: ""
                     )
-                    Result.success(user)
+                    Results.Success(user)
                 } else {
-                    Result.failure(Exception("User data not found in Firestore"))
+                    Results.Failure(Exception("User data not found in Firestore"))
                 }
             } else {
-                Result.failure(Exception("No authenticated user found"))
+                Results.Failure(Exception("No authenticated user found"))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Results.Failure(e)
         }
     }
 
-    override suspend fun updateUser(user: User): Result<User> {
+    override suspend fun updateUser(user: User): Results<User> {
         return try {
             val userId = firebaseAuth.currentUser?.uid
-                ?: return Result.failure(Exception("No authenticated user found"))
+                ?: return Results.Failure(Exception("No authenticated user found"))
             Log.d("AppWriteUpload", "upload profile image: ${user.profileImageUrl}")
             // Upload profile image to Appwrite (if provided)
             val updatedProfileImageUrl = if (user.profileImageUrl.isNotEmpty()) {
@@ -132,7 +132,7 @@ class UserRepositoryImpl(
                     uploadProfileImageToAppwrite(user.profileImageUrl)
                 } catch (e: Exception) {
                     Log.e("AppWriteUpload", "Failed to upload profile image: ${e.message}")
-                    return Result.failure(e)
+                    return Results.Failure(e)
                 }
             } else {
                 ""
@@ -150,19 +150,19 @@ class UserRepositoryImpl(
             // Update Firestore database
             usersCollection.document(userId).update(userData).await()
 
-            Result.success(user.copy(profileImageUrl = updatedProfileImageUrl))
+            Results.Success(user.copy(profileImageUrl = updatedProfileImageUrl))
         } catch (e: Exception) {
             Log.e("UpdateUser", "Error updating user: ${e.message}")
-            Result.failure(e)
+            Results.Failure(e)
         }
     }
 
-    override suspend fun signOutUser(): Result<Unit> {
+    override suspend fun signOutUser(): Results<Unit> {
         return try {
             firebaseAuth.signOut()
-            Result.success(Unit)
+            Results.Success(Unit)
         } catch (e: Exception) {
-            Result.failure(e)
+            Results.Failure(e)
         }
     }
 

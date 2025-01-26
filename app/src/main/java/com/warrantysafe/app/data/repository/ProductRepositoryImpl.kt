@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.domain.repository.ProductRepository
+import com.warrantysafe.app.domain.utils.Results
 import io.appwrite.Client
 import io.appwrite.ID
 import io.appwrite.models.InputFile
@@ -24,7 +25,7 @@ class ProductRepositoryImpl(
 
     private val usersCollection = firestore.collection("users")
 
-    override suspend fun getProducts(): Result<List<Product>> {
+    override suspend fun getProducts(): Results<List<Product>> {
         return try {
             val userId = firebaseAuth.currentUser?.uid
 
@@ -50,25 +51,25 @@ class ProductRepositoryImpl(
                             null // Skip this document if mapping fails
                         }
                     }
-                    Result.success(products)
+                    Results.Success(products)
                 } else {
                     // No products found for the user
-                    Result.failure(Exception("No products found for the user"))
+                    Results.Failure(Exception("No products found for the user"))
                 }
             } else {
                 // User not authenticated
-                Result.failure(Exception("No authenticated user found"))
+                Results.Failure(Exception("No authenticated user found"))
             }
         } catch (e: Exception) {
             // Handle Firestore-related errors
             Log.e("ProductRepo", "Error fetching products: ${e.localizedMessage}")
-            Result.failure(e)
+            Results.Failure(e)
         }
     }
 
-    override suspend fun getProductDetail(productId: String): Result<Product> {
+    override suspend fun getProductDetail(productId: String): Results<Product> {
         return try {
-            val userId = firebaseAuth.currentUser?.uid ?: return Result.failure(Exception("User not authenticated"))
+            val userId = firebaseAuth.currentUser?.uid ?: return Results.Failure(Exception("User not authenticated"))
 
             // Fetch the product document by its ID
             val productSnapshot = usersCollection
@@ -89,20 +90,20 @@ class ProductRepositoryImpl(
                     productImageUri = productSnapshot.getString("productImgUri") ?: "",
                     notes = productSnapshot.getString("notes") ?: ""
                 )
-                Result.success(product)
+                Results.Success(product)
             } else {
-                Result.failure(Exception("Product not found"))
+                Results.Failure(Exception("Product not found"))
             }
         } catch (e: Exception) {
             Log.e("ProductRepo", "Error fetching product: ${e.localizedMessage}")
-            Result.failure(e)
+            Results.Failure(e)
         }
     }
 
-    override suspend fun addProduct(product: Product): Result<Product> {
+    override suspend fun addProduct(product: Product): Results<Product> {
         return try {
             // Ensure user is authenticated
-            val userId = firebaseAuth.currentUser?.uid ?: return Result.failure(Exception("User not authenticated"))
+            val userId = firebaseAuth.currentUser?.uid ?: return Results.Failure(Exception("User not authenticated"))
             Log.d("ProductRepo", "user id fetched $userId $product")
 
             // Upload profile image to Appwrite (if provided)
@@ -135,18 +136,18 @@ class ProductRepositoryImpl(
 
             // Success: Return the product object with the ID set
             Log.d("ProductRepo", "Product added successfully: ${productRef.id}")
-            Result.success(product.copy(id = productRef.id))
+            Results.Success(product.copy(id = productRef.id))
 
         } catch (e: Exception) {
             // Logging the exception
             Log.e("ProductRepo", "Error adding product: ${e.localizedMessage}")
-            Result.failure(e)
+            Results.Failure(e)
         }
     }
 
-    override suspend fun updateProduct(product: Product): Result<Product> {
+    override suspend fun updateProduct(product: Product): Results<Product> {
         return try {
-            val userId = firebaseAuth.currentUser?.uid ?: return Result.failure(Exception("User not authenticated"))
+            val userId = firebaseAuth.currentUser?.uid ?: return Results.Failure(Exception("User not authenticated"))
             if (product.id.isNotEmpty()) {
                 val productRef = usersCollection.document(userId).collection("userProducts").document(product.id)
 
@@ -177,12 +178,12 @@ class ProductRepositoryImpl(
 
                 // Success: Return the product object with the ID set
                 Log.d("ProductRepo", "Product added successfully: ${productRef.id}")
-                Result.success(product)
+                Results.Success(product)
             } else {
-                Result.failure(Exception("Product ID is empty"))
+                Results.Failure(Exception("Product ID is empty"))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Results.Failure(e)
         }
     }
 

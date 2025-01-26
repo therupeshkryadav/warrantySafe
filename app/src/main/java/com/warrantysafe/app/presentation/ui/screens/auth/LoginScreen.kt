@@ -1,11 +1,10 @@
 package com.warrantysafe.app.presentation.ui.screens.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,11 +17,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -35,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -53,33 +53,33 @@ import org.koin.androidx.compose.koinViewModel
 fun LoginScreen(navController: NavController) {
 
     val userViewModel: UserViewModel = koinViewModel()
+    val context = LocalContext.current
 
-    // Observe the sign-up state
+    // Observe the login state
     val loginState = userViewModel.loginState.observeAsState()
+    val isLoading = userViewModel.isLoading.observeAsState(initial = false)
 
-    val result = loginState.value
-    if (result != null) {
-        if (result.isSuccess) {
-            // Navigate to the next screen
-            LaunchedEffect(result.isSuccess) {
+    // Handle login state
+    when (val result = loginState.value) {
+        is Results.Success -> {
+            LaunchedEffect(Unit) {
                 navController.navigate(Route.HomeScreen.route) {
                     popUpTo(Route.LoginScreen.route) { inclusive = true }
                 }
             }
-        } else if (result.isFailure) {
-            val errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
-            Text(text = errorMessage, color = Color.Red)
         }
+
+        is Results.Failure -> {
+            val errorMessage = result.exception.message ?: "No account found with these credentials"
+            Toast.makeText(context,errorMessage, Toast.LENGTH_SHORT).show()
+        }
+
+        else -> { /* No-op for initial or null state */ }
     }
 
     // Remember state for user input
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
-
-
-    // Form validation check
-    val isFormValid = email.value.isNotEmpty() && password.value.isNotEmpty()
-
 
     Column(
         modifier = Modifier
@@ -89,7 +89,9 @@ fun LoginScreen(navController: NavController) {
             .background(color = Color.White)
     ) {
         Image(
-            modifier = Modifier.fillMaxWidth().height(250.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp),
             alignment = Alignment.Center,
             painter = painterResource(R.drawable.warranty_logo),
             contentDescription = null
@@ -179,16 +181,34 @@ fun LoginScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null // Disables ripple effect
+                ) {
+
+                },
+            text = "Forgot Password ?",
+            fontSize = 12.sp,
+            color = Color.Red,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Start
+        )
+
         // Login Button
         Button(
             onClick = {
-                if (isFormValid) {
+                if (email.value.isNotEmpty() && password.value.isNotEmpty()) {
                     userViewModel.loginUser(
                         email = email.value,
                         password = password.value
                     )
                 } else {
-                    // Show validation errors
+                    Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT)
+                        .show()// Show validation errors
                 }
             },
             shape = RoundedCornerShape(20.dp),
@@ -201,9 +221,13 @@ fun LoginScreen(navController: NavController) {
                 disabledContainerColor = Color.DarkGray,
                 disabledContentColor = Color.White
             ),
-            enabled = isFormValid // Disable button if form is invalid
+            enabled = !isLoading.value, // Disable the button while loading
         ) {
-            Text(text = "Login")
+            if (isLoading.value) {
+                CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))
+            } else {
+                Text("Login")
+            }
         }
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -220,7 +244,8 @@ fun LoginScreen(navController: NavController) {
                 },
             text = "Not have an account ? SignUp",
             fontSize = 12.sp,
-            color = Color.Red,
+            fontWeight = FontWeight.Bold,
+            color = Color.DarkGray,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(48.dp))
