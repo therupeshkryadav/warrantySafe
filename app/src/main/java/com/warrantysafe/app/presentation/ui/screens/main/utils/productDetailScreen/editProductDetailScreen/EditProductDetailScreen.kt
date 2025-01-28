@@ -71,6 +71,7 @@ import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.component
 import com.warrantysafe.app.presentation.ui.screens.main.utils.categorySection.CategorySection
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
+import com.warrantysafe.app.utils.checkValidNetworkConnection
 import org.koin.androidx.compose.koinViewModel
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
@@ -84,6 +85,7 @@ fun EditProductDetailScreen(
     navController: NavController,
     productJson: String
 ) {
+    val context = LocalContext.current
     // URL decode the productJson string
     val decodedProductJson = URLDecoder.decode(productJson, StandardCharsets.UTF_8.toString())
 
@@ -110,9 +112,12 @@ fun EditProductDetailScreen(
 
     val productViewModel: ProductViewModel = koinViewModel()
 
+    // Remember and update internet connection status dynamically
+    val isConnected = remember { mutableStateOf(checkValidNetworkConnection(context)) }
     // Observe the updateProductState LiveData
     val updateProductsState by productViewModel.updateProductState.observeAsState()
-    val context = LocalContext.current
+
+
     // States for selected image URI
     var selectedProductImageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -128,10 +133,8 @@ fun EditProductDetailScreen(
                 // Handle the success case when the product has been updated
                 val updatedProduct = (updateProductsState as Results.Success).data
                 Log.d("ProductUpdate", "Product updated successfully: ${updatedProduct.id}")
+                navController.popBackStack()
                 Toast.makeText(context, "Product updated successfully!", Toast.LENGTH_SHORT).show()
-                navController.navigate("productDetailsScreen/${updatedProduct.id}") {
-                    popUpTo(Route.EditProductDetailsScreen.route) { inclusive = true }
-                }
             }
             is Results.Failure -> {
                 // Handle failure state
@@ -147,8 +150,6 @@ fun EditProductDetailScreen(
     // Handle Date Pickers
     val showPurchaseDatePicker = remember { mutableStateOf(false) }
     val showExpiryDatePicker = remember { mutableStateOf(false) }
-
-
 
     // Activity Result Launcher for Image Picker
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -253,17 +254,22 @@ fun EditProductDetailScreen(
             actions = {
                 IconButton(
                     onClick = {
-                        productViewModel.updateProduct(
-                            product = Product(
-                                id = product.id,
-                                productName = validProductName!!,
-                                purchase = validPurchaseDate!!,
-                                expiry = validExpiryDate!!,
-                                category = updatedCategory!!,
-                                productImageUri = selectedProductImageUri.toString(),
-                                notes = validNotes!!
+                        isConnected.value=checkValidNetworkConnection(context)
+                        if(!isConnected.value){
+                            Toast.makeText(context, "No Valid Internet Connection!!", Toast.LENGTH_LONG).show()
+                        }else{
+                            productViewModel.updateProduct(
+                                product = Product(
+                                    id = product.id,
+                                    productName = validProductName,
+                                    purchase = validPurchaseDate,
+                                    expiry = validExpiryDate,
+                                    category = updatedCategory,
+                                    productImageUri = selectedProductImageUri.toString(),
+                                    notes = validNotes
+                                )
                             )
-                        )
+                        }
                     }
                 ) {
                     Icon(imageVector = Icons.Filled.Check, contentDescription = "Edited Successfully!!")

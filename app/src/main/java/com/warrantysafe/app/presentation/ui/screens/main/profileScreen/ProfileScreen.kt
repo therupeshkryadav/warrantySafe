@@ -1,6 +1,7 @@
 package com.warrantysafe.app.presentation.ui.screens.main.profileScreen
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -50,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -69,6 +71,7 @@ import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.C
 import com.warrantysafe.app.presentation.ui.screens.main.utils.dropDownMenu.DropDownMenuContent
 import com.warrantysafe.app.presentation.ui.screens.main.utils.sideDrawer.SideDrawerContent
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
+import com.warrantysafe.app.utils.checkValidNetworkConnection
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -76,6 +79,7 @@ import org.koin.androidx.compose.koinViewModel
 fun ProfileScreen(
     navController: NavController
 ) {
+    val context = LocalContext.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
@@ -89,6 +93,7 @@ fun ProfileScreen(
 
     // Observe user state (loading, success, failure)
     val userState = userViewModel.userState.observeAsState()
+    val isConnected = remember { mutableStateOf(checkValidNetworkConnection(context)) }
 
     var user by remember { mutableStateOf(User()) }
     var isMenuExpanded by remember { mutableStateOf(false) }
@@ -110,11 +115,27 @@ fun ProfileScreen(
                     onItemClicked = { item ->
                         coroutineScope.launch { drawerState.close() }
                         when (item) {
-                            "List of Product Cards" -> navigateToTab(navController, Route.ProductCardList)
-                            "Help & Support" -> navigateToTab(navController, Route.HelpSupportScreen)
-                            "Terms & Privacy" -> navigateToTab(navController, Route.TermsPrivacyScreen)
+                            "List of Product Cards" -> navigateToTab(
+                                navController,
+                                Route.ProductCardList
+                            )
+
+                            "Help & Support" -> navigateToTab(
+                                navController,
+                                Route.HelpSupportScreen
+                            )
+
+                            "Terms & Privacy" -> navigateToTab(
+                                navController,
+                                Route.TermsPrivacyScreen
+                            )
+
                             "About the App" -> navigateToTab(navController, Route.AboutAppScreen)
-                            "Upcoming Features" -> navigateToTab(navController, Route.UpcomingFeaturesScreen)
+                            "Upcoming Features" -> navigateToTab(
+                                navController,
+                                Route.UpcomingFeaturesScreen
+                            )
+
                             "Settings" -> navigateToTab(navController, Route.SettingsScreen)
                         }
                     }
@@ -259,10 +280,19 @@ fun ProfileScreen(
                             // Edit Profile Button
                             Button(
                                 onClick = {
-                                    navigateToEditProfile(
-                                        navController = navController,
-                                        user = user
-                                    )
+                                    isConnected.value = checkValidNetworkConnection(context)
+                                    if (!isConnected.value) {
+                                        Toast.makeText(
+                                            context,
+                                            "No Valid Internet Connection!!",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    } else {
+                                        navigateToEditProfile(
+                                            navController = navController,
+                                            user = user
+                                        )
+                                    }
                                 },
                                 shape = RoundedCornerShape(20.dp),
                                 modifier = Modifier

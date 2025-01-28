@@ -58,6 +58,7 @@ import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.component
 import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.components.PhoneDetailRow
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
+import com.warrantysafe.app.utils.checkValidNetworkConnection
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -69,6 +70,7 @@ fun EditProfileScreen(
     email: String,
     phoneNumber: String
 ) {
+    val context = LocalContext.current
     var actualName by remember { mutableStateOf(name) }
     var actualUsername by remember { mutableStateOf(username) }
     var actualEmail by remember { mutableStateOf(email) }
@@ -78,6 +80,7 @@ fun EditProfileScreen(
 
     // State to handle updated profile image
     var updatedProfileUri by remember { mutableStateOf<Uri?>(profileImgUri) }
+    val isConnected = remember { mutableStateOf(checkValidNetworkConnection(context)) }
 
     // Image picker launcher
     val launcher = rememberLauncherForActivityResult(
@@ -89,7 +92,6 @@ fun EditProfileScreen(
     }
 
     val updateUserState by userViewModel.updateUserState.observeAsState()
-    val context = LocalContext.current
     // Handle state changes for user updates
     LaunchedEffect(updateUserState) {
         when (updateUserState) {
@@ -111,7 +113,6 @@ fun EditProfileScreen(
                 Log.e("ProfileUpdate", "Error updating profile: $errorMessage")
                 Toast.makeText(context, "Failed to update profile: $errorMessage", Toast.LENGTH_SHORT).show()
             }
-
             else -> {}
         }
     }
@@ -145,15 +146,21 @@ fun EditProfileScreen(
             actions = {
                 IconButton(onClick = {
                     Log.d("AppwriteUpload", "updatedProfileUri ->> ${updatedProfileUri.toString()}")
-                    userViewModel.updateUser(
-                        user = User(
-                            name = actualName,
-                            username = actualUsername,
-                            email = actualEmail,
-                            phoneNumber = actualPhoneNumber,
-                            profileImageUrl = updatedProfileUri.toString()
+                    isConnected.value=checkValidNetworkConnection(context)
+                    if(!isConnected.value){
+                        Toast.makeText(context, "No Valid Internet Connection!!", Toast.LENGTH_LONG).show()
+                    }else{
+                        userViewModel.updateUser(
+                            user = User(
+                                name = actualName,
+                                username = actualUsername,
+                                email = actualEmail,
+                                phoneNumber = actualPhoneNumber,
+                                profileImageUrl = updatedProfileUri.toString()
+                            )
                         )
-                    )
+                    }
+
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Check,
