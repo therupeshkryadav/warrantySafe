@@ -215,13 +215,7 @@ fun LoginScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            colors = ButtonColors(
-                containerColor = Color.DarkGray,
-                contentColor = Color.White,
-                disabledContainerColor = Color.DarkGray,
-                disabledContentColor = Color.White
-            ),
-            enabled = !isLoading.value, // Disable the button while loading
+            enabled = email.value.isNotEmpty() && password.value.isNotEmpty(), // Disable the button while loading
         ) {
             if (isLoading.value) {
                 CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))

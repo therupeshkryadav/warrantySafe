@@ -2,7 +2,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.WarrantySafe" parent="android:Theme.Material.Light.NoActionBar">
-        <!-- Remove splash screen attributes to disable system splash behavior -->
+        <!-- Keep the theme light for older devices -->
     </style>
 
 </resources>
+

@@ -1,7 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.main.utils.productDetailScreen
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -45,11 +44,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.google.gson.Gson
 import com.warrantysafe.app.R
+import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.components.DetailRow
@@ -60,6 +60,8 @@ import com.warrantysafe.app.presentation.ui.screens.main.utils.categorySection.C
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import org.koin.androidx.compose.koinViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun ProductDetailScreen(
@@ -138,16 +140,11 @@ fun ProductDetailScreen(
                         }
                     },
                     actions = {
+                        Log.d("fatal",product.toString())
                         IconButton(onClick = {
                             navigateToEditProductDetailsScreen(
                                 navController = navController,
-                                productId = product.id,
-                                productName = product.productName,
-                                purchaseDate = product.purchase,
-                                category = product.category,
-                                expiryDate = product.expiry,
-                                notes = product.notes,
-                                imageUri = product.productImageUri.toUri()
+                                product= product
                             )
                         }) {
                             Icon(
@@ -333,24 +330,16 @@ private fun getCurrentDate(): String {
 
 fun navigateToEditProductDetailsScreen(
     navController: NavController,
-    productId: String,
-    productName: String?,
-    purchaseDate: String?,
-    category: String?,
-    expiryDate: String?,
-    notes: String?,
-    imageUri: Uri? // Image resource ID
+    product: Product
 ) {
-    val route = Route.EditProductDetailsScreen.createRoute(
-        id = productId,
-        productName = productName,
-        purchaseDate = purchaseDate,
-        category = category,
-        expiryDate = expiryDate,
-        notes = notes,
-        imageUri = imageUri
-    )
-    navController.navigate(route)
+    // Serialize the product to JSON
+    val productJson = Gson().toJson(product)
+
+    // URL encode the productJson string
+    val encodedProductJson = URLEncoder.encode(productJson, StandardCharsets.UTF_8.toString())
+
+    // Navigate to the destination with the encoded productJson
+    navController.navigate("editProductDetailsScreen/$encodedProductJson")
 }
 
 @Preview(showBackground = true)

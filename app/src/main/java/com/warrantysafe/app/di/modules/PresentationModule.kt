@@ -1,5 +1,6 @@
 package com.warrantysafe.app.di.modules
 
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.warrantysafe.app.presentation.viewModel.BottomNavigationViewModel
 import com.warrantysafe.app.presentation.viewModel.NotificationViewModel
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
@@ -12,7 +13,8 @@ import org.koin.dsl.module
 
 val presentationModule = module {
     // Product
-    viewModel { ProductViewModel(get(), get(), get(), get(), get(), get(), get()) }
+
+    viewModel { ProductViewModel(get(),get(), get(), get(), get(), get(), get()) }
 
     // User
     viewModel { UserViewModel(get(), get(), get(), get(), get(), get()) }

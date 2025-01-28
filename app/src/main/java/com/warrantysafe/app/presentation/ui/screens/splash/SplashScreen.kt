@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
@@ -33,28 +31,11 @@ import org.koin.androidx.compose.koinViewModel
 fun SplashScreen(
     navController: NavController
 ) {
-    val userViewModel: UserViewModel = koinViewModel()
-    val navigationRoute by userViewModel.navigationRoute.observeAsState()
-
-    // Trigger checkUser when SplashScreen is launched
-    LaunchedEffect(Unit) {
-        userViewModel.checkUser() // Call the ViewModel to determine the next screen
-        delay(2000L) // Splash screen delay (optional)
-    }
-
-    // Navigate to the determined route when available
-    LaunchedEffect(navigationRoute) {
-        navigationRoute?.let { route ->
-            navController.navigate(route) {
-                popUpTo(Route.SplashScreen.route) { inclusive = true }
-            }
-        }
-    }
-
+    // This box will show the logo and be centered
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White), // Primary color
+            .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -62,8 +43,30 @@ fun SplashScreen(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(16.dp)
         ) {
-            Image(painter = painterResource(R.drawable.warranty_logo),
-                contentDescription = null)
+            Image(
+                painter = painterResource(R.drawable.warranty_logo),
+                contentDescription = "Warranty Safe Logo"
+            )
+        }
+    }
+
+    // Use ViewModel to manage navigation logic
+    val userViewModel: UserViewModel = koinViewModel()
+    val navigationRoute by userViewModel.navigationRoute.observeAsState()
+
+    // Handle navigation logic with delay
+    LaunchedEffect(Unit) {
+        delay(2000L) // Show splash screen for 2 seconds
+
+        // Call checkUser after the delay to decide the navigation route
+        userViewModel.checkUser()
+
+        // After checkUser logic, navigate if route is available
+        navigationRoute?.let { route ->
+            navController.navigate(route) {
+                // Pop up to splash screen to avoid back navigation to it
+                popUpTo(Route.SplashScreen.route) { inclusive = true }
+            }
         }
     }
 }

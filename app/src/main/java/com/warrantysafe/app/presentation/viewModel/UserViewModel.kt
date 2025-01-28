@@ -77,6 +77,7 @@ class UserViewModel(
                 _loginState.value = result
                 _isLoading.value = false // Stop loading
             } catch (e: Exception) {
+
                 _loginState.value = Results.Failure(e)
             }
         }

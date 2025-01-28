@@ -1,11 +1,12 @@
 package com.warrantysafe.app.domain.useCases
 
+import android.annotation.SuppressLint
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.domain.repository.ProductRepository
 import com.warrantysafe.app.domain.utils.Results
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.Locale
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 class GetActiveProductsUseCase(
     private val productRepository: ProductRepository
@@ -17,24 +18,26 @@ class GetActiveProductsUseCase(
                 products.filter { product -> isDateBefore(currentDate, product.expiry) }
             }
             is Results.Failure -> {
-                // Log the error or take appropriate action
-                emptyList() // Return an empty list if fetching products fails
+                // Log the error or handle failure as needed
+                emptyList()
             }
             is Results.Loading -> {
-                // Optionally handle a loading state if needed
+                // Handle loading state if necessary
                 emptyList()
             }
         }
     }
 
+    @SuppressLint("NewApi")
     private fun isDateBefore(current: String, expiry: String): Boolean {
-        val dateFormat = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
+        val dateFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT)
         return try {
-            val currentDate = dateFormat.parse(current)
-            val expiryDate = dateFormat.parse(expiry)
-            expiryDate?.after(currentDate) ?: false
-        } catch (e: ParseException) {
-            false // Handle invalid date formats
+            val currentDate = LocalDate.parse(current, dateFormatter)
+            val expiryDate = LocalDate.parse(expiry, dateFormatter)
+            expiryDate.isAfter(currentDate) // Check if expiry is after current date
+        } catch (e: DateTimeParseException) {
+            // Log error (you could also throw a custom exception or handle it in other ways)
+            false
         }
     }
 

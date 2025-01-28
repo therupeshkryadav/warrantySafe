@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -61,6 +62,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.google.gson.Gson
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.domain.utils.Results
@@ -70,6 +72,8 @@ import com.warrantysafe.app.presentation.ui.screens.main.utils.categorySection.C
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import org.koin.androidx.compose.koinViewModel
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -78,19 +82,19 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun EditProductDetailScreen(
     navController: NavController,
-    productId: String,
-    productName: String? = null,
-    purchaseDate: String?,
-    category: String? = null,
-    expiryDate: String?,
-    notes: String? = null,
-    imageUri: Uri,
+    productJson: String
 ) {
-    var validProductName by remember { mutableStateOf(productName) }
-    var validPurchaseDate by remember { mutableStateOf(purchaseDate) }
-    var validExpiryDate by remember { mutableStateOf(expiryDate) }
-    var validNotes by remember { mutableStateOf(notes) }
-    var updatedCategory by remember { mutableStateOf(category) }
+    // URL decode the productJson string
+    val decodedProductJson = URLDecoder.decode(productJson, StandardCharsets.UTF_8.toString())
+
+    // Deserialize the JSON string back into a Product object
+    val product = Gson().fromJson(decodedProductJson, Product::class.java)
+
+    var validProductName by remember { mutableStateOf(product.productName) }
+    var validPurchaseDate by remember { mutableStateOf(product.purchase) }
+    var validExpiryDate by remember { mutableStateOf(product.expiry) }
+    var validNotes by remember { mutableStateOf(product.notes) }
+    var updatedCategory by remember { mutableStateOf(product.category) }
     val categoryOptions = listOf(
         "General", "Electronics", "Vehicles", "Furniture", "Home Appliances",
         "Kitchen Appliances", "Gadgets & Accessories", "Personal & Lifestyle Products",
@@ -251,7 +255,7 @@ fun EditProductDetailScreen(
                     onClick = {
                         productViewModel.updateProduct(
                             product = Product(
-                                id = productId,
+                                id = product.id,
                                 productName = validProductName!!,
                                 purchase = validPurchaseDate!!,
                                 expiry = validExpiryDate!!,
@@ -295,7 +299,7 @@ fun EditProductDetailScreen(
                         .border(width = 2.dp, color = colorResource(R.color.black))
                 ) {
                     Image(
-                        painter = rememberAsyncImagePainter(selectedProductImageUri ?: imageUri),
+                        painter = rememberAsyncImagePainter(selectedProductImageUri ?: product.productImageUri),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -376,35 +380,31 @@ fun EditProductDetailScreen(
                     }
                 }
 
-                if (purchaseDate != null) {
-                    DetailRow(
-                        label = "Purchase Date",
-                        textColor = Color.DarkGray,
-                        enable = false,
-                        icon = R.drawable.calendar,
-                        placeHolder = "DD/MM/YYYY",
-                        updatedValue = validPurchaseDate!!,
-                        onDetailRowClick = {
-                            showPurchaseDatePicker.value = true
-                        },
-                        onValueChange = { validPurchaseDate = it }
-                    )
-                }
+                DetailRow(
+                    label = "Purchase Date",
+                    textColor = Color.DarkGray,
+                    enable = false,
+                    icon = R.drawable.calendar,
+                    placeHolder = "DD/MM/YYYY",
+                    updatedValue = validPurchaseDate!!,
+                    onDetailRowClick = {
+                        showPurchaseDatePicker.value = true
+                    },
+                    onValueChange = { validPurchaseDate = it }
+                )
 
-                if (expiryDate != null) {
-                    DetailRow(
-                        label = "Expiry Date",
-                        textColor = Color.DarkGray,
-                        enable = false,
-                        icon = R.drawable.calendar,
-                        placeHolder = "DD/MM/YYYY",
-                        updatedValue = validExpiryDate!!,
-                        onDetailRowClick = {
-                            showExpiryDatePicker.value = true
-                        },
-                        onValueChange = { validExpiryDate = it }
-                    )
-                }
+                DetailRow(
+                    label = "Expiry Date",
+                    textColor = Color.DarkGray,
+                    enable = false,
+                    icon = R.drawable.calendar,
+                    placeHolder = "DD/MM/YYYY",
+                    updatedValue = validExpiryDate!!,
+                    onDetailRowClick = {
+                        showExpiryDatePicker.value = true
+                    },
+                    onValueChange = { validExpiryDate = it }
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -493,19 +493,4 @@ fun EditProductDetailScreen(
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun PreviewProductDetailsScreen() {
-    EditProductDetailScreen(
-        navController = rememberNavController(),
-        productId = "ProductId",
-        productName = "LG WASHING MACHINE",
-        purchaseDate = "11/01/2023",
-        category = "Electronics",
-        expiryDate = "11/09/2024",
-        imageUri = Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-    )
-
 }

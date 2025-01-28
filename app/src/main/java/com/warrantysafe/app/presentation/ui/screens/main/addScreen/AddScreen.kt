@@ -241,6 +241,7 @@ fun AddScreen(navController: NavController) {
                         ).show()
                     } else {
                         productViewModel.addProduct(
+                            context,
                             Product(
                                 productName = productName,
                                 purchase = purchaseDate,

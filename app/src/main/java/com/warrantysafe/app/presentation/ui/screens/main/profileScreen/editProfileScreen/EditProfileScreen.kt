@@ -2,17 +2,21 @@ package com.warrantysafe.app.presentation.ui.screens.main.profileScreen.editProf
 
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -37,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -84,49 +89,30 @@ fun EditProfileScreen(
     }
 
     val updateUserState by userViewModel.updateUserState.observeAsState()
+    val context = LocalContext.current
     // Handle state changes for user updates
-    updateUserState?.let { result ->
-        when (result) {
+    LaunchedEffect(updateUserState) {
+        when (updateUserState) {
             is Results.Loading -> {
-                // Display a loading indicator while the update is in progress
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
+                // Show a loading indicator while the product is being updated
+                Log.d("ProductUpdate", "Updating product...")
 
+            }
             is Results.Success -> {
-                // Handle successful user update
-                LaunchedEffect(Unit) {
-                    Log.d("AppWriteUpload", "User updated successfully: ${result.data.profileImageUrl}")
-                    navigateToTab(navController, Route.ProfileScreen)
-                }
+                // Handle the success case when the product has been updated
+                val updatedProduct = (updateUserState as Results.Success).data
+                Log.d("ProfileUpdate", "Profile updated successfully: ${updatedProduct.username}")
+                Toast.makeText(context, "Product updated successfully!", Toast.LENGTH_SHORT).show()
+                navController.popBackStack()
             }
-
             is Results.Failure -> {
-                // Handle failure during user update
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    val errorMessage = result.exception.message ?: "An error occurred"
-                    Log.e("ProfileUpdate", "Failed to update user: $errorMessage")
-
-                    // Display an error message on the screen
-                    Text(
-                        text = errorMessage,
-                        color = Color.Red,
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center
-                    )
-                }
+                // Handle failure state
+                val errorMessage = (updateUserState as Results.Failure).exception.message ?: "Unknown error"
+                Log.e("ProfileUpdate", "Error updating profile: $errorMessage")
+                Toast.makeText(context, "Failed to update profile: $errorMessage", Toast.LENGTH_SHORT).show()
             }
 
-            else -> {
-                // Handle any undefined state (optional, based on your design)
-            }
+            else -> {}
         }
     }
 
@@ -176,74 +162,89 @@ fun EditProfileScreen(
                 }
             }
         )
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-        ) {
-
-            Spacer(modifier = Modifier.size(16.dp))
-
-            // Profile Avatar Box
-            Box(
+        // Show loading indicator if the product is being updated
+        if (updateUserState is Results.Loading) {
+            Column(
                 modifier = Modifier
-                    .size(200.dp)
-                    .clip(CircleShape)
-                    .background(color = colorResource(R.color.black))
-                    .align(Alignment.CenterHorizontally)
-                    .clickable { launcher.launch("image/*") } // Open gallery on click
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .statusBarsPadding()
+                    .navigationBarsPadding(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Display the selected profile image or a placeholder
-                Image(
-                    painter = rememberAsyncImagePainter(updatedProfileUri),
-                    contentDescription = "Profile Avatar",
+                CircularProgressIndicator()
+                Text("Profile Updating...", color = Color.Blue)
+            }
+        }else{
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+            ) {
+
+                Spacer(modifier = Modifier.size(16.dp))
+
+                // Profile Avatar Box
+                Box(
                     modifier = Modifier
-                        .size(198.dp)
-                        .align(Alignment.Center)
-                        .clickable { launcher.launch("image/*") } // Open gallery on icon click
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
+                        .size(200.dp)
+                        .clip(CircleShape)
+                        .background(color = colorResource(R.color.black))
+                        .align(Alignment.CenterHorizontally)
+                        .clickable { launcher.launch("image/*") } // Open gallery on click
+                ) {
+                    // Display the selected profile image or a placeholder
+                    Image(
+                        painter = rememberAsyncImagePainter(updatedProfileUri),
+                        contentDescription = "Profile Avatar",
+                        modifier = Modifier
+                            .size(198.dp)
+                            .align(Alignment.Center)
+                            .clickable { launcher.launch("image/*") } // Open gallery on icon click
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+                Spacer(modifier = Modifier.size(16.dp))
+
+                // Profile details (e.g., name, username, email, phone number)
+                DetailRow(
+                    "Name",
+                    updatedValue = actualName,
+                    enable = true,
+                    textColor = colorResource(R.color.purple_500),
+                    icon = null,
+                    onValueChange = { actualName = it }
+                )
+                DetailRow(
+                    "Username",
+                    updatedValue = actualUsername,
+                    enable = true,
+                    textColor = colorResource(R.color.purple_500),
+                    icon = null,
+                    onValueChange = { actualUsername = it }
+                )
+                DetailRow(
+                    "Email",
+                    updatedValue = actualEmail,
+                    enable = true,
+                    textColor = colorResource(R.color.purple_500),
+                    icon = null,
+                    onValueChange = { actualEmail = it }
+                )
+                PhoneDetailRow(
+                    label = "Phone",
+                    enable = true,
+                    phoneNumber = actualPhoneNumber,
+                    textColor = colorResource(R.color.purple_500),
+                    onCountryCodeChange = { /* Handle country code */ },
+                    onPhoneNumberChange = { actualPhoneNumber = it }
                 )
             }
-
-            Spacer(modifier = Modifier.size(16.dp))
-
-            // Profile details (e.g., name, username, email, phone number)
-            DetailRow(
-                "Name",
-                updatedValue = actualName,
-                enable = true,
-                textColor = colorResource(R.color.purple_500),
-                icon = null,
-                onValueChange = { actualName = it }
-            )
-            DetailRow(
-                "Username",
-                updatedValue = actualUsername,
-                enable = true,
-                textColor = colorResource(R.color.purple_500),
-                icon = null,
-                onValueChange = { actualUsername = it }
-            )
-            DetailRow(
-                "Email",
-                updatedValue = actualEmail,
-                enable = true,
-                textColor = colorResource(R.color.purple_500),
-                icon = null,
-                onValueChange = { actualEmail = it }
-            )
-            PhoneDetailRow(
-                label = "Phone",
-                enable = true,
-                phoneNumber = actualPhoneNumber,
-                textColor = colorResource(R.color.purple_500),
-                onCountryCodeChange = { /* Handle country code */ },
-                onPhoneNumberChange = { actualPhoneNumber = it }
-            )
         }
     }
-
 }
 
 fun navigateToTab(navController: NavController, route: Route) {

@@ -1,6 +1,7 @@
 package com.warrantysafe.app.presentation.ui.screens.main.homeScreen.tabs
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -18,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
@@ -33,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -46,18 +49,28 @@ import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList.components.ProductCard
 import com.warrantysafe.app.presentation.ui.screens.main.utils.dropDownMenu.components.dropDownMenuItem
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
+import com.warrantysafe.app.utils.checkValidNetworkConnection
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ExpiredTab(
     navController: NavController
 ) {
+    val context = LocalContext.current
     val productViewModel: ProductViewModel = koinViewModel()
 
     // Observe the result state
     val productState by productViewModel.expiredProductsState.observeAsState(initial = Results.Loading)
-    LaunchedEffect(Unit){
+    // Remember and update internet connection status dynamically
+    val isConnected = remember { mutableStateOf(checkValidNetworkConnection(context)) }
+    LaunchedEffect(Unit) {
         productViewModel.loadExpiredProducts()
+    }
+    // Continuously monitor the network status
+    LaunchedEffect(isConnected.value) {
+        if (!isConnected.value) {
+            Toast.makeText(context, "No Valid Internet Connection!!", Toast.LENGTH_LONG).show()
+        }
     }
 
     val sortOptions = listOf(

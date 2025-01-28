@@ -12,7 +12,6 @@ android {
     defaultConfig {
         applicationId = "com.warrantysafe.app"
         minSdk = 24
-        //noinspection OldTargetApi
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -69,6 +68,8 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation("io.appwrite:sdk-for-kotlin:6.1.0")
+
+    implementation("com.google.code.gson:gson:2.8.9") // Or the latest version
 
     // Koin
     implementation (libs.koin.androidx.compose)

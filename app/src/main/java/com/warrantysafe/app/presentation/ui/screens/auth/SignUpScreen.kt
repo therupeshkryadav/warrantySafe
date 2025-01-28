@@ -372,17 +372,11 @@ fun SignUpScreen(
                     }
                 },
                 shape = RoundedCornerShape(20.dp),
-                colors = ButtonColors(
-                    containerColor = Color.DarkGray,
-                    contentColor = Color.White,
-                    disabledContainerColor = Color.DarkGray,
-                    disabledContentColor = Color.White
-                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)
                     .padding(horizontal = 16.dp),
-                enabled = !isLoading.value, // Disable the button while loading
+                enabled = isValidInput, // Disable the button while loading
             ) {
                 if (isLoading.value) {
                     CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))

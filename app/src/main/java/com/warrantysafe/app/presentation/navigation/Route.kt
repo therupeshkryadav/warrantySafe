@@ -1,10 +1,12 @@
 package com.warrantysafe.app.presentation.navigation
 
 import android.net.Uri
+import com.google.gson.Gson
+import com.warrantysafe.app.domain.model.Product
 
 sealed class Route(
-    val route : String
-){
+    val route: String
+) {
     object SplashScreen : Route(route = "splashScreen")
     object LoginScreen : Route(route = "loginScreen")
     object SignUpScreen : Route(route = "signUpScreen")
@@ -30,44 +32,26 @@ sealed class Route(
         }
     }
 
-    object EditProductDetailsScreen : Route("editProductDetailsScreen/{id}/{productName}/{purchaseDate}/{category}/{expiryDate}/{notes}/{imageUri}") {
-        fun createRoute(
-            id: String?,
-            productName: String?,
-            purchaseDate: String?,
-            expiryDate: String?,
-            category: String?,
-            notes: String?,
-            imageUri: Uri?
-        ): String {
-            // Provide safe defaults and encode the values
-            val safeProductId = Uri.encode(id)?: "Unknown"
-            val safeProductName = Uri.encode(productName ?: "Unknown")
-            val safePurchaseDate = Uri.encode(purchaseDate ?: "N/A")
-            val safeExpiryDate = Uri.encode(expiryDate ?: "N/A")
-            val safeCategory = Uri.encode(category ?: "N/A")
-            val safeNotes = Uri.encode(notes ?: "N/A")
-            val safeImageUri = Uri.encode(imageUri?.toString() ?: "N/A")
 
-            return "editProductDetailsScreen/$safeProductId/$safeProductName/$safePurchaseDate/$safeCategory/$safeExpiryDate/$safeNotes/$safeImageUri"
-        }
-    }
+    object EditProductDetailsScreen : Route("editProductDetailsScreen/{productJson}")
 
-    object EditProfileScreen : Route("editProfileScreen/{profileImgUrl}/{fullName}/{userName}/{emailId}/{phone}") {
+    object EditProfileScreen :
+        Route("editProfileScreen/{profileImgUrl}/{fullName}/{userName}/{emailId}/{phone}") {
         fun createRoute(
-            profileImgUri : Uri?,
+            profileImgUri: Uri?,
             fullName: String?,
             userName: String?,
             emailId: String?,
             phone: String?
-        ) :String{
+        ): String {
             // Provide safe defaults and encode the values
             val safeFullName = Uri.encode(fullName ?: "----")
             val safeProfileImgUri = Uri.encode(profileImgUri?.toString() ?: "N/A")
             val safeUserName = Uri.encode(userName ?: "----")
             val safeEmailId = Uri.encode(emailId ?: "----")
             val safePhone = Uri.encode(phone ?: "----")
-            return "editProfileScreen/$safeProfileImgUri/$safeFullName/$safeUserName/$safeEmailId/$safePhone"}
+            return "editProfileScreen/$safeProfileImgUri/$safeFullName/$safeUserName/$safeEmailId/$safePhone"
+        }
     }
 
     object NotificationScreen : Route(route = "notificationScreen")

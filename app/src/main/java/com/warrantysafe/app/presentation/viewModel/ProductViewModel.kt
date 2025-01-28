@@ -1,7 +1,12 @@
 package com.warrantysafe.app.presentation.viewModel
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +20,7 @@ import com.warrantysafe.app.domain.useCases.GetExpiredProductsUseCase
 import com.warrantysafe.app.domain.useCases.UpdateProductUseCase
 import com.warrantysafe.app.domain.useCases.GetProductDetailUseCase
 import com.warrantysafe.app.domain.utils.Results
+import com.warrantysafe.app.utils.checkValidNetworkConnection
 import kotlinx.coroutines.launch
 
 class ProductViewModel(
@@ -54,7 +60,6 @@ class ProductViewModel(
     fun loadProductDetail(productId: String) {
         viewModelScope.launch {
             try {
-                _productDetailState.value = Results.Loading
                 val result = getProductDetailUseCase(productId)
                 _productDetailState.value = result
                 Log.d("ProductDetail", "Product Detail Loaded: $result") // Debugging log
@@ -82,6 +87,7 @@ class ProductViewModel(
     fun loadActiveProducts() {
         viewModelScope.launch {
             try {
+                _activeProductsState.value = Results.Loading
                 val products = getActiveProductsUseCase(currentDate)
                 _activeProductsState.value = Results.Success(products)
                Log.d("ActiveProducts","Active Products Loaded: $products") // Debugging log
@@ -105,19 +111,30 @@ class ProductViewModel(
         }
     }
 
-    // Add a new product
-    fun addProduct(product: Product) {
+    fun addProduct(context: Context,product: Product) {
+        // Check for valid internet connection before proceeding
+        if (!checkValidNetworkConnection(context)) {
+            _addProductState.value = Results.Failure(Exception("No valid internet connection"))
+            return
+        }
+
+        // Start the "loading" state
+        _addProductState.value = Results.Loading
+
         viewModelScope.launch {
             try {
-                _addProductState.value= Results.Loading
+                // Simulate adding a product (this could be a network request or DB operation)
                 addProductUseCase(product)
+
+                // If successful, update the state with a Success result (with no data in this case)
                 _addProductState.value = Results.Success(Unit)
-                refreshAllProducts()
             } catch (e: Exception) {
+                // If there's an error, update the state with a Failure result
                 _addProductState.value = Results.Failure(e)
             }
         }
     }
+
 
     // Update an existing product
     fun updateProduct(product: Product) {

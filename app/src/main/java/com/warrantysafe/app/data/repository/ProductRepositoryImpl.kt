@@ -131,7 +131,7 @@ class ProductRepositoryImpl(
             // Logging the product data for debugging
             Log.d("ProductRepo", "Product data to be saved: $productData")
 
-            // Save the product data in the user's "userProducts" subcollection
+            // Save the product data in the user's "userProducts" collection
             productRef.set(productData).await()
 
             // Success: Return the product object with the ID set

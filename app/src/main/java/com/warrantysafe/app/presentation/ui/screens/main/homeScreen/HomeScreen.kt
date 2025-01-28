@@ -1,6 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.main.homeScreen
 
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -49,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -77,6 +78,7 @@ fun HomeScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     val userViewModel: UserViewModel = koinViewModel()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit){
         userViewModel.getUser()
@@ -84,7 +86,6 @@ fun HomeScreen(
 
     // States to handle loading and errors
     val userState = userViewModel.userState.observeAsState()
-    Log.d("UserState","${userState.value}")
     var username by remember { mutableStateOf("") }
     // Handle user state
     when (val result = userState.value) {
@@ -96,7 +97,7 @@ fun HomeScreen(
         }
         is Results.Failure -> {
             val errorMessage = result.exception.message?: "Unknown error"
-            Text(text = errorMessage, color = Color.Red)
+            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
         }
         else -> {
             // No-op for null or undefined states
