@@ -8,12 +8,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.domain.repository.ProductRepository
 import com.warrantysafe.app.domain.utils.Results
+import com.warrantysafe.app.utils.checkValidNetworkConnection
 import io.appwrite.Client
 import io.appwrite.ID
 import io.appwrite.models.InputFile
 import io.appwrite.services.Storage
 import kotlinx.coroutines.tasks.await
 import java.io.File
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class ProductRepositoryImpl(
     private val context: Context,
@@ -104,7 +107,7 @@ class ProductRepositoryImpl(
         return try {
             // Ensure user is authenticated
             val userId = firebaseAuth.currentUser?.uid ?: return Results.Failure(Exception("User not authenticated"))
-            Log.d("ProductRepo", "user id fetched $userId $product")
+            Log.d("ProductRepo", "User ID fetched: $userId, Product: $product")
 
             // Upload profile image to Appwrite (if provided)
             val productImageUri = product.productImageUri
@@ -113,6 +116,7 @@ class ProductRepositoryImpl(
             } else {
                 ""
             }
+
 
             // Create a reference for the new product document
             val productRef = usersCollection.document(userId).collection("userProducts").document()
@@ -131,16 +135,22 @@ class ProductRepositoryImpl(
             // Logging the product data for debugging
             Log.d("ProductRepo", "Product data to be saved: $productData")
 
-            // Save the product data in the user's "userProducts" collection
-            productRef.set(productData).await()
-
-            // Success: Return the product object with the ID set
-            Log.d("ProductRepo", "Product added successfully: ${productRef.id}")
-            Results.Success(product.copy(id = productRef.id))
+            // Use suspendCoroutine to correctly return success or failure
+            return suspendCoroutine { continuation ->
+                productRef.set(productData)
+                    .addOnSuccessListener {
+                        Log.d("ProductRepo", "Product added successfully: ${productRef.id}")
+                        continuation.resume(Results.Success(product.copy(id = productRef.id)))
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("ProductRepo", "Error adding product: ${e.localizedMessage}")
+                        continuation.resume(Results.Failure(e))
+                    }
+            }
 
         } catch (e: Exception) {
             // Logging the exception
-            Log.e("ProductRepo", "Error adding product: ${e.localizedMessage}")
+            Log.e("ProductRepo", "Unexpected error: ${e.localizedMessage}")
             Results.Failure(e)
         }
     }

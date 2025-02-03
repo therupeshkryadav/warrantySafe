@@ -1,5 +1,7 @@
 package com.warrantysafe.app.domain.model
 
 data class Notification(
-    val notification: String
+    val id: Int,
+    val notification: String,
+    val isRead: Boolean = false
 )

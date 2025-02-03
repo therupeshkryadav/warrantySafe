@@ -16,27 +16,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.warrantysafe.app.domain.model.Notification
 
 @Composable
 fun NotificationItem(
-    notification: String
+    notification: String,
+    isRead: Boolean,
+    onClick: () -> Unit
 ) {
-    // Track if the item is clicked or not
-    val isClicked = remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = if (isClicked.value) Color.Transparent else MaterialTheme.colorScheme.background)
+            .background(color = if (isRead) Color.Transparent else MaterialTheme.colorScheme.background)
             .padding(vertical = 8.dp)
             .clickable(
                 interactionSource = remember {MutableInteractionSource()}, // Disable the ripple effect
                 indication = null,
-                onClick = {
-                    if (!isClicked.value) {
-                        isClicked.value = true // Change background once clicked
-                    }
-                }
+                onClick = { onClick() }
             )
     ) {
         Text(
@@ -54,6 +51,8 @@ fun NotificationItem(
 @Composable
 private fun PreviewNotificationItem() {
     NotificationItem(
-        notification = "My First Notification!!"
+        notification = "My First Notification!!",
+        isRead = false,
+        onClick = {}
     )
 }

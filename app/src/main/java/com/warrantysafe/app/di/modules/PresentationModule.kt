@@ -1,6 +1,5 @@
 package com.warrantysafe.app.di.modules
 
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.warrantysafe.app.presentation.viewModel.BottomNavigationViewModel
 import com.warrantysafe.app.presentation.viewModel.NotificationViewModel
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
@@ -20,7 +19,7 @@ val presentationModule = module {
     viewModel { UserViewModel(get(), get(), get(), get(), get(), get()) }
 
     // Notifications
-    viewModel { NotificationViewModel(get()) }
+    viewModel { NotificationViewModel(get(), get(),get()) }
 
     // Recents
     viewModel { RecentViewModel(get()) }

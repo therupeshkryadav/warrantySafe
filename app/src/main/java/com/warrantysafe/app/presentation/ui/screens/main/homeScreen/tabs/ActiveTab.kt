@@ -93,6 +93,7 @@ fun ActiveTab(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Text("Fetching Active Products...")
                     LinearProgressIndicator()
                 }
             }

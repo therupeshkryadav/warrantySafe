@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -25,8 +27,6 @@ fun SettingsItem(
     Row(
         modifier = Modifier
             .fillMaxWidth(1f)
-            .padding(8.dp)
-            .border(width = 1.dp, Color.Black)
             .background(Color.LightGray),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -38,10 +38,6 @@ fun SettingsItem(
             fontSize = 12.sp,
             color = Color.Black,
             fontWeight = FontWeight.Medium
-        )
-        Icon(
-            imageVector = Icons.Default.KeyboardArrowRight,
-            contentDescription = null
         )
     }
 }

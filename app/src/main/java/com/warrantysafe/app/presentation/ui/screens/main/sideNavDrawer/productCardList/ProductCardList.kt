@@ -1,6 +1,7 @@
 package com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -40,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -58,15 +60,18 @@ import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCa
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.main.utils.dropDownMenu.components.dropDownMenuItem
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
+import com.warrantysafe.app.utils.checkValidNetworkConnection
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProductCardList(
     navController: NavController
 ) {
+    val context = LocalContext.current
     val productViewModel: ProductViewModel = koinViewModel()
     // Observe the result state
     val productState by productViewModel.allProductsState.observeAsState(initial = Results.Loading)
+    val isConnected = remember { mutableStateOf(checkValidNetworkConnection(context)) }
     LaunchedEffect(Unit) {
         productViewModel.loadAllProducts()
     }
@@ -125,7 +130,7 @@ fun ProductCardList(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 32.dp, vertical = 8.dp),
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -143,13 +148,13 @@ fun ProductCardList(
                                 )
                         ) {
                             Row(
-                                modifier = Modifier.padding(4.dp),
+                                modifier = Modifier,
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Text(
                                     text = "Sort By",
-                                    modifier = Modifier.padding(end = 4.dp)
+                                    modifier = Modifier.padding(horizontal = 4.dp)
                                 )
                                 Icon(
                                     modifier = Modifier.size(24.dp),
@@ -182,7 +187,17 @@ fun ProductCardList(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null // Disables ripple effect
                                 ) {
-                                    productViewModel.deleteProducts(selectedProducts)
+                                    isConnected.value = checkValidNetworkConnection(context)
+                                    if (!isConnected.value) {
+                                        Toast.makeText(
+                                            context,
+                                            "Delete not Possible, No Valid Internet Connection!!",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }else{
+                                        productViewModel.deleteProducts(selectedProducts)
+                                    }
+
                                 },
                                 imageVector = Icons.Default.Delete,
                                 contentDescription = null
@@ -262,7 +277,7 @@ fun ProductCardList(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(16.dp),
+                            .padding(horizontal = 8.dp),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {

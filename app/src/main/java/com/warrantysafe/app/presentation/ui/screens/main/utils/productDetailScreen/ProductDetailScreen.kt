@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -86,22 +87,24 @@ fun ProductDetailScreen(
     val currentDate = getCurrentDate()
 
     val result = productDetailState.value
-    when {
-        result is Results.Loading -> {
+    when (result) {
+        is Results.Loading -> {
             // Show loading state
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.White)
                     .statusBarsPadding()
                     .navigationBarsPadding(),
-                contentAlignment = Alignment.Center
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                CircularProgressIndicator()
+                Text("Fetching Product Detail .........")
+                LinearProgressIndicator()
             }
         }
 
-        result is Results.Success -> {
+        is Results.Success -> {
             val product = result.data
 
             val validPeriod = periodCalculator(
@@ -317,7 +320,7 @@ fun ProductDetailScreen(
             }
         }
 
-        result is Results.Failure -> {
+        is Results.Failure -> {
             // Handle failure state
             val errorMessage = result.exception.message ?: "Unknown error"
             Text(

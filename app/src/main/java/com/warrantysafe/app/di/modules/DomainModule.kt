@@ -1,5 +1,6 @@
 package com.warrantysafe.app.di.modules
 
+import com.warrantysafe.app.domain.useCases.AddNotificationUseCase
 import com.warrantysafe.app.domain.useCases.AddProductUseCase
 import com.warrantysafe.app.domain.useCases.CheckUserUseCase
 import com.warrantysafe.app.domain.useCases.DeleteProductsUseCase
@@ -14,6 +15,7 @@ import com.warrantysafe.app.domain.useCases.GetSettingsUseCase
 import com.warrantysafe.app.domain.useCases.GetUpcomingUseCase
 import com.warrantysafe.app.domain.useCases.GetUserUseCase
 import com.warrantysafe.app.domain.useCases.LoginUserUseCase
+import com.warrantysafe.app.domain.useCases.MarkNotificationReadUseCase
 import com.warrantysafe.app.domain.useCases.SignOutUserUseCase
 import com.warrantysafe.app.domain.useCases.SignUpUserUseCase
 import com.warrantysafe.app.domain.useCases.UpdateProductUseCase
@@ -39,7 +41,9 @@ val domainModule = module {
     single { SignOutUserUseCase(get()) }
 
     // Miscellaneous Use Cases
+    single { AddNotificationUseCase(get()) }
     single { GetNotificationsUseCase(get()) }
+    single { MarkNotificationReadUseCase(get()) }
     single { GetRecentsUseCase(get()) }
     single { GetBottomNavigationIconsUseCase(get()) }
     single { GetUpcomingUseCase(get()) }

@@ -2,11 +2,7 @@ package com.warrantysafe.app.presentation.viewModel
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,8 +13,8 @@ import com.warrantysafe.app.domain.useCases.DeleteProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetActiveProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetAllProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetExpiredProductsUseCase
-import com.warrantysafe.app.domain.useCases.UpdateProductUseCase
 import com.warrantysafe.app.domain.useCases.GetProductDetailUseCase
+import com.warrantysafe.app.domain.useCases.UpdateProductUseCase
 import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.utils.checkValidNetworkConnection
 import kotlinx.coroutines.launch
@@ -124,17 +120,16 @@ class ProductViewModel(
         viewModelScope.launch {
             try {
                 // Simulate adding a product (this could be a network request or DB operation)
-                addProductUseCase(product)
+                val response = addProductUseCase(product)
 
                 // If successful, update the state with a Success result (with no data in this case)
-                _addProductState.value = Results.Success(Unit)
+                _addProductState.value = Results.Success(response)
             } catch (e: Exception) {
                 // If there's an error, update the state with a Failure result
                 _addProductState.value = Results.Failure(e)
             }
         }
     }
-
 
     // Update an existing product
     fun updateProduct(product: Product) {

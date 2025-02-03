@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.splash
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,6 +26,7 @@ import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.theme.WarrantySafeTheme
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
+import com.warrantysafe.app.utils.NotificationHelper
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
@@ -31,7 +34,9 @@ import org.koin.androidx.compose.koinViewModel
 fun SplashScreen(
     navController: NavController
 ) {
+    val context = LocalContext.current
     // This box will show the logo and be centered
+    NotificationHelper.sendNotification(context,"App Started","Welcome to Warranty Safe!!")
     Box(
         modifier = Modifier
             .fillMaxSize()

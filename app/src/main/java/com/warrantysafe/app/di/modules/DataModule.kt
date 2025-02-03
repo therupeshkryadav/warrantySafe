@@ -42,7 +42,7 @@ val dataModule = module {
 
     // Provide repositories
     single<ProductRepository> { ProductRepositoryImpl(get(), get(), get(), get(), get()) }
-    single<NotificationRepository> { NotificationRepositoryImpl() }
+    single<NotificationRepository> { NotificationRepositoryImpl(get(),get()) }
     single<UserRepository> { UserRepositoryImpl(get(), get(), get(), get(), get()) }
     single<RecentRepository> { RecentRepositoryImpl() }
     single<BottomNavigationRepository> { BottomNavigationRepositoryImpl() }

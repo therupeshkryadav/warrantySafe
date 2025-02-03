@@ -1,5 +1,6 @@
 package com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.upcomingFeaturesScreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -81,6 +83,7 @@ fun UpcomingFeaturesScreen(navController: NavController) {
                     UpcomingFeaturesItem(
                         upcomingNotification = upcomingNotifications.upcomingNotification
                     )
+                    Spacer(Modifier.fillMaxWidth().height(1.dp).background(Color.White))
                 }
 
                 item {
