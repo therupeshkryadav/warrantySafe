@@ -49,7 +49,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
@@ -228,7 +227,7 @@ fun ProductCardList(
                                         purchase = product.purchase,
                                         expiry = product.expiry,
                                         category = product.category,
-                                        imageResource = rememberAsyncImagePainter(product.productImageUri),
+                                        imageUri = product.productImageUri,
                                         itemTint = Color.Transparent, // Indicate selection
                                         detailsColor = Color.Black, // Change text color for selected item
                                         onSlidingForward = {
@@ -250,7 +249,7 @@ fun ProductCardList(
                                         purchase = product.purchase,
                                         expiry = product.expiry,
                                         category = product.category,
-                                        imageResource = rememberAsyncImagePainter(product.productImageUri),
+                                        imageUri = product.productImageUri,
                                         itemTint = Color.Transparent, // Indicate selection
                                         detailsColor = Color.Black, // Change text color for selected item
                                         onSlidingForward = {

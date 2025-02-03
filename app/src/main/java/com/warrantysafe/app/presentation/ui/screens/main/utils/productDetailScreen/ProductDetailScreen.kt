@@ -1,6 +1,7 @@
 package com.warrantysafe.app.presentation.ui.screens.main.utils.productDetailScreen
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -32,9 +33,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,9 +52,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.google.gson.Gson
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
@@ -176,16 +183,24 @@ fun ProductDetailScreen(
                         .padding(horizontal = 8.dp)
                         .verticalScroll(scrollState)
                 ) {
+                    // Handling image loading and displaying with simplified logic
+                    val initialImageUri by remember { mutableStateOf<Uri?>(product.productImageUri.toUri()) }
+
                     Image(
-                        painter = rememberAsyncImagePainter(product.productImageUri),
-                        modifier = Modifier
-                            .fillMaxWidth(1f)
-                            .height(280.dp)
-                            .padding(8.dp)
-                            .border(width = 2.dp, color = colorResource(R.color.black)),
+                        painter = rememberAsyncImagePainter(
+                            model = initialImageUri?:product.productImageUri ,
+                            placeholder = rememberAsyncImagePainter(product.productImageUri),
+                            error = painterResource(id = R.drawable.product_placeholder)
+                        ),
+                        contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        contentDescription = null
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(280.dp)
+                            .padding(top = 8.dp, start = 4.dp, end = 4.dp)
+                            .border(width = 2.dp, color = colorResource(R.color.black))
                     )
+
 
                     DetailRow(
                         label = "Product Name",

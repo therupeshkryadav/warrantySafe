@@ -1,6 +1,7 @@
 package com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList.components
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,7 +30,6 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -39,6 +39,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.core.net.toUri
+import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList.components.functions.CustomLinearProgressIndicator
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList.components.functions.calculateProgress
@@ -55,7 +57,7 @@ fun ProductCard(
     detailsColor: Color,
     purchase: String,
     expiry: String,
-    imageResource: Painter // Image resource ID
+    imageUri: String // Image resource ID
 ) {
     val currentDate = getCurrentDate()
     val period = periodCalculator(
@@ -65,12 +67,15 @@ fun ProductCard(
     )
     val progress = calculateProgress(purchase, expiry, currentDate)
 
+    val finalImageUri = if (imageUri.isNotEmpty()) imageUri.toUri()
+    else Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
+
+
     Box(modifier = Modifier
         .wrapContentSize()
         .padding(vertical = 16.dp)
         .pointerInput(Unit) {
-            detectHorizontalDragGestures { change, dragAmount ->
-                change.consume() // Consume the gesture
+            detectHorizontalDragGestures { _, dragAmount ->
                 if (dragAmount > 0) {
                     onSlidingForward()
                 } else {
@@ -116,7 +121,11 @@ fun ProductCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = imageResource,
+                    painter = rememberAsyncImagePainter(
+                        model = finalImageUri,
+                        placeholder = painterResource(id = R.drawable.product_placeholder),
+                        error = painterResource(id = R.drawable.product_placeholder)
+                    ),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth(0.35f)
@@ -193,6 +202,6 @@ fun ProductCardPreview() {
         detailsColor = Color.Black,
         purchase = "30/11/2023",
         expiry = "01/12/2025",
-        imageResource = painterResource(R.drawable.product_placeholder)
+        imageUri = ""
     )
 }

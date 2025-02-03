@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
@@ -147,7 +146,7 @@ fun SearchScreen(
                         detailsColor = Color.Black,
                         purchase = product.purchase,
                         expiry = product.expiry,
-                        imageResource = rememberAsyncImagePainter(product.productImageUri),
+                        imageUri = product.productImageUri,
                         onSlidingBackward = {}
                     )
                 }

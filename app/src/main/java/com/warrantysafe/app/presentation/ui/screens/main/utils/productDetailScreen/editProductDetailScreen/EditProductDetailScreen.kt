@@ -32,7 +32,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -56,17 +55,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.google.gson.Gson
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.domain.utils.Results
-import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.main.utils.categorySection.CategorySection
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
@@ -279,15 +275,17 @@ fun EditProductDetailScreen(
 
         // Show loading indicator if the product is being updated
         if (updateProductsState is Results.Loading) {
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.White)
                     .statusBarsPadding()
                     .navigationBarsPadding(),
-                contentAlignment = Alignment.Center
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CircularProgressIndicator()
+                Text("Updating Product Details....")
+                LinearProgressIndicator()
             }
         }else{
             // Main content
@@ -305,7 +303,11 @@ fun EditProductDetailScreen(
                         .border(width = 2.dp, color = colorResource(R.color.black))
                 ) {
                     Image(
-                        painter = rememberAsyncImagePainter(selectedProductImageUri ?: product.productImageUri),
+                        painter = rememberAsyncImagePainter(
+                            model = selectedProductImageUri ?: product.productImageUri,
+                            placeholder = rememberAsyncImagePainter(product.productImageUri),
+                            error = painterResource(id = R.drawable.product_placeholder)
+                        ),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -344,7 +346,7 @@ fun EditProductDetailScreen(
 
                 DetailRow(
                     label = "Product Name",
-                    updatedValue = validProductName!!,
+                    updatedValue = validProductName,
                     enable = true,
                     textColor = Color.DarkGray,
                     icon = null,
@@ -352,7 +354,7 @@ fun EditProductDetailScreen(
                 )
 
                 CategorySection(
-                    updatedCategory = updatedCategory!!,
+                    updatedCategory = updatedCategory,
                     onSelectEnabled = true,
                     onCategoryChange = { updatedCategory = it },
                     onCategorySelection = { expanded = !expanded }
@@ -392,7 +394,7 @@ fun EditProductDetailScreen(
                     enable = false,
                     icon = R.drawable.calendar,
                     placeHolder = "DD/MM/YYYY",
-                    updatedValue = validPurchaseDate!!,
+                    updatedValue = validPurchaseDate,
                     onDetailRowClick = {
                         showPurchaseDatePicker.value = true
                     },
@@ -405,7 +407,7 @@ fun EditProductDetailScreen(
                     enable = false,
                     icon = R.drawable.calendar,
                     placeHolder = "DD/MM/YYYY",
-                    updatedValue = validExpiryDate!!,
+                    updatedValue = validExpiryDate,
                     onDetailRowClick = {
                         showExpiryDatePicker.value = true
                     },
@@ -487,7 +489,7 @@ fun EditProductDetailScreen(
                     enable = true,
                     icon = null,
                     placeHolder = "write your notes here -->",
-                    updatedValue = validNotes!!,
+                    updatedValue = validNotes,
                     onDetailRowClick = {
                         showExpiryDatePicker.value = true
                     },

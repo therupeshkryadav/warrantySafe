@@ -22,8 +22,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -190,7 +188,7 @@ fun ExpiredTab(
                                 detailsColor = Color.Black,
                                 purchase = product.purchase,
                                 expiry = product.expiry,
-                                imageResource = rememberAsyncImagePainter(product.productImageUri),
+                                imageUri = product.productImageUri,
                                 onSlidingBackward = {}
                             )
                         }
