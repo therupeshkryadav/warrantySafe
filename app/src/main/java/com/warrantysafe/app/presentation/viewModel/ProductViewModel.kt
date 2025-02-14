@@ -14,6 +14,7 @@ import com.warrantysafe.app.domain.useCases.GetActiveProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetAllProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetExpiredProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetProductDetailUseCase
+import com.warrantysafe.app.domain.useCases.SearchProductsUseCase
 import com.warrantysafe.app.domain.useCases.UpdateProductUseCase
 import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.utils.checkValidNetworkConnection
@@ -26,7 +27,8 @@ class ProductViewModel(
     private val getProductDetailUseCase: GetProductDetailUseCase,
     private val addProductUseCase: AddProductUseCase,
     private val updateProductUseCase: UpdateProductUseCase,
-    private val deleteProductsUseCase: DeleteProductsUseCase
+    private val deleteProductsUseCase: DeleteProductsUseCase,
+    private val searchProductsUseCase: SearchProductsUseCase
 ) : ViewModel() {
 
     private val currentDate = getCurrentDate()
@@ -36,6 +38,9 @@ class ProductViewModel(
 
     private val _productDetailState = MutableLiveData<Results<Product>>()
     val productDetailState: LiveData<Results<Product>> get() = _productDetailState
+
+    private val _searchResults = MutableLiveData<Results<List<Product>>>()
+    val searchResults: LiveData<Results<List<Product>>> get() = _searchResults
 
     private val _activeProductsState = MutableLiveData<Results<List<Product>>>()
     val activeProductsState: LiveData<Results<List<Product>>> get() = _activeProductsState
@@ -78,6 +83,19 @@ class ProductViewModel(
             }
         }
     }
+
+    fun searchProducts(query: String) {
+        viewModelScope.launch {
+            _searchResults.value = Results.Loading
+            try {
+                val products = searchProductsUseCase.execute(query)
+                _searchResults.value = Results.Success(products)
+            } catch (e: Exception) {
+                _searchResults.value = Results.Failure(e)
+            }
+        }
+    }
+
 
     // Load active products
     fun loadActiveProducts() {

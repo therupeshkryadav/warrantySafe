@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.3"
+agp = "8.8.0"
 ccp = "2.7.1"
 coilCompose = "2.2.2"
 coreSplashscreenVersion = "1.0.1"
@@ -19,10 +19,12 @@ runtimeLivedata = "1.7.6"
 firebaseFirestoreKtx = "25.1.1"
 firebaseStorageKtx = "21.0.1"
 googleGmsGoogleServices = "4.4.2"
+workRuntimeKtx = "2.10.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreenVersion" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 ccp = { module = "com.hbb20:ccp", version.ref = "ccp" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

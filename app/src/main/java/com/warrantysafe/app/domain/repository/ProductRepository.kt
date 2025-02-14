@@ -5,6 +5,7 @@ import com.warrantysafe.app.domain.utils.Results
 
 interface ProductRepository {
     suspend fun getProducts(): Results<List<Product>>
+    suspend fun searchProducts(query: String): List<Product>
     suspend fun getProductDetail(productId: String) : Results<Product>
     suspend fun addProduct(product: Product) : Results<Product>
     suspend fun updateProduct(product: Product) : Results<Product>

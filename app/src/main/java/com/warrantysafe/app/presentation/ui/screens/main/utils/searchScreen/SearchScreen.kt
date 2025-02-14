@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,10 +41,12 @@ import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.domain.model.Recent
+import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList.components.ProductCard
 import com.warrantysafe.app.presentation.ui.screens.main.utils.searchScreen.components.RecentItem
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
+import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import com.warrantysafe.app.presentation.viewModel.RecentViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -52,16 +55,17 @@ fun SearchScreen(
     navController: NavController
 ) {
     val recentViewModel: RecentViewModel = koinViewModel()
-    LaunchedEffect(Unit){
+    val productViewModel: ProductViewModel = koinViewModel()
+    val searchResults by productViewModel.searchResults.observeAsState(initial = Results.Loading)
+
+    LaunchedEffect(Unit) {
         recentViewModel.loadRecentSearches()
     }
     var text by remember { mutableStateOf("") }
     val focusRequester = FocusRequester()
 
-    // Content under the TopAppBar
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         CustomTopAppBar(
             title = {
@@ -83,7 +87,6 @@ fun SearchScreen(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null
                                 ) {
-                                    // Request focus on the TextField when clicking the placeholder
                                     focusRequester.requestFocus()
                                 }
                                 .background(color = colorResource(R.color.transparent))
@@ -93,7 +96,10 @@ fun SearchScreen(
                     // TextField
                     BasicTextField(
                         value = text,
-                        onValueChange = { text = it },
+                        onValueChange = {
+                            text = it
+                          //  productViewModel.searchProducts(it) // Trigger search on text change
+                        },
                         textStyle = MaterialTheme.typography.titleLarge.copy(
                             color = colorResource(R.color.black)
                         ),
@@ -117,7 +123,11 @@ fun SearchScreen(
                 }
             },
             actions = {
-                IconButton(onClick = { /* Handle Search Click */ }) {
+                IconButton(onClick = {
+                    recentViewModel.addToRecent(text) // Save query to recent list
+                    productViewModel.searchProducts(text) // Trigger search
+                    // Optional: Handle search icon click
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.search_warranty),
                         contentDescription = "Search",
@@ -127,34 +137,8 @@ fun SearchScreen(
             }
         )
 
-        val matchedList = mutableListOf<Product>()
-
-        if (matchedList.isNotEmpty()) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(top = 8.dp, start = 8.dp, end = 8.dp)
-            ) {
-                // Display Products
-                items(matchedList.size) { index ->
-                    val product = matchedList[index]
-                    ProductCard(
-                        onClick = { navigateToDetails(product, navController) },
-                        onSlidingForward = {},
-                        productName = product.productName,
-                        itemTint = Color.Transparent,
-                        category = product.category,
-                        detailsColor = Color.Black,
-                        purchase = product.purchase,
-                        expiry = product.expiry,
-                        imageUri = product.productImageUri,
-                        onSlidingBackward = {}
-                    )
-                }
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-            }
-        }else{
+        // Initially show Recent Searches
+        if (text.isEmpty()) {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -163,8 +147,61 @@ fun SearchScreen(
                 }
             }
         }
+
+        // Show Products only when text is not empty
+        if (text.isNotEmpty()) {
+            when (searchResults) {
+                is Results.Loading -> {
+                    Text(
+                        text = "Searching...",
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
+                is Results.Success -> {
+                    val matchedList = (searchResults as Results.Success<List<Product>>).data
+                    if (matchedList.isNotEmpty()) {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(top = 8.dp, start = 8.dp, end = 8.dp)
+                        ) {
+                            items(matchedList.size) { index ->
+                                val product = matchedList[index]
+                                ProductCard(
+                                    onClick = { navigateToDetails(product, navController) },
+                                    onSlidingForward = {},
+                                    productName = product.productName,
+                                    itemTint = Color.Transparent,
+                                    category = product.category,
+                                    detailsColor = Color.Black,
+                                    purchase = product.purchase,
+                                    expiry = product.expiry,
+                                    imageUri = product.productImageUri,
+                                    onSlidingBackward = {}
+                                )
+                            }
+                            item {
+                                Spacer(modifier = Modifier.height(16.dp))
+                            }
+                        }
+                    } else {
+                        Text(
+                            text = "No products found",
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                    }
+                }
+                is Results.Failure -> {
+                    Text(
+                        text = "Failed to load products",
+                        color = Color.Red,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
+            }
+        }
     }
 }
+
 
 private fun navigateToDetails(product: Product, navController: NavController) {
 

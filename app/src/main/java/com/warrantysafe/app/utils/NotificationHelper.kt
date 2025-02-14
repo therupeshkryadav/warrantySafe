@@ -1,6 +1,7 @@
 package com.warrantysafe.app.utils
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -23,6 +24,7 @@ object NotificationHelper {
     private const val TAG = "NotificationHelper"
 
     // Create Notification Channel
+    @SuppressLint("ObsoleteSdkInt")
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -70,6 +70,51 @@ class ProductRepositoryImpl(
         }
     }
 
+    override suspend fun searchProducts(query: String): List<Product> {
+        return try {
+            val userId = firebaseAuth.currentUser?.uid ?: return emptyList()
+
+            // Convert query to lowercase for case-insensitive search
+            val queryLower = query.lowercase()
+
+            // Search in productName, category, and notes fields
+            val productQuery = usersCollection
+                .document(userId)
+                .collection("userProducts")
+                .whereGreaterThanOrEqualTo("productName", queryLower)
+                .whereLessThanOrEqualTo("productName", queryLower + '\uf8ff')
+                .get()
+                .await()
+
+            val products = productQuery.documents.mapNotNull { document ->
+                try {
+                    Product(
+                        id = document.getString("id") ?: "",
+                        productName = document.getString("productName") ?: "",
+                        purchase = document.getString("purchase") ?: "",
+                        expiry = document.getString("expiry") ?: "",
+                        category = document.getString("category") ?: "",
+                        productImageUri = document.getString("productImgUri") ?: "",
+                        notes = document.getString("notes") ?: ""
+                    )
+                } catch (e: Exception) {
+                    Log.e("ProductMapping", "Error mapping document to Product: ${e.localizedMessage}")
+                    null // Skip this document if mapping fails
+                }
+            }
+
+            // Optionally, filter further in-memory to match category and notes
+            products.filter { product ->
+                product.productName.contains(query, ignoreCase = true) ||
+                        product.category.contains(query, ignoreCase = true) ||
+                        product.notes.contains(query, ignoreCase = true)
+            }
+        } catch (e: Exception) {
+            Log.e("ProductRepo", "Error searching products: ${e.localizedMessage}")
+            emptyList()
+        }
+    }
+
     override suspend fun getProductDetail(productId: String): Results<Product> {
         return try {
             val userId = firebaseAuth.currentUser?.uid ?: return Results.Failure(Exception("User not authenticated"))
