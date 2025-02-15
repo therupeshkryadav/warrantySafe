@@ -24,8 +24,6 @@ class MainActivity : ComponentActivity(), ViewModelStoreOwner {
         NotificationHelper.createNotificationChannel(this)
 
         WarrantyNotificationScheduler.schedule(this)
-        val workRequest = OneTimeWorkRequestBuilder<WarrantyWorker>().build()
-        WorkManager.getInstance(this).enqueue(workRequest)
 
         setContent {
             WarrantySafeTheme {
