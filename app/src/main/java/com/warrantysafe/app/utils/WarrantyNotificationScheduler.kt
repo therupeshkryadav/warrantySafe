@@ -9,7 +9,8 @@ import java.util.concurrent.TimeUnit
 
 object WarrantyNotificationScheduler {
     fun schedule(context: Context) {
-        val request = PeriodicWorkRequestBuilder<WarrantyWorker>(10, TimeUnit.MICROSECONDS)
+        // Schedule the worker to run every 15 minutes
+        val request = PeriodicWorkRequestBuilder<WarrantyWorker>(15, TimeUnit.MINUTES)
             .build()
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
