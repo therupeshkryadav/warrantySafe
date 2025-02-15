@@ -18,7 +18,7 @@ class WarrantyWorker(
 ) : CoroutineWorker(context, params), KoinComponent {
 
     private val getExpiringWarrantiesUseCase: GetExpiringWarrantiesUseCase by inject()
-// "AIzaSyC8O9mHdE8NOVGuzSSNyHX-YWcwuzN0Cas"
+
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun doWork(): Result {
         try {
