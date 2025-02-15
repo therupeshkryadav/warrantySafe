@@ -6,9 +6,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.warrantysafe.app.data.worker.WarrantyWorker
 import com.warrantysafe.app.presentation.navigation.AppNavGraph
 import com.warrantysafe.app.presentation.ui.theme.WarrantySafeTheme
 import com.warrantysafe.app.utils.NotificationHelper
+import com.warrantysafe.app.utils.WarrantyNotificationScheduler
 
 class MainActivity : ComponentActivity(), ViewModelStoreOwner {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -19,6 +23,9 @@ class MainActivity : ComponentActivity(), ViewModelStoreOwner {
         // Create the notification channel
         NotificationHelper.createNotificationChannel(this)
 
+        WarrantyNotificationScheduler.schedule(this)
+        val workRequest = OneTimeWorkRequestBuilder<WarrantyWorker>().build()
+        WorkManager.getInstance(this).enqueue(workRequest)
 
         setContent {
             WarrantySafeTheme {

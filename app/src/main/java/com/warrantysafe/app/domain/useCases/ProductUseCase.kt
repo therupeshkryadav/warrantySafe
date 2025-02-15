@@ -1,9 +1,12 @@
 package com.warrantysafe.app.domain.useCases
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.domain.repository.ProductRepository
 import com.warrantysafe.app.domain.utils.Results
+import com.warrantysafe.app.presentation.ui.screens.main.utils.productDetailScreen.getCurrentDate
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -35,6 +38,40 @@ class GetAllProductsUseCase(
         return productRepository.getProducts()
     }
 }
+
+class GetExpiringWarrantiesUseCase(
+    private val repository: ProductRepository
+) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend operator fun invoke(daysUntilExpiry: Long): Results<List<Product>> {
+        val result = repository.getProducts()
+
+        if (result is Results.Success) {
+            val products = result.data
+            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
+            // Filter products whose expiry date is within the specified number of days
+            val expiringWarranties = products.filter { product ->
+                try {
+                    val expiryDate = product.expiry
+                    val currentDate = getCurrentDate()
+                    val expiry = LocalDate.parse(expiryDate, formatter)
+                    val current = LocalDate.parse(currentDate, formatter)
+                    val daysToExpiry = current.until(expiry).days
+
+                    daysToExpiry in 0..daysUntilExpiry
+                } catch (e: Exception) {
+                    false
+                }
+            }
+
+            return Results.Success(expiringWarranties)
+        }
+
+        return Results.Failure(Exception("Failed to get products"))
+    }
+}
+
 
 class SearchProductsUseCase(
     private val productRepository: ProductRepository

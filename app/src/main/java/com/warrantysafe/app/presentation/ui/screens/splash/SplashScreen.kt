@@ -36,7 +36,7 @@ fun SplashScreen(
 ) {
     val context = LocalContext.current
     // This box will show the logo and be centered
-    NotificationHelper.sendNotification(context,"App Started","Welcome to Warranty Safe!!")
+   // NotificationHelper.sendNotification(context,"App Started","Welcome to Warranty Safe!!")
     Box(
         modifier = Modifier
             .fillMaxSize()

@@ -353,7 +353,7 @@ fun ProductDetailScreen(
 
 // Helper function to get the current date in "dd/MM/yyyy" format
 @SuppressLint("NewApi")
-private fun getCurrentDate(): String {
+ fun getCurrentDate(): String {
     return java.time.LocalDate.now()
         .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 }
