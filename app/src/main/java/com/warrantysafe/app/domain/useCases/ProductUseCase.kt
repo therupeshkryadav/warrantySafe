@@ -25,6 +25,7 @@ class AddProductUseCase(
             expiry = product.expiry,
             category = product.category,
             productImageUri = product.productImageUri,
+            receiptImageUri = product.receiptImageUri,
             notes = product.notes
         )
         productRepository.addProduct(newProduct)

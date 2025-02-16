@@ -7,6 +7,7 @@ data class Product(
     val expiry: String,
     val category: String,
     val productImageUri: String,
+    val receiptImageUri: String,
     val notes: String
 )
 

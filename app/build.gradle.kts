@@ -42,7 +42,7 @@ android {
 
 dependencies {
     // Core SplashScreen API
-    implementation (libs.androidx.core.splashscreen)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -71,10 +71,17 @@ dependencies {
 
     implementation("io.appwrite:sdk-for-kotlin:6.1.0")
 
-    implementation("com.google.code.gson:gson:2.8.9") // Or the latest version
+    implementation("com.google.code.gson:gson:2.10.1") // Or the latest version
+
+    // Replace 'latest-version' with the actual latest version number
+    implementation("com.github.barteksc:AndroidPdfViewerV1:1.6.0")
+
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+
+
 
     // Koin
-    implementation (libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.compose)
 
 
 }

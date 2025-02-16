@@ -2,19 +2,24 @@ package com.warrantysafe.app.data.repository
 
 import android.content.ContentResolver
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.graphics.pdf.PdfDocument
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.domain.repository.ProductRepository
 import com.warrantysafe.app.domain.utils.Results
-import com.warrantysafe.app.utils.checkValidNetworkConnection
 import io.appwrite.Client
 import io.appwrite.ID
 import io.appwrite.models.InputFile
 import io.appwrite.services.Storage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileOutputStream
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -47,6 +52,7 @@ class ProductRepositoryImpl(
                                 expiry = document.getString("expiry") ?: "",
                                 category = document.getString("category") ?: "",
                                 productImageUri = document.getString("productImgUri") ?: "", // Nullable
+                                receiptImageUri = document.getString("receiptImgUri")?: "",
                                 notes = document.getString("notes") ?: "" // Nullable
                             )
                         } catch (e: Exception) {
@@ -95,6 +101,7 @@ class ProductRepositoryImpl(
                         expiry = document.getString("expiry") ?: "",
                         category = document.getString("category") ?: "",
                         productImageUri = document.getString("productImgUri") ?: "",
+                        receiptImageUri = document.getString("receiptImgUri")?: "",
                         notes = document.getString("notes") ?: ""
                     )
                 } catch (e: Exception) {
@@ -136,6 +143,7 @@ class ProductRepositoryImpl(
                     expiry = productSnapshot.getString("expiry") ?: "",
                     category = productSnapshot.getString("category") ?: "",
                     productImageUri = productSnapshot.getString("productImgUri") ?: "",
+                    receiptImageUri = productSnapshot.getString("receiptImgUri")?: "",
                     notes = productSnapshot.getString("notes") ?: ""
                 )
                 Results.Success(product)
@@ -155,9 +163,17 @@ class ProductRepositoryImpl(
             Log.d("ProductRepo", "User ID fetched: $userId, Product: $product")
 
             // Upload profile image to Appwrite (if provided)
-            val productImageUri = product.productImageUri
+            val productImageUri = product.productImageUri?:""
             val uploadedProductImageUrl = if (productImageUri.isNotEmpty()) {
-                uploadProfileImageToAppwrite(productImageUri)
+                uploadProductImageToAppwrite(productImageUri)
+            } else {
+                ""
+            }
+
+            // Convert receipt image to PDF and upload to Appwrite (if provided)
+            val receiptImageUri = product.receiptImageUri?:""
+            val uploadedReceiptImagePdfUrl = if (receiptImageUri.isNotEmpty()) {
+                convertImageToPdfAndUpload(receiptImageUri)
             } else {
                 ""
             }
@@ -171,6 +187,7 @@ class ProductRepositoryImpl(
                 "id" to productRef.id,
                 "productName" to product.productName,
                 "productImgUri" to uploadedProductImageUrl,
+                "receiptImgUri" to uploadedReceiptImagePdfUrl,
                 "category" to product.category,
                 "purchase" to product.purchase,
                 "expiry" to product.expiry,
@@ -209,7 +226,15 @@ class ProductRepositoryImpl(
                 // Upload profile image to Appwrite (if provided)
                 val productImageUri = product.productImageUri
                 val updatedProductImageUrl = if (productImageUri.isNotEmpty()) {
-                    uploadProfileImageToAppwrite(productImageUri)
+                    uploadProductImageToAppwrite(productImageUri)
+                } else {
+                    ""
+                }
+
+                // Convert receipt image to PDF and upload to Appwrite (if provided)
+                val receiptImageUri = product.receiptImageUri
+                val updatedReceiptImagePdfUrl = if (receiptImageUri.isNotEmpty()) {
+                    convertImageToPdfAndUpload(receiptImageUri)
                 } else {
                     ""
                 }
@@ -218,6 +243,7 @@ class ProductRepositoryImpl(
                 val productData = mapOf(
                     "id" to productRef.id,
                     "productName" to product.productName,
+                    "receiptImgUri" to updatedReceiptImagePdfUrl,
                     "productImgUri" to updatedProductImageUrl,
                     "category" to product.category,
                     "purchase" to product.purchase,
@@ -257,14 +283,16 @@ class ProductRepositoryImpl(
     /**
      * Helper function to upload a profile image to Appwrite storage
      */
-    private suspend fun uploadProfileImageToAppwrite(uri: String): String {
+    private suspend fun uploadProductImageToAppwrite(uri: String): String {
         return try {
             // Resolve the content:// URI using ContentResolver
             val contentResolver: ContentResolver = context.contentResolver
-            val tempFile = File.createTempFile("profile_image", ".jpg", context.cacheDir)
+            val tempFile = withContext(Dispatchers.IO) {
+                File.createTempFile("product_image", ".jpg", context.cacheDir)
+            }
 
             // Open the input stream and copy to the temporary file
-            contentResolver.openInputStream(android.net.Uri.parse(uri)).use { inputStream ->
+            contentResolver.openInputStream(Uri.parse(uri)).use { inputStream ->
                 tempFile.outputStream().use { outputStream ->
                     inputStream?.copyTo(outputStream)
                 }
@@ -280,8 +308,47 @@ class ProductRepositoryImpl(
             // Return the file's public URL
             "${appwriteClient.endPoint}/storage/buckets/${file.bucketId}/files/${file.id}/view?project=warranty-safe&project=warranty-safe&mode=admin"
         } catch (e: Exception) {
-            Log.e("AppwriteUpload", "Error uploading profile image", e)
+            Log.e("AppwriteUpload", "Error uploading product image $uri", e)
             ""
+        }
+    }
+
+    private suspend fun convertImageToPdfAndUpload(imageUri: String): String {
+        var pdfFile: File? = null
+        return try {
+            // Convert Image to PDF
+            val inputStream = context.contentResolver.openInputStream(Uri.parse(imageUri))
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+
+            pdfFile = File(context.cacheDir, "receipt_${System.currentTimeMillis()}.pdf")
+            val pdfDocument = PdfDocument()
+            val pageInfo = PdfDocument.PageInfo.Builder(bitmap.width, bitmap.height, 1).create()
+            val page = pdfDocument.startPage(pageInfo)
+            page.canvas.drawBitmap(bitmap, 0f, 0f, null)
+            pdfDocument.finishPage(page)
+
+            withContext(Dispatchers.IO) {
+                FileOutputStream(pdfFile).use {
+                    pdfDocument.writeTo(it)
+                }
+            }
+            pdfDocument.close()
+
+            // Upload PDF to Appwrite
+            val response = appwriteStorage.createFile(
+                bucketId = "678fd444002f3d3c4897",
+                fileId = ID.unique(),
+                file = InputFile.fromFile(pdfFile)
+            )
+            Log.d("ProductRepo", "PDF Uploaded: ${response.toMap()}")
+
+            "${appwriteClient.endPoint}/storage/buckets/${response.bucketId}/files/${response.id}/view?project=warranty-safe&project=warranty-safe&mode=admin"
+        } catch (e: Exception) {
+            Log.e("ProductRepo", "Error converting image to PDF or uploading: ${e.localizedMessage}")
+            ""
+        } finally {
+            // Delete local PDF file after uploading
+            pdfFile?.delete()
         }
     }
 }

@@ -262,6 +262,7 @@ fun EditProductDetailScreen(
                                     expiry = validExpiryDate,
                                     category = updatedCategory,
                                     productImageUri = selectedProductImageUri.toString(),
+                                    receiptImageUri = selectedProductImageUri.toString(),
                                     notes = validNotes
                                 )
                             )

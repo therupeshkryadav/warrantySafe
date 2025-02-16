@@ -236,6 +236,7 @@ fun AddScreen(navController: NavController) {
                                     expiry = expiryDate,
                                     category = updatedCategory,
                                     notes = notes,
+                                    receiptImageUri = selectedProductReceiptImageUri.toString(),
                                     productImageUri = selectedProductImageUri.toString()
                                 )
                             )

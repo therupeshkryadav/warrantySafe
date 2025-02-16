@@ -2,6 +2,7 @@ package com.warrantysafe.app.data.repository
 
 import android.content.ContentResolver
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,7 +14,9 @@ import io.appwrite.Client
 import io.appwrite.ID
 import io.appwrite.models.InputFile
 import io.appwrite.services.Storage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class UserRepositoryImpl(
@@ -125,13 +128,13 @@ class UserRepositoryImpl(
         return try {
             val userId = firebaseAuth.currentUser?.uid
                 ?: return Results.Failure(Exception("No authenticated user found"))
-            Log.d("AppWriteUpload", "upload profile image: ${user.profileImageUrl}")
+            Log.d("AppWriteUploa", "upload profile image: ${user.profileImageUrl}")
             // Upload profile image to Appwrite (if provided)
             val updatedProfileImageUrl = if (user.profileImageUrl.isNotEmpty()) {
                 try {
                     uploadProfileImageToAppwrite(user.profileImageUrl)
                 } catch (e: Exception) {
-                    Log.e("AppWriteUpload", "Failed to upload profile image: ${e.message}")
+                    Log.e("AppWriteUploa", "Failed to upload profile image: ${e.message}")
                     return Results.Failure(e)
                 }
             } else {
@@ -173,10 +176,12 @@ class UserRepositoryImpl(
         return try {
             // Resolve the content:// URI using ContentResolver
             val contentResolver: ContentResolver = context.contentResolver
-            val tempFile = File.createTempFile("profile_image", ".jpg", context.cacheDir)
+            val tempFile = withContext(Dispatchers.IO) {
+                File.createTempFile("profile_image", ".jpg", context.cacheDir)
+            }
 
             // Open the input stream and copy to the temporary file
-            contentResolver.openInputStream(android.net.Uri.parse(uri)).use { inputStream ->
+            contentResolver.openInputStream(Uri.parse(uri)).use { inputStream ->
                 tempFile.outputStream().use { outputStream ->
                     inputStream?.copyTo(outputStream)
                 }
