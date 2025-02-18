@@ -2,7 +2,9 @@ package com.warrantysafe.app.presentation.ui.screens.main.utils.productDetailScr
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -77,8 +79,10 @@ import com.warrantysafe.app.presentation.ui.screens.main.utils.categorySection.C
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import com.warrantysafe.app.utils.checkValidNetworkConnection
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.koin.androidx.compose.koinViewModel
@@ -263,10 +267,7 @@ fun ProductDetailScreen(
                                     width = 1.dp,
                                     color = colorResource(R.color.black)
                                 )
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null // Disables ripple effect
-                                ) {
+                                .clickable {
                                     showPdfViewer.value =true // Call viewReceipt here
                                 }
                                 .padding(horizontal = 8.dp), // Set a fixed height to align items properly
@@ -292,6 +293,16 @@ fun ProductDetailScreen(
                         Row(
                             modifier = Modifier
                                 .background(colorResource(R.color.teal_200))
+                                .clickable {
+                                    product.receiptImageUri.let { receiptUrl ->
+                                        if (receiptUrl.isNotEmpty()) {
+                                            val fileName = "${product.productName}_receipt.pdf"
+                                            downloadAndSavePdf(context, receiptUrl, fileName)
+                                        } else {
+                                            Toast.makeText(context, "No Receipt Available", Toast.LENGTH_LONG).show()
+                                        }
+                                    }
+                                }
                                 .border(
                                     width = 1.dp,
                                     color = colorResource(R.color.black)
@@ -376,71 +387,58 @@ fun ProductDetailScreen(
     }
 }
 
-@Composable
-fun ViewReceipt(receiptUrl: String) {
-    val context = LocalContext.current
-    val showPdfViewer = remember { mutableStateOf(true) }
-    val pdfFile = remember { mutableStateOf<File?>(null) }
-    val coroutineScope = rememberCoroutineScope()
+fun downloadAndSavePdf(context: Context, url: String, fileName: String) {
+    val client = OkHttpClient()
+    val request = Request.Builder().url(url).build()
 
-    // Download and cache the PDF
-    LaunchedEffect(receiptUrl) {
-        coroutineScope.launch(Dispatchers.IO) {
-            try {
-                // Download the PDF and save locally
-                val downloadedFile = downloadPdf(context, receiptUrl)
-                pdfFile.value = downloadedFile
-            } catch (e: Exception) {
-                Log.e("ViewReceipt", "Failed to download PDF: ${e.message}")
-                coroutineScope.launch(Dispatchers.Main) {
-                    Toast.makeText(context, "Failed to load PDF", Toast.LENGTH_LONG).show()
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = client.newCall(request).execute()
+
+            if (!response.isSuccessful) {
+                throw IOException("Failed to download file: $url")
+            }
+
+            val inputStream = response.body?.byteStream()
+
+            // Save to public Downloads folder
+            val file = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                fileName
+            )
+
+            val outputStream = FileOutputStream(file)
+
+            inputStream?.use { input ->
+                outputStream.use { output ->
+                    input.copyTo(output)
                 }
             }
-        }
-    }
 
-    if (showPdfViewer.value && pdfFile.value != null) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .clickable { showPdfViewer.value = false } // Close on background click
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.4f)
-                    .fillMaxHeight(0.6f)
-                    .align(Alignment.Center)
+            // Notify MediaScanner about the new file
+            MediaScannerConnection.scanFile(
+                context,
+                arrayOf(file.absolutePath),
+                arrayOf("application/pdf")
+            ) { path, uri ->
+                Log.d("DownloadAndSavePDF", "File scanned: $path, Uri: $uri")
+            }
 
-            ) {
-                AndroidView(
-                    factory = { context ->
-                        PDFView(context, null).apply {
-                            try {
-                                // Load PDF from the cached file
-                                fromFile(pdfFile.value)
-                                    .enableSwipe(false)
-                                    .showPageWithAnimation(false)
-                                    .enableDoubletap(true)
-                                    .onLoad { nbPages ->
-                                        Log.d("PDFViewer", "Loaded PDF with $nbPages pages")
-                                    }
-                                    .onError { t ->
-                                        Log.d("CheckPdf", "Exception: ${t.localizedMessage}")
-                                        Toast.makeText(context, "Failed to load PDF: ${t.message}", Toast.LENGTH_LONG).show()
-                                    }
-                                    .load()
-                            } catch (e: Exception) {
-                                Toast.makeText(context, "Invalid receipt URI", Toast.LENGTH_LONG).show()
-                                Log.e("ViewReceipt", "Error loading PDF: ${e.message}")
-                            }
-                        }
-                    },
-                    modifier = Modifier.fillMaxSize()
-                )
+            withContext(Dispatchers.Main) {
+                Log.d("PDF", "Path: ${file.absolutePath}")
+                Toast.makeText(context, "PDF Saved: ${file.absolutePath}", Toast.LENGTH_LONG).show()
+            }
+
+        } catch (e: Exception) {
+            Log.e("DownloadAndSavePDF", "Error downloading PDF: ${e.message}")
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, "Failed to Download PDF", Toast.LENGTH_LONG).show()
             }
         }
     }
 }
+
+
 
 @Composable
 fun ViewReceiptDialog(
@@ -472,11 +470,12 @@ fun ViewReceiptDialog(
     if (pdfFile.value != null) {
         Dialog(
             onDismissRequest = { onDismiss() },
-            properties = DialogProperties(dismissOnBackPress = true,dismissOnClickOutside = true)
+            properties = DialogProperties(dismissOnBackPress = true,dismissOnClickOutside = true,usePlatformDefaultWidth = false)
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize(0.6f) // Make Box fill the entire Dialog
+                    .wrapContentSize()
+                    .border(1.dp,Color.Black)// Make Box fill the entire Dialog
             ) {
                 AndroidView(
                     factory = { context ->
@@ -506,7 +505,7 @@ fun ViewReceiptDialog(
                             }
                         }
                     },
-                    modifier = Modifier.fillMaxSize() // Make PDF Viewer fill the Box
+                    modifier = Modifier.fillMaxSize(0.6f) // Make PDF Viewer fill the Box
                 )
             }
         }
