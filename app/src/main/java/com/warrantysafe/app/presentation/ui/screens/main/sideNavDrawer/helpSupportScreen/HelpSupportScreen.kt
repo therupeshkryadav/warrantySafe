@@ -35,7 +35,7 @@ fun HelpSupportScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color.White)
     ) {
         CustomTopAppBar(
             title = {
