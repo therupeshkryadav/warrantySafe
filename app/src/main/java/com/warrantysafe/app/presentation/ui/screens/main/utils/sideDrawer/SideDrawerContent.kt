@@ -34,7 +34,6 @@ fun SideDrawerContent(
             .width(280.dp) // Fixed width for the drawer
             .systemBarsPadding()
             .statusBarsPadding()
-            .border(width = 1.dp, Color.Black)
             .background(color = Color.White)
     ) {
         // Header

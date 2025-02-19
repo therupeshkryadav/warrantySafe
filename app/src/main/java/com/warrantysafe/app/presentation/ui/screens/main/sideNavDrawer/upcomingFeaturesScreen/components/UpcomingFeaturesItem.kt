@@ -51,7 +51,7 @@ fun UpcomingFeaturesItem(upcomingNotification: String) {
             text = upcomingNotification,
             fontSize = 12.sp,
             textAlign = TextAlign.Center,
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = FontWeight.Medium,
             color = Color.Black,
             modifier = Modifier.weight(1f).padding(end = 2.dp)
         )
@@ -59,17 +59,17 @@ fun UpcomingFeaturesItem(upcomingNotification: String) {
         Box(
             modifier = Modifier
                 .wrapContentWidth()
-                .background(Color.Red, shape = RoundedCornerShape(8.dp))
+                .background(Color.Red, shape = RoundedCornerShape(20 .dp))
                 .alpha(alpha) ,// Apply flickering effect
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "UPCOMING",
-                fontSize = 8.sp,
+                fontSize = 7.sp,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 0.dp)
+                modifier = Modifier.padding(horizontal = 8.dp)
             )
         }
     }

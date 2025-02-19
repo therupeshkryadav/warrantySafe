@@ -1,6 +1,5 @@
 package com.warrantysafe.app.presentation.ui.screens.splash
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,7 +24,6 @@ import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.theme.WarrantySafeTheme
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
-import com.warrantysafe.app.utils.NotificationHelper
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 

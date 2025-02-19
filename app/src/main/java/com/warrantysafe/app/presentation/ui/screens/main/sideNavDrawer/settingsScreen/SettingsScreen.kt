@@ -29,17 +29,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.settingsScreen.components.SettingsItem
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
-import com.warrantysafe.app.presentation.viewModel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsScreen(navController: NavController) {
 
-    val settingsViewModel: SettingsViewModel = koinViewModel()
-    LaunchedEffect(Unit) {
-        settingsViewModel.loadSettings()
-    }
-    val settingsList = settingsViewModel.settingsTexts.value
+    val settingsList = listOf("Manage Categories ","Change Password")
 
     Column(modifier = Modifier.fillMaxSize()) {
         CustomTopAppBar(
@@ -76,7 +71,7 @@ fun SettingsScreen(navController: NavController) {
             // Add notifications as list items
             items(settingsList) { settings ->
                 SettingsItem(
-                    settingsText = settings.settingsText
+                    settingsText = settings
                 )
                 Spacer(modifier = Modifier.height(1.dp).fillMaxWidth().background(Color.White))
             }

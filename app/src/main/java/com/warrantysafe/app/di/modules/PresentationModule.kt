@@ -4,7 +4,6 @@ import com.warrantysafe.app.presentation.viewModel.BottomNavigationViewModel
 import com.warrantysafe.app.presentation.viewModel.NotificationViewModel
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import com.warrantysafe.app.presentation.viewModel.RecentViewModel
-import com.warrantysafe.app.presentation.viewModel.SettingsViewModel
 import com.warrantysafe.app.presentation.viewModel.UpcomingViewModel
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -21,7 +20,7 @@ val presentationModule = module {
     // Notifications
     viewModel { NotificationViewModel(get(), get(),get()) }
 
-    // Recents
+    // Resents
     viewModel { RecentViewModel(get()) }
 
     // Bottom Navigation
@@ -29,9 +28,6 @@ val presentationModule = module {
 
     // Upcoming
     viewModel { UpcomingViewModel(get()) }
-
-    // Settings
-    viewModel { SettingsViewModel(get()) }
 }
 
 
