@@ -361,7 +361,7 @@ fun ProductDetailScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp),
-                            text = if (product.notes.isEmpty()) "// your notes would be provided here" else product.notes,
+                            text = product.notes.ifEmpty { "// your notes would be provided here" },
                             textAlign = TextAlign.Start,
                             fontSize = 16.sp,
                             color = if (product.notes.isEmpty()) Color.LightGray else Color.DarkGray
@@ -437,8 +437,6 @@ fun downloadAndSavePdf(context: Context, url: String, fileName: String) {
         }
     }
 }
-
-
 
 @Composable
 fun ViewReceiptDialog(

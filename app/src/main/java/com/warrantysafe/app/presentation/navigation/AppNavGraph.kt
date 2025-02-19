@@ -2,15 +2,11 @@ package com.warrantysafe.app.presentation.navigation
 
 import android.net.Uri
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.google.firebase.auth.FirebaseAuth
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.ui.screens.auth.LoginScreen
 import com.warrantysafe.app.presentation.ui.screens.auth.SignUpScreen
@@ -20,17 +16,16 @@ import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.ProfileSc
 import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.editProfileScreen.EditProfileScreen
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.aboutApp.AboutAppScreen
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.helpSupportScreen.HelpSupportScreen
+import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.privacyPolicyScreen.PrivacyPolicyScreen
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList.ProductCardList
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.settingsScreen.SettingsScreen
-import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.termsPrivacyScreen.TermsPrivacyScreen
+import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.termsConditionsScreen.TermsConditionsScreen
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.upcomingFeaturesScreen.UpcomingFeaturesScreen
 import com.warrantysafe.app.presentation.ui.screens.main.utils.notificationScreen.NotificationScreen
 import com.warrantysafe.app.presentation.ui.screens.main.utils.productDetailScreen.ProductDetailScreen
 import com.warrantysafe.app.presentation.ui.screens.main.utils.productDetailScreen.editProductDetailScreen.EditProductDetailScreen
 import com.warrantysafe.app.presentation.ui.screens.main.utils.searchScreen.SearchScreen
 import com.warrantysafe.app.presentation.ui.screens.splash.SplashScreen
-import com.warrantysafe.app.presentation.viewModel.UserViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AppNavGraph() {
@@ -72,10 +67,13 @@ fun AppNavGraph() {
             HelpSupportScreen(navController = navController)
         }
 
-        composable(Route.TermsPrivacyScreen.route) {
-            TermsPrivacyScreen(navController = navController)
+        composable(Route.TermsConditionScreen.route) {
+            TermsConditionsScreen(navController = navController)
         }
 
+        composable(Route.PrivacyPolicyScreen.route) {
+           PrivacyPolicyScreen(navController = navController)
+        }
         composable(Route.AboutAppScreen.route) {
             AboutAppScreen(navController = navController)
         }

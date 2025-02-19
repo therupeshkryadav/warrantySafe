@@ -1,11 +1,13 @@
 package com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.upcomingFeaturesScreen.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsEndWidth
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -39,34 +41,35 @@ fun UpcomingFeaturesItem(upcomingNotification: String) {
         }
     }
 
-    Box(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color(0xFFEEEEEE)) // Light stylish gray
             .padding(8.dp),
-        contentAlignment = Alignment.Center
     ) {
         Text(
             text = upcomingNotification,
-            fontSize = 14.sp,
+            fontSize = 12.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.SemiBold,
             color = Color.Black,
-            modifier = Modifier.padding(start=8.dp,end = 70.dp)
+            modifier = Modifier.weight(1f).padding(end = 2.dp)
         )
 
         Box(
             modifier = Modifier
-                .align(Alignment.CenterEnd)
+                .wrapContentWidth()
                 .background(Color.Red, shape = RoundedCornerShape(8.dp))
-                .padding(horizontal = 10.dp, vertical = 2.dp)
-                .alpha(alpha) // Apply flickering effect
+                .alpha(alpha) ,// Apply flickering effect
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "UPCOMING",
-                fontSize = 10.sp,
+                fontSize = 8.sp,
+                textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = Color.White,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 0.dp)
             )
         }
     }

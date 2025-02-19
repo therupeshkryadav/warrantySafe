@@ -27,7 +27,7 @@ fun SettingsItem(
     Row(
         modifier = Modifier
             .fillMaxWidth(1f)
-            .background(Color.LightGray),
+            .background(Color(0xFFEEEEEE)),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     )

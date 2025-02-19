@@ -29,11 +29,7 @@ object WarrantyNotificationScheduler {
         Log.d(TAG, "Scheduling Periodic Work Request")
 
         // Periodic Work Request (Every 15 minutes)
-        val request = PeriodicWorkRequestBuilder<WarrantyWorker>(15, TimeUnit.MINUTES)
-            .setBackoffCriteria(
-                BackoffPolicy.EXPONENTIAL,
-                15, TimeUnit.MINUTES
-            )
+        val request = PeriodicWorkRequestBuilder<WarrantyWorker>(2, TimeUnit.DAYS)
             .setConstraints(
                 Constraints.Builder()
                     .setRequiresCharging(false)  // Run even if not charging

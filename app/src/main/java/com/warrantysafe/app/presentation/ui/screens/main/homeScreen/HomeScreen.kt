@@ -163,7 +163,8 @@ fun HomeScreen(
                             when (item) {
                                 "List of Product Cards" -> navigateToTab(navController, Route.ProductCardList)
                                 "Help & Support" -> navigateToTab(navController, Route.HelpSupportScreen)
-                                "Terms & Privacy" -> navigateToTab(navController, Route.TermsPrivacyScreen)
+                                "Terms & Conditions" -> navigateToTab(navController, Route.TermsConditionScreen)
+                                "Privacy Policy" -> navigateToTab(navController, Route.PrivacyPolicyScreen)
                                 "About the App" -> navigateToTab(navController, Route.AboutAppScreen)
                                 "Upcoming Features" -> navigateToTab(navController, Route.UpcomingFeaturesScreen)
                                 "Settings" -> navigateToTab(navController, Route.SettingsScreen)

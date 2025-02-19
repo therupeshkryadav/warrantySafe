@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -127,7 +125,12 @@ fun ProfileScreen(
 
                             "Terms & Privacy" -> navigateToTab(
                                 navController,
-                                Route.TermsPrivacyScreen
+                                Route.TermsConditionScreen
+                            )
+
+                            "Privacy Policy" -> navigateToTab(
+                                navController,
+                                Route.PrivacyPolicyScreen
                             )
 
                             "About the App" -> navigateToTab(navController, Route.AboutAppScreen)

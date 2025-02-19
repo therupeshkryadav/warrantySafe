@@ -64,7 +64,8 @@ fun SideDrawerContent(
                 "Help & Support" to R.drawable.help_support,
                 "Rate and Review" to R.drawable.rate_review,
                 "Share with Friends" to R.drawable.share_warranty,
-                "Terms & Privacy" to R.drawable.policy_warranty,
+                "Terms & Conditions" to R.drawable.policy_warranty,
+                "Privacy Policy" to R.drawable.terms_warranty,
                 "About the App" to R.drawable.about_app,
                 "Upcoming Features" to R.drawable.upcoming_features,
                 "Settings" to R.drawable.settings

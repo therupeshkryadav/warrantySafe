@@ -1,8 +1,6 @@
 package com.warrantysafe.app.presentation.navigation
 
 import android.net.Uri
-import com.google.gson.Gson
-import com.warrantysafe.app.domain.model.Product
 
 sealed class Route(
     val route: String
@@ -16,7 +14,8 @@ sealed class Route(
     object ProfileScreen : Route(route = "profileScreen")
     object ProductCardList : Route(route = "productCardList")
     object HelpSupportScreen : Route(route = "helpSupportScreen")
-    object TermsPrivacyScreen : Route(route = "termsPrivacyScreen")
+    object TermsConditionScreen : Route(route = "termsConditionScreen")
+    object PrivacyPolicyScreen : Route(route = "privacyPolicyScreen")
     object AboutAppScreen : Route(route = "aboutAppScreen")
     object UpcomingFeaturesScreen : Route(route = "upcomingFeaturesScreen")
     object SettingsScreen : Route(route = "settingsScreen")
