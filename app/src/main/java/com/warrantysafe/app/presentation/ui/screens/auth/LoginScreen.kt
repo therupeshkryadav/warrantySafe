@@ -351,7 +351,7 @@ fun PhoneOtpScreen(navController: NavController) {
             Button(
                 onClick = {
                     Toast.makeText(context, "OTP Verified (Mock Action)", Toast.LENGTH_SHORT).show()
-                    navController.navigate("home_screen")  // Navigate to Home Screen (Modify as needed)
+                    Toast.makeText(context,"Auth with Phone Coming Soon!!",Toast.LENGTH_LONG).show() // Navigate to Home Screen (Modify as needed)
                 },
                 enabled = otpCode.text.isNotEmpty(),
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
