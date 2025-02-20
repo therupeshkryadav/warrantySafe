@@ -14,17 +14,15 @@ WarrantySafe is an Android application developed using Kotlin and Jetpack Compos
 - **Language**: Kotlin  
 - **Architecture**: Clean Architecture  
 - **UI Framework**: Jetpack Compose  
-- **Dependency Injection**: Koin  
-- **Database**: Room Database  
-- **Cloud Sync**: Firebase  
-- **PDF Generation**: iText Library (for exporting warranty details)  
-- **Notifications**: WorkManager / AlarmManager  
+- **Dependency Injection**: Koin 
+- **Cloud Sync**: Firebase 
+- **Notifications**: WorkManager 
 
 ## Usage
 1. **Add a new warranty**: Enter product details and attach warranty proof.  
 2. **Set reminders**: Configure notifications for expiration dates.  
 3. **Backup & Restore**: Sync data to Firebase for safety.  
-4. **Search & Manage**: Use filters and search functionality to find warranties quickly.  
+4. **Search & Manage**: Use search functionality to find warranties quickly.  
 
 ## Contributing
 Contributions are welcome! To contribute:
