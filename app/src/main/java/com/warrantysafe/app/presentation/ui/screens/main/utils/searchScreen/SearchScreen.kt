@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,12 +12,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,31 +39,27 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
-import com.warrantysafe.app.domain.model.Recent
 import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList.components.ProductCard
-import com.warrantysafe.app.presentation.ui.screens.main.utils.searchScreen.components.RecentItem
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
-import com.warrantysafe.app.presentation.viewModel.RecentViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchScreen(
     navController: NavController
 ) {
-    val recentViewModel: RecentViewModel = koinViewModel()
     val productViewModel: ProductViewModel = koinViewModel()
     val searchResults by productViewModel.searchResults.observeAsState(initial = Results.Loading)
 
     LaunchedEffect(Unit) {
-        recentViewModel.loadRecentSearches()
+        productViewModel.loadAllProducts()
     }
     var text by remember { mutableStateOf("") }
     val focusRequester = FocusRequester()
@@ -98,7 +98,7 @@ fun SearchScreen(
                         value = text,
                         onValueChange = {
                             text = it
-                          //  productViewModel.searchProducts(it) // Trigger search on text change
+                        productViewModel.searchProducts(it) // Trigger search on text change
                         },
                         textStyle = MaterialTheme.typography.titleLarge.copy(
                             color = colorResource(R.color.black)
@@ -123,11 +123,7 @@ fun SearchScreen(
                 }
             },
             actions = {
-                IconButton(onClick = {
-                    recentViewModel.addToRecent(text) // Save query to recent list
-                    productViewModel.searchProducts(text) // Trigger search
-                    // Optional: Handle search icon click
-                }) {
+                IconButton(onClick = {}) {
                     Icon(
                         painter = painterResource(id = R.drawable.search_warranty),
                         contentDescription = "Search",
@@ -139,12 +135,26 @@ fun SearchScreen(
 
         // Initially show Recent Searches
         if (text.isEmpty()) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(recentViewModel.recent.value) { recentSearch ->
-                    RecentItem(Recent(recent = recentSearch.recent))
-                }
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search Products",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(64.dp)
+                )
+                Text(
+                    text = "Search your query for products !!",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
             }
         }
 
@@ -184,10 +194,27 @@ fun SearchScreen(
                             }
                         }
                     } else {
-                        Text(
-                            text = "No products found",
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                        )
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ShoppingCart,
+                                contentDescription = "No Products",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(64.dp)
+                            )
+                            Text(
+                                text = "No Products Found !!",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(top = 16.dp)
+                            )
+                        }
                     }
                 }
                 is Results.Failure -> {

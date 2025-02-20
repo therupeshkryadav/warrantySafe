@@ -58,7 +58,9 @@ fun CustomTopAppBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(1.dp)
-                .background(color = colorResource(R.color.xtreme))
+                .background(color = Color.LightGray
+
+                )
         )
     }
 }

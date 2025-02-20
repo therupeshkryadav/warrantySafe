@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
-    <style name="Theme.WarrantySafe" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.Splash" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/transparent</item>
+        <item name="windowSplashScreenBackground">@color/white</item>
         <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+    <style name="Theme.SwipeAssignment" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/transparent</item>
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
 </resources>
 

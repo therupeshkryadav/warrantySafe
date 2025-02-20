@@ -22,7 +22,7 @@
         <activity
             android:name=".presentation.ui.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.WarrantySafe">
+            android:theme="@style/Theme.Splash">
             <!-- Launcher Intent -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

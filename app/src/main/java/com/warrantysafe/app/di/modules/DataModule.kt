@@ -5,13 +5,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.warrantysafe.app.data.repository.BottomNavigationRepositoryImpl
 import com.warrantysafe.app.data.repository.NotificationRepositoryImpl
 import com.warrantysafe.app.data.repository.ProductRepositoryImpl
-import com.warrantysafe.app.data.repository.RecentRepositoryImpl
 import com.warrantysafe.app.data.repository.UpcomingRepositoryImpl
 import com.warrantysafe.app.data.repository.UserRepositoryImpl
 import com.warrantysafe.app.domain.repository.BottomNavigationRepository
 import com.warrantysafe.app.domain.repository.NotificationRepository
 import com.warrantysafe.app.domain.repository.ProductRepository
-import com.warrantysafe.app.domain.repository.RecentRepository
 import com.warrantysafe.app.domain.repository.UpcomingRepository
 import com.warrantysafe.app.domain.repository.UserRepository
 import io.appwrite.Client
@@ -42,7 +40,6 @@ val dataModule = module {
     single<ProductRepository> { ProductRepositoryImpl(get(), get(), get(), get(), get()) }
     single<NotificationRepository> { NotificationRepositoryImpl(get(),get()) }
     single<UserRepository> { UserRepositoryImpl(get(), get(), get(), get(), get()) }
-    single<RecentRepository> { RecentRepositoryImpl() }
     single<BottomNavigationRepository> { BottomNavigationRepositoryImpl() }
     single<UpcomingRepository> { UpcomingRepositoryImpl() }
 }

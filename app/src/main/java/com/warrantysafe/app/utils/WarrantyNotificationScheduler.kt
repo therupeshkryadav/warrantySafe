@@ -25,7 +25,7 @@ object WarrantyNotificationScheduler {
             .setConstraints(getWorkConstraints())
             .build()
 
-        workManager.enqueueUniqueWork(WORK_NAME_MORNING, ExistingWorkPolicy.REPLACE, morningRequest)
+        workManager.enqueueUniqueWork(WORK_NAME_MORNING, ExistingWorkPolicy.KEEP, morningRequest)
         Log.d(TAG, "Morning Work Scheduled (Delay: ${morningDelay / 3600000} hours)")
 
         // Schedule Evening Work (4 PM)
@@ -35,7 +35,7 @@ object WarrantyNotificationScheduler {
             .setConstraints(getWorkConstraints())
             .build()
 
-        workManager.enqueueUniqueWork(WORK_NAME_EVENING, ExistingWorkPolicy.REPLACE, eveningRequest)
+        workManager.enqueueUniqueWork(WORK_NAME_EVENING, ExistingWorkPolicy.KEEP, eveningRequest)
         Log.d(TAG, "Evening Work Scheduled (Delay: ${eveningDelay / 3600000} hours)")
     }
 

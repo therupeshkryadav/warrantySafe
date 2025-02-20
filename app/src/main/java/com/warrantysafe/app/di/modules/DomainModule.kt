@@ -11,7 +11,6 @@ import com.warrantysafe.app.domain.useCases.GetExpiredProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetExpiringWarrantiesUseCase
 import com.warrantysafe.app.domain.useCases.GetNotificationsUseCase
 import com.warrantysafe.app.domain.useCases.GetProductDetailUseCase
-import com.warrantysafe.app.domain.useCases.GetRecentsUseCase
 import com.warrantysafe.app.domain.useCases.GetUpcomingUseCase
 import com.warrantysafe.app.domain.useCases.GetUserUseCase
 import com.warrantysafe.app.domain.useCases.LoginUserUseCase
@@ -47,7 +46,6 @@ val domainModule = module {
     single { AddNotificationUseCase(get()) }
     single { GetNotificationsUseCase(get()) }
     single { MarkNotificationReadUseCase(get()) }
-    single { GetRecentsUseCase(get()) }
     single { GetBottomNavigationIconsUseCase(get()) }
     single { GetUpcomingUseCase(get()) }
 }
