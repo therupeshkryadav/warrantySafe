@@ -31,7 +31,7 @@ Contributions are welcome! To contribute:
 - Submit a pull request.  
 
 ## License
-This project is licensed under the MIT License.
+This project is licensed under the  GNU GENERAL PUBLIC LICENSE.
 
 ## Contact
 For any queries or suggestions, feel free to reach out:
