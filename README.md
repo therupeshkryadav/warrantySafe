@@ -15,7 +15,7 @@ WarrantySafe is an Android application developed using Kotlin and Jetpack Compos
 - **Architecture**: Clean Architecture  
 - **UI Framework**: Jetpack Compose  
 - **Dependency Injection**: Koin 
-- **Cloud Sync**: Firebase, Appwrite 
+- **Cloud Sync**: Cloud Firestore, Appwrite 
 - **Notifications**: WorkManager 
 
 ## Usage
