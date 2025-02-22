@@ -24,12 +24,6 @@ WarrantySafe is an Android application developed using Kotlin and Jetpack Compos
 3. **Backup & Restore**: Sync data to Firebase for safety.  
 4. **Search & Manage**: Use search functionality to find warranties quickly.  
 
-## Contributing
-Contributions are welcome! To contribute:
-- Fork the repository.  
-- Create a new branch.  
-- Submit a pull request.  
-
 ## License
 This project is licensed under the  GNU GENERAL PUBLIC LICENSE.
 
