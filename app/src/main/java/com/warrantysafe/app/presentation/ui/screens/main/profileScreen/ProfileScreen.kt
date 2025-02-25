@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,11 +23,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
@@ -63,7 +67,6 @@ import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
-import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.components.DetailRow
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customBottomNavigation.CustomBottomNavigation
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.main.utils.dropDownMenu.DropDownMenuContent
@@ -246,39 +249,44 @@ fun ProfileScreen(
                                 )
                             }
 
-                            // Profile Details
-                            DetailRow(
-                                "Name",
-                                updatedValue = user.name,
-                                enable = false,
-                                textColor = colorResource(R.color.purple_500),
-                                icon = null,
-                                onValueChange = { }
-                            )
-                            DetailRow(
-                                "Username",
-                                updatedValue = user.username,
-                                enable = false,
-                                textColor = colorResource(R.color.purple_500),
-                                icon = null,
-                                onValueChange = { }
-                            )
-                            DetailRow(
-                                "Email",
-                                updatedValue = user.email,
-                                enable = false,
-                                textColor = colorResource(R.color.purple_500),
-                                icon = null,
-                                onValueChange = { }
-                            )
-                            DetailRow(
-                                "Phone",
-                                updatedValue = user.phoneNumber,
-                                enable = false,
-                                textColor = colorResource(R.color.purple_500),
-                                icon = null,
-                                onValueChange = { }
-                            )
+                            ModernProfileDetailRow("Name", user.name)
+                            ModernProfileDetailRow("Username", user.username)
+                            ModernProfileDetailRow("Email", user.email)
+                            ModernProfileDetailRow("Phone", user.phoneNumber)
+
+//                            // Profile Details
+//                            DetailRow(
+//                                "Name",
+//                                updatedValue = user.name,
+//                                enable = false,
+//                                textColor = colorResource(R.color.purple_500),
+//                                icon = null,
+//                                onValueChange = { }
+//                            )
+//                            DetailRow(
+//                                "Username",
+//                                updatedValue = user.username,
+//                                enable = false,
+//                                textColor = colorResource(R.color.purple_500),
+//                                icon = null,
+//                                onValueChange = { }
+//                            )
+//                            DetailRow(
+//                                "Email",
+//                                updatedValue = user.email,
+//                                enable = false,
+//                                textColor = colorResource(R.color.purple_500),
+//                                icon = null,
+//                                onValueChange = { }
+//                            )
+//                            DetailRow(
+//                                "Phone",
+//                                updatedValue = user.phoneNumber,
+//                                enable = false,
+//                                textColor = colorResource(R.color.purple_500),
+//                                icon = null,
+//                                onValueChange = { }
+//                            )
 
                             // Edit Profile Button
                             Button(
@@ -319,6 +327,8 @@ fun ProfileScreen(
                                     contentDescription = "Edit Profile"
                                 )
                             }
+
+                            ModernLogoutButton { userViewModel.signOutUser() }
 
                             Spacer(modifier = Modifier.size(120.dp))
                         }
@@ -375,6 +385,59 @@ fun ProfileScreen(
         else -> {
             // No-op for null or undefined states
         }
+    }
+}
+
+@Composable
+fun ModernProfileDetailRow(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = value,
+            fontSize = 13.sp,
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(2f)
+        )
+    }
+}
+
+@Composable
+fun ModernLogoutButton(onLogout: () -> Unit) {
+    Button(
+        onClick = onLogout,
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE53935)), // Modern red color
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp),
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
+    ) {
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ExitToApp, // You can replace this with a logout icon
+            contentDescription = "Logout",
+            tint = Color.White
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = "Logout",
+            fontSize = 18.sp,
+            color = Color.White,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
