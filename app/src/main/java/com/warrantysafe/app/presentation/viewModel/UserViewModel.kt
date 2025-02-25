@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.domain.useCases.CheckUserUseCase
+import com.warrantysafe.app.domain.useCases.CheckUsernameUseCase
 import com.warrantysafe.app.domain.useCases.GetUserUseCase
 import com.warrantysafe.app.domain.useCases.LoginUserUseCase
 import com.warrantysafe.app.domain.useCases.SignOutUserUseCase
@@ -13,9 +14,12 @@ import com.warrantysafe.app.domain.useCases.SignUpUserUseCase
 import com.warrantysafe.app.domain.useCases.UpdateUserUseCase
 import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class UserViewModel(
+    private val checkUsernameUseCase: CheckUsernameUseCase,
     private val signUpUserUseCase: SignUpUserUseCase,
     private val loginUserUseCase: LoginUserUseCase,
     private val checkUserUseCase: CheckUserUseCase,
@@ -23,6 +27,9 @@ class UserViewModel(
     private val updateUserUseCase: UpdateUserUseCase,
     private val signOutUserUseCase: SignOutUserUseCase
 ) : ViewModel() {
+
+    private val _isUsernameTaken = MutableStateFlow<Boolean?>(null) // `null` initially
+    val isUsernameTaken: StateFlow<Boolean?> = _isUsernameTaken
 
     private val _loginState = MutableLiveData<Results<User>>()
     val loginState: LiveData<Results<User>> get() = _loginState
@@ -51,6 +58,13 @@ class UserViewModel(
         viewModelScope.launch {
             val route = checkUserUseCase()
             _navigationRoute.value = route
+        }
+    }
+
+    fun checkUsername(username: String) {
+        viewModelScope.launch {
+            val isTaken = checkUsernameUseCase(username)
+            _isUsernameTaken.value = isTaken
         }
     }
 

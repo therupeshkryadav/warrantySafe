@@ -8,7 +8,7 @@ sealed class Route(
 
     object SplashScreen : Route(route = "splashScreen")
     object LoginScreen : Route(route = "loginScreen")
-    object PhoneOtpScreen : Route(route = "phoneOtpScreen")
+    object ForgotPasswordScreen : Route(route = "forgotPasswordScreen")
     object SignUpScreen : Route(route = "signUpScreen")
     object HomeScreen : Route(route = "homeScreen")
     object SearchScreen : Route(route = "search_screen")

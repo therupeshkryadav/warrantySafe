@@ -23,9 +23,11 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
@@ -37,6 +39,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +54,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -66,6 +70,10 @@ import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -101,7 +109,11 @@ fun SignUpScreen(
     val email = remember { mutableStateOf("") }
     val phoneNumber = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
+    val confPassword = remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var isUsernameValid by remember { mutableStateOf(true) }
+
+    val isUsernameTaken by userViewModel.isUsernameTaken.collectAsState()
 
     // Default profile image URI (when no image is selected)
     val defaultProfileImage =
@@ -117,7 +129,7 @@ fun SignUpScreen(
         profileImageUri = uri ?: defaultProfileImage
     }
 
-    val isValidInput = name.value.isNotEmpty() && username.value.isNotEmpty() && email.value.isNotEmpty() && phoneNumber.value.isNotEmpty() && password.value.isNotEmpty()
+    val isValidInput = name.value.isNotEmpty() && username.value.isNotEmpty() && email.value.isNotEmpty() && phoneNumber.value.isNotEmpty() && password.value.isNotEmpty() && confPassword.value == password.value
 
     Column(
         modifier = Modifier
@@ -209,22 +221,49 @@ fun SignUpScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Username Field
+            // Username validation regex: Only lowercase letters, numbers, and dots (no spaces or special characters)
+            fun isValidUsername(username: String): Boolean {
+                return username.matches(Regex("^[a-z0-9.]+$"))
+            }
+
+// Username Field
             TextField(
                 value = username.value,
-                onValueChange = { username.value = it },
+                onValueChange = { input ->
+                    val lowercasedInput = input.lowercase()  // Convert to lowercase
+                    username.value = lowercasedInput
+                    isUsernameValid = isValidUsername(lowercasedInput)
+                    // Check username availability only if it's not empty
+                    if (lowercasedInput.isNotEmpty()) {
+                        userViewModel.checkUsername(lowercasedInput)
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
+                    .border(
+                        width = 1.dp,
+                        color = if (username.value.isEmpty() || isUsernameValid) Color.LightGray else Color.Red,
+                        shape = RoundedCornerShape(20.dp)
+                    ),
                 placeholder = {
-                    Text("Choose Your username", color = Color.Gray)
+                    Text("Choose Your Username", color = Color.Gray)
                 },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.username_pp),
                         contentDescription = "Username Icon"
                     )
+                },
+                trailingIcon = {
+                    when {
+                        isUsernameTaken == true ->
+                            Icon(
+                            imageVector = Icons.Filled.Warning,
+                            contentDescription = "Username Taken",
+                            tint = Color.Red
+                        )
+                    }
                 },
                 singleLine = true,
                 textStyle = TextStyle(
@@ -240,16 +279,51 @@ fun SignUpScreen(
                 )
             )
 
+// Error message if username is invalid
+            if (username.value.isNotEmpty() && !isUsernameValid) {
+                Text(
+                    text = "Invalid username! Only lowercase letters, numbers, and dots are allowed.",
+                    color = Color.Red,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                )
+            }
+
+            else if(isUsernameTaken == true) {
+                Text(
+                    text = "Username is already taken! Choose another one.",
+                    color = Color.Red,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                )
+            }
+
+
+
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Email Address Field
+            // Email validation regex
+            fun isValidEmail(email: String): Boolean {
+                return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+            }
+
+// Email Address Field
+            var isEmailValid by remember { mutableStateOf(true) }
+
             TextField(
                 value = email.value,
-                onValueChange = { email.value = it },
+                onValueChange = {
+                    email.value = it
+                    isEmailValid = isValidEmail(it)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
+                    .border(
+                        width = 1.dp,
+                        color = if (isEmailValid) Color.LightGray else Color.Red,
+                        shape = RoundedCornerShape(20.dp)
+                    ),
                 placeholder = {
                     Text("Enter Your Email Address", color = Color.Gray)
                 },
@@ -273,16 +347,41 @@ fun SignUpScreen(
                 )
             )
 
+// Error message if email is invalid
+            if (email.value.isNotEmpty() && !isEmailValid) {
+                Text(
+                    text = "Invalid email address",
+                    color = Color.Red,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                )
+            }
+
+
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Phone Number Field
+            // State for storing the error message
+            var phoneError by remember { mutableStateOf<String?>(null) }
+
+// Phone Number Field
             TextField(
                 value = phoneNumber.value,
-                onValueChange = { phoneNumber.value = it },
+                onValueChange = {
+                    if (it.all { char -> char.isDigit() }) { // Check if all characters are digits
+                        phoneNumber.value = it
+                        phoneError = if (phoneNumber.value.isEmpty() || it.length in 10..15) null else "Enter a valid phone number (10-15 digits)"
+                    } else {
+                        phoneError = "Only numbers are allowed!"
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
+                    .border(
+                        width = 1.dp,
+                        color = if (phoneError != null) Color.Red else Color.LightGray,
+                        shape = RoundedCornerShape(20.dp)
+                    ),
                 placeholder = {
                     Text("Enter Your Phone Number", color = Color.Gray)
                 },
@@ -298,6 +397,7 @@ fun SignUpScreen(
                     color = Color.Black,
                     fontWeight = FontWeight.Normal
                 ),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
@@ -306,20 +406,96 @@ fun SignUpScreen(
                 )
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+// Show Error Message if Validation Fails
+            phoneError?.let {
+                Text(
+                    text = it,
+                    color = Color.Red,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 20.dp, top = 4.dp).fillMaxWidth()
+                )
+            }
 
-            // Password Field with Visibility Toggle
+
+            Spacer(modifier = Modifier.height(16.dp))
+            var passwordError by remember { mutableStateOf<String?>(null) }
+
+            // Function to validate password
+            fun isValidPassword(input: String): Boolean {
+                val passwordRegex = "^[A-Z][a-zA-Z0-9@]*$".toRegex() // Starts with UpperCase, contains only allowed characters
+                return input.matches(passwordRegex) &&
+                        input.any { it.isDigit() } && // At least one digit
+                        input.contains("@") // At least one '@'
+            }
+
+// Password Field
             TextField(
                 value = password.value,
                 onValueChange = {
                     password.value = it
+                    passwordError = if (password.value.isEmpty() || isValidPassword(it)) null else "Password must start with an uppercase letter, contain at least one digit, one '@', and no other special characters."
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
+                    .border(
+                        width = 1.dp,
+                        color = if (passwordError != null) Color.Red else Color.LightGray,
+                        shape = RoundedCornerShape(20.dp)
+                    ),
                 placeholder = {
                     Text("Enter Your Password", color = Color.Gray)
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.password),
+                        contentDescription = "Password Icon"
+                    )
+                },
+                singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                textStyle = TextStyle(
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Normal
+                ),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
+            )
+
+// Show error message if validation fails
+            passwordError?.let {
+                Text(
+                    text = it,
+                    color = Color.Red,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+
+
+            Spacer(modifier = Modifier.height(16.dp))
+            var confPasswordError by remember { mutableStateOf<String?>(null) }
+            // Password Field with Visibility Toggle
+            TextField(
+                value = confPassword.value,
+                onValueChange = {
+                    confPassword.value = it
+                    confPasswordError = if (confPassword.value.isEmpty() || password.value == it) null else "Password does not matches, Check your password!!"
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .border(width = 1.dp,
+                        color = if (passwordError != null) Color.Red else Color.LightGray,
+                        shape = RoundedCornerShape(20.dp)),
+                placeholder = {
+                    Text("Confirm Your Password", color = Color.Gray)
                 },
                 leadingIcon = {
                     Icon(
@@ -332,7 +508,7 @@ fun SignUpScreen(
                 trailingIcon = {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_eye),
+                            painter = if(passwordVisible)painterResource(R.drawable.ic_eye)else painterResource(R.drawable.unhide_password),
                             contentDescription = "Toggle Password Visibility"
                         )
                     }
@@ -349,6 +525,16 @@ fun SignUpScreen(
                     unfocusedContainerColor = Color.White
                 )
             )
+
+            // Show error message if validation fails
+            confPasswordError?.let {
+                Text(
+                    text = it,
+                    color = Color.Red,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -367,7 +553,7 @@ fun SignUpScreen(
                             )
                         )
                     } else {
-                        Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT)
+                        Toast.makeText(context, "Please validate the fields ", Toast.LENGTH_SHORT)
                             .show()// Show validation errors
                     }
                 },

@@ -36,6 +36,22 @@ class UserRepositoryImpl(
             Route.LoginScreen.route
     }
 
+    override suspend fun checkUsername(username: String): Boolean {
+        return try {
+            val querySnapshot = usersCollection
+                .whereEqualTo("username", username)
+                .get()
+                .await()
+
+            // If the query returns any documents, the username is already taken
+            querySnapshot.documents.isNotEmpty()
+        } catch (e: Exception) {
+            Log.e("CheckUsername", "Error checking username availability", e)
+            false // Assuming username is available in case of an error (handle gracefully)
+        }
+    }
+
+
     override suspend fun signUpUser(user: User): Results<User> {
         return try {
             val authResult = firebaseAuth.createUserWithEmailAndPassword(user.email, user.password).await()

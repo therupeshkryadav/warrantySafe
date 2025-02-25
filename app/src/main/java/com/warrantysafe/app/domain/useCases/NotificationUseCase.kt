@@ -4,7 +4,6 @@ import com.warrantysafe.app.domain.model.Notification
 import com.warrantysafe.app.domain.repository.NotificationRepository
 import com.warrantysafe.app.domain.utils.Results
 
-
 // Use case for adding a notification
 class AddNotificationUseCase(
     private val notificationRepository: NotificationRepository

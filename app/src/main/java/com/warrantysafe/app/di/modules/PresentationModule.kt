@@ -14,7 +14,7 @@ val presentationModule = module {
     viewModel { ProductViewModel(get(),get(), get(), get(), get(), get(), get(), get()) }
 
     // User
-    viewModel { UserViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { UserViewModel(get(), get(), get(), get(), get(), get(),get()) }
 
     // Notifications
     viewModel { NotificationViewModel(get(), get(),get()) }

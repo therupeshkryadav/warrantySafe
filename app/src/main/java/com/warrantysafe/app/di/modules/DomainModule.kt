@@ -3,6 +3,7 @@ package com.warrantysafe.app.di.modules
 import com.warrantysafe.app.domain.useCases.AddNotificationUseCase
 import com.warrantysafe.app.domain.useCases.AddProductUseCase
 import com.warrantysafe.app.domain.useCases.CheckUserUseCase
+import com.warrantysafe.app.domain.useCases.CheckUsernameUseCase
 import com.warrantysafe.app.domain.useCases.DeleteProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetActiveProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetAllProductsUseCase
@@ -37,6 +38,7 @@ val domainModule = module {
     // User Use Cases
     single { SignUpUserUseCase(get()) }
     single { CheckUserUseCase(get()) }
+    single { CheckUsernameUseCase(get()) }
     single { LoginUserUseCase(get()) }
     single { GetUserUseCase(get()) }
     single { UpdateUserUseCase(get()) }

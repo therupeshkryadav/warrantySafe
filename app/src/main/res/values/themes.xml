@@ -3,7 +3,7 @@
 
     <style name="Theme.Splash" parent="android:Theme.Material.Light.NoActionBar">
         <item name="windowSplashScreenAnimatedIcon">@drawable/transparent</item>
-        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenBackground">@color/transparent</item>
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
@@ -11,9 +11,10 @@
 
     <style name="Theme.SwipeAssignment" parent="android:Theme.Material.Light.NoActionBar">
         <item name="windowSplashScreenAnimatedIcon">@drawable/transparent</item>
-        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenBackground">@color/transparent</item>
         <item name="android:statusBarColor">@color/white</item>
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>

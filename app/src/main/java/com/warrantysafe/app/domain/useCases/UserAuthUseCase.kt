@@ -32,6 +32,14 @@ class SignUpUserUseCase(
     }
 }
 
+class CheckUsernameUseCase(private val userRepository: UserRepository) {
+
+    suspend operator fun invoke(username: String): Boolean {
+        return userRepository.checkUsername(username)
+    }
+}
+
+
 class LoginUserUseCase(
     private val userRepository: UserRepository
 ) {

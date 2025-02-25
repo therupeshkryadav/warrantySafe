@@ -5,6 +5,7 @@ import com.warrantysafe.app.domain.utils.Results
 
 interface UserRepository {
     suspend fun checkUser() : String
+    suspend fun checkUsername(username: String) : Boolean
     suspend fun signUpUser(user: User): Results<User>
     suspend fun loginUser(email: String, password: String): Results<User>
     suspend fun getUser(): Results<User> // Complete the getUser method

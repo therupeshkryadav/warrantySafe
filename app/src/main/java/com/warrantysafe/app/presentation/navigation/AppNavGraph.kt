@@ -9,7 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.ui.screens.auth.LoginScreen
-import com.warrantysafe.app.presentation.ui.screens.auth.PhoneOtpScreen
+import com.warrantysafe.app.presentation.ui.screens.auth.ForgotPasswordScreen
 import com.warrantysafe.app.presentation.ui.screens.auth.SignUpScreen
 import com.warrantysafe.app.presentation.ui.screens.main.addScreen.AddScreen
 import com.warrantysafe.app.presentation.ui.screens.main.homeScreen.HomeScreen
@@ -45,8 +45,8 @@ fun AppNavGraph() {
             LoginScreen(navController = navController)
         }
 
-        composable(Route.PhoneOtpScreen.route) {
-            PhoneOtpScreen(navController= navController)
+        composable(Route.ForgotPasswordScreen.route) {
+            ForgotPasswordScreen(navController= navController)
         }
 
         // SignUpScreen
