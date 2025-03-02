@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelStoreOwner
@@ -17,6 +18,7 @@ class MainActivity : ComponentActivity(), ViewModelStoreOwner {
     override fun onCreate(savedInstanceState: Bundle?) {
         // ✅ Show splash screen before anything else
         installSplashScreen()
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         // Create the notification channel

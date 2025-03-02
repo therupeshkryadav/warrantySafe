@@ -1,5 +1,8 @@
 package com.warrantysafe.app.presentation.ui.screens.main.homeScreen
 
+import CustomBottomNavigation
+import android.content.Context
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -63,7 +66,6 @@ import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.homeScreen.tabs.ActiveTab
 import com.warrantysafe.app.presentation.ui.screens.main.homeScreen.tabs.ExpiredTab
-import com.warrantysafe.app.presentation.ui.screens.main.utils.customBottomNavigation.CustomBottomNavigation
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.main.utils.dropDownMenu.DropDownMenuContent
 import com.warrantysafe.app.presentation.ui.screens.main.utils.sideDrawer.SideDrawerContent
@@ -165,6 +167,7 @@ fun HomeScreen(
                                 "Help & Support" -> navigateToTab(navController, Route.HelpSupportScreen)
                                 "Terms & Conditions" -> navigateToTab(navController, Route.TermsConditionScreen)
                                 "Privacy Policy" -> navigateToTab(navController, Route.PrivacyPolicyScreen)
+                                "Share with Friends" -> shareApp(context)
                                 "About the App" -> navigateToTab(navController, Route.AboutAppScreen)
                                 "Upcoming Features" -> navigateToTab(navController, Route.UpcomingFeaturesScreen)
                                 "Settings" -> navigateToTab(navController, Route.SettingsScreen)
@@ -354,3 +357,22 @@ fun navigateToTab(navController: NavController, route: Route) {
         restoreState = true // Restore the state if previously saved
     }
 }
+
+fun shareApp(context: Context) {
+    val shareMessage = """
+        🌟 Check out WarrantySafe! 🌟
+        
+        Manage all your warranties efficiently in one place! 
+        Download now and never lose a warranty document again! 📜✨
+        
+        🔗 Download Here: [https://drive.google.com/file/d/199OYYv1EPlJ58EPYEP9ssxLNfKSU18b4/view?usp=drive_link]
+    """.trimIndent()
+
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, shareMessage)
+    }
+
+    context.startActivity(Intent.createChooser(intent, "Share WarrantySafe with Friends!"))
+}
+

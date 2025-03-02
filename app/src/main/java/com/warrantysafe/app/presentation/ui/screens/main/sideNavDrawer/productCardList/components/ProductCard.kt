@@ -16,7 +16,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -48,7 +52,7 @@ import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCa
 
 @Composable
 fun ProductCard(
-    onClick: () -> Unit, // Callback to handle click and pass details
+    onClick: () -> Unit,
     onSlidingForward: () -> Unit,
     onSlidingBackward: () -> Unit,
     productName: String,
@@ -57,68 +61,57 @@ fun ProductCard(
     detailsColor: Color,
     purchase: String,
     expiry: String,
-    imageUri: String // Image resource ID
+    imageUri: String
 ) {
     val currentDate = getCurrentDate()
-    val period = periodCalculator(
-        purchaseDate = purchase,
-        expiryDate = expiry,
-        currentDate = currentDate
-    )
+    val period = periodCalculator(purchase, expiry, currentDate)
     val progress = calculateProgress(purchase, expiry, currentDate)
 
     val finalImageUri = if (imageUri.isNotEmpty()) imageUri.toUri()
     else Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-
-
-    Box(modifier = Modifier
-        .wrapContentSize()
-        .padding(vertical = 16.dp)
-        .pointerInput(Unit) {
-            detectHorizontalDragGestures { _, dragAmount ->
-                if (dragAmount > 0) {
-                    onSlidingForward()
-                } else {
-                    onSlidingBackward()
+Box(modifier = Modifier.padding(top = 16.dp)){
+    // Category tag positioned above the card
+    Box(
+        modifier = Modifier
+            .align(Alignment.TopEnd)
+            .zIndex(1f) // Ensures it is drawn above the card
+            .offset(y = (-6).dp, x = (-20).dp)
+            .shadow(8.dp, RoundedCornerShape(8.dp))
+            .background(Color.Gray, shape = RoundedCornerShape(12.dp))
+            .padding(horizontal = 12.dp, vertical = 4.dp) //text Box design
+    ) {
+        Text(
+            text = category,
+            fontSize = 9.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            style = MaterialTheme.typography.bodySmall
+        )
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp, vertical = 6.dp)
+            .shadow(8.dp, shape = RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(20.dp))
+            .border(1.dp,Color.Black.copy(alpha = 0.2f), RoundedCornerShape(20.dp))
+            .background(Color.White)
+            .clickable { onClick() }
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures { _, dragAmount ->
+                    if (dragAmount > 0) onSlidingForward() else onSlidingBackward()
                 }
             }
-        }) {
+    ) {
 
-        // Category tag positioned above the card
-        Box(
+        Column(
             modifier = Modifier
-                .align(Alignment.TopEnd)
-                .zIndex(1f) // Ensures it is drawn above the card
-                .offset(y = (-12).dp, x = (-18).dp)
-                .background(Color.Yellow, shape = RoundedCornerShape(8.dp))
-                .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(8.dp))
-                .padding(horizontal = 12.dp, vertical = 4.dp) //text Box design
-        ) {
-            Text(
-                text = category,
-                fontSize = 9.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
-
-        Card(
-            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 12.dp)
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(20.dp))
-                .clickable { onClick() }
-                .background(color = itemTint)
-                .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.LightGray
-            )
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(
@@ -128,59 +121,39 @@ fun ProductCard(
                     ),
                     contentDescription = null,
                     modifier = Modifier
-                        .fillMaxWidth(0.35f)
-                        .fillMaxHeight(1f)
-                        .clip(shape = RectangleShape)
-                        .border(width = 1.dp, color = Color.DarkGray),
-                    colorFilter = ColorFilter.tint(
-                        color = Color.Transparent, // Change this to your desired color
-                        blendMode = BlendMode.Color
-                    ),
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .zIndex(1f)
+                        .border(0.4.dp,Color.LightGray, CircleShape),
                     contentScale = ContentScale.Crop
                 )
+                Spacer(modifier = Modifier.width(12.dp))
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 8.dp)
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Text(
-                        text = productName,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = detailsColor
-                    )
+                    Text(text = productName, style = MaterialTheme.typography.titleMedium, color = detailsColor)
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Purchase Date: $purchase",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = detailsColor.copy(alpha = 0.7f)
-                    )
+                    Text(text = "Purchase Date: $purchase", style = MaterialTheme.typography.bodySmall, color = detailsColor.copy(alpha = 0.7f))
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = period,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = detailsColor.copy(alpha = 0.7f)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(text = period, fontSize = 10.sp,  style = MaterialTheme.typography.labelSmall, color = detailsColor.copy(alpha = 0.7f))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                    if (progress != null) {
+                    progress?.let {
                         CustomLinearProgressIndicator(
-                            progress = progress,
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            trackColor = colorResource(R.color.white),
-                            progressColor = if (progress >= 1f)
-                                colorResource(R.color.noDaysLeft)
-                            else
-                                colorResource(R.color.DaysLeft),
-                            strokeWidth = 18f,
+                            progress = it,
+                            modifier = Modifier.fillMaxWidth(),
+                            trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+                            progressColor = if (it >= 1f) Color.Red else MaterialTheme.colorScheme.primary,
+                            strokeWidth = 14f,
                             gapSize = 0f,
                         )
                     }
                 }
             }
         }
-    }
+    }}
 }
+
 
 // Helper function to get the current date in "dd/MM/yyyy" format
 @SuppressLint("NewApi")

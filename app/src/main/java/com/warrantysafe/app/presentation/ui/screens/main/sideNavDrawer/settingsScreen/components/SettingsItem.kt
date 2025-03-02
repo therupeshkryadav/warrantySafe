@@ -2,6 +2,7 @@ package com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,12 +23,14 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun SettingsItem(
-    settingsText: String
+    settingsText: String,
+    onClick:() -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth(1f)
-            .background(Color(0xFFEEEEEE)),
+            .background(Color(0xFFEEEEEE))
+            .clickable{onClick()},
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     )

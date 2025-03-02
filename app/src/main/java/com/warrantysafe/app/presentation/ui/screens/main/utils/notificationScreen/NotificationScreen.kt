@@ -20,6 +20,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -120,9 +121,9 @@ fun NotificationScreen(navController: NavController) {
                                     .padding(8.dp)
                                     .border(
                                         width = 1.dp,
-                                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                                        color = Color.LightGray.copy(alpha = 0.5f)
                                     )
-                                    .background(MaterialTheme.colorScheme.background)
+                                    .background(Color.LightGray.copy(alpha = 0.5f))
                                     .clickable {
                                         notificationViewModel.markAllAsRead()
                                     },

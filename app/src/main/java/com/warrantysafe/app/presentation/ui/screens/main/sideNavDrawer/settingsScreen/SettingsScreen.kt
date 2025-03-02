@@ -1,22 +1,13 @@
 package com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.settingsScreen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -29,12 +20,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.settingsScreen.components.SettingsItem
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsScreen(navController: NavController) {
+    var showChangePasswordDialog by remember { mutableStateOf(false) }
 
-    val settingsList = listOf("Manage Categories ","Change Password")
+    val settingsList = listOf("Change Password")
 
     Column(modifier = Modifier.fillMaxSize()) {
         CustomTopAppBar(
@@ -46,10 +37,8 @@ fun SettingsScreen(navController: NavController) {
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,  // Handling overflow text
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.fillMaxWidth().wrapContentHeight()
                 )
             },
             navigationIcon = {
@@ -64,15 +53,14 @@ fun SettingsScreen(navController: NavController) {
             },
             actions = {}
         )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            // Add notifications as list items
-            items(settingsList) { settings ->
-                SettingsItem(
-                    settingsText = settings
-                )
+
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(settingsList) { setting ->
+                SettingsItem(settingsText = setting, onClick = {
+                    if (setting == "Change Password") {
+                        showChangePasswordDialog = true
+                    }
+                })
                 Spacer(modifier = Modifier.height(1.dp).fillMaxWidth().background(Color.White))
             }
 
@@ -80,13 +68,78 @@ fun SettingsScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
+
+        if (showChangePasswordDialog) {
+            ChangePasswordDialog(onDismiss = { showChangePasswordDialog = false })
+        }
     }
 }
 
+@Composable
+fun ChangePasswordDialog(onDismiss: () -> Unit) {
+    var currentPassword by remember { mutableStateOf("") }
+    var newPassword by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = Color.White,
+        title = { Text("Change Password", fontWeight = FontWeight.Bold) },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = currentPassword,
+                    onValueChange = { currentPassword = it },
+                    label = { Text("Current Password") },
+                    singleLine = true
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = newPassword,
+                    onValueChange = { newPassword = it },
+                    label = { Text("New Password") },
+                    singleLine = true
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = confirmPassword,
+                    onValueChange = { confirmPassword = it },
+                    label = { Text("Confirm New Password") },
+                    singleLine = true
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                errorMessage?.let {
+                    Text(text = it, color = Color.Red, fontSize = 14.sp)
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                if (newPassword != confirmPassword) {
+                    errorMessage = "Passwords do not match"
+                } else if (newPassword.isEmpty() || currentPassword.isEmpty()) {
+                    errorMessage = "All fields are required"
+                } else {
+                    // TODO: Implement password change logic
+                    onDismiss()
+                }
+            }) {
+                Text("Change")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
 
 @Preview(showBackground = true)
 @Composable
-private fun PreV() {
+private fun PreviewSettingsScreen() {
     SettingsScreen(rememberNavController())
-
 }

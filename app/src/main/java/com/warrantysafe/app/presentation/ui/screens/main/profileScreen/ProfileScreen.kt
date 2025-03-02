@@ -1,9 +1,13 @@
 package com.warrantysafe.app.presentation.ui.screens.main.profileScreen
 
+import CustomBottomNavigation
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +29,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
@@ -67,7 +70,6 @@ import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
-import com.warrantysafe.app.presentation.ui.screens.main.utils.customBottomNavigation.CustomBottomNavigation
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.ui.screens.main.utils.dropDownMenu.DropDownMenuContent
 import com.warrantysafe.app.presentation.ui.screens.main.utils.sideDrawer.SideDrawerContent
@@ -235,7 +237,7 @@ fun ProfileScreen(
                                 modifier = Modifier
                                     .size(200.dp)
                                     .clip(CircleShape)
-                                    .background(color = colorResource(R.color.black))
+                                    .background(Color.LightGray)
                                     .align(Alignment.CenterHorizontally)
                             ) {
                                 Image(
@@ -254,39 +256,6 @@ fun ProfileScreen(
                             ModernProfileDetailRow("Email", user.email)
                             ModernProfileDetailRow("Phone", user.phoneNumber)
 
-//                            // Profile Details
-//                            DetailRow(
-//                                "Name",
-//                                updatedValue = user.name,
-//                                enable = false,
-//                                textColor = colorResource(R.color.purple_500),
-//                                icon = null,
-//                                onValueChange = { }
-//                            )
-//                            DetailRow(
-//                                "Username",
-//                                updatedValue = user.username,
-//                                enable = false,
-//                                textColor = colorResource(R.color.purple_500),
-//                                icon = null,
-//                                onValueChange = { }
-//                            )
-//                            DetailRow(
-//                                "Email",
-//                                updatedValue = user.email,
-//                                enable = false,
-//                                textColor = colorResource(R.color.purple_500),
-//                                icon = null,
-//                                onValueChange = { }
-//                            )
-//                            DetailRow(
-//                                "Phone",
-//                                updatedValue = user.phoneNumber,
-//                                enable = false,
-//                                textColor = colorResource(R.color.purple_500),
-//                                icon = null,
-//                                onValueChange = { }
-//                            )
 
                             // Edit Profile Button
                             Button(
@@ -305,7 +274,10 @@ fun ProfileScreen(
                                         )
                                     }
                                 },
+                                colors = ButtonDefaults.elevatedButtonColors(Color.White),
+                                border = BorderStroke(1.dp,Color.LightGray),
                                 shape = RoundedCornerShape(20.dp),
+                                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(top = 16.dp)
@@ -315,7 +287,7 @@ fun ProfileScreen(
                                         .align(Alignment.CenterVertically),
                                     text = "Edit Profile",
                                     fontSize = 18.sp,
-                                    color = colorResource(R.color.white)
+                                    color = colorResource(R.color.body)
                                 )
                                 Icon(
                                     modifier = Modifier
@@ -323,7 +295,7 @@ fun ProfileScreen(
                                         .padding(start = 4.dp)
                                         .fillMaxHeight(),
                                     imageVector = Icons.Filled.Edit,
-                                    tint = colorResource(R.color.white),
+                                    tint = colorResource(R.color.body),
                                     contentDescription = "Edit Profile"
                                 )
                             }
@@ -394,7 +366,8 @@ fun ModernProfileDetailRow(label: String, value: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))
+            .background(Color.White, shape = RoundedCornerShape(12.dp))
+            .border(width = 1.dp,Color.LightGray, RoundedCornerShape(12.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -419,25 +392,31 @@ fun ModernProfileDetailRow(label: String, value: String) {
 fun ModernLogoutButton(onLogout: () -> Unit) {
     Button(
         onClick = onLogout,
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE53935)), // Modern red color
+        colors = ButtonDefaults.elevatedButtonColors(Color.White),
         shape = RoundedCornerShape(20.dp),
+        border = BorderStroke(1.dp,Color.LightGray),
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp),
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp) // Remove elevation since we use shadow
     ) {
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.ExitToApp, // You can replace this with a logout icon
-            contentDescription = "Logout",
-            tint = Color.White
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = "Logout",
-            fontSize = 18.sp,
-            color = Color.White,
-            fontWeight = FontWeight.Bold
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                contentDescription = "Logout",
+                tint = Color.Red.copy(alpha = 0.7f) // Better visibility
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Logout",
+                fontSize = 18.sp,
+                color = Color.Red.copy(alpha = 0.7f),
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 

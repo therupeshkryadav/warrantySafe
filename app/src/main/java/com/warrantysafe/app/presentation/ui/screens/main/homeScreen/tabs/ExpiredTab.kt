@@ -17,12 +17,16 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +39,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
@@ -125,7 +130,7 @@ fun ExpiredTab(
                     }
                 } else {
                     // Sort By Section
-                    Box(
+                    Column(
                         modifier = Modifier
                             .wrapContentWidth()
                             .padding(bottom = 4.dp)
@@ -135,38 +140,43 @@ fun ExpiredTab(
                             ) { expandedSort.value = true }
                             .border(
                                 width = 1.dp,
-                                shape = RectangleShape,
-                                color = colorResource(R.color.black)
+                                shape = CircleShape,
+                                color = Color.Gray.copy(alpha = 0.4f)
                             )
+                            .clip(CircleShape)
+                            .padding(4.dp) // Added padding for better touch interaction
                     ) {
                         Row(
+                            modifier = Modifier.wrapContentSize().padding(horizontal = 8.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = selectedSortOption.value,
-                                modifier = Modifier.padding(horizontal = 4.dp)
+                                text = "Sort By",
+                                modifier = Modifier.padding(horizontal = 8.dp)
                             )
                             Icon(
                                 modifier = Modifier.size(24.dp),
-                                painter = painterResource(R.drawable.drop_down),
-                                contentDescription = null
+                                painter = if(!expandedSort.value)painterResource(id = R.drawable.drop_down)else painterResource(id = R.drawable.drop_up),
+                                contentDescription = "Sort Dropdown"
                             )
                         }
 
                         DropdownMenu(
-                            modifier = Modifier.wrapContentWidth(),
+                            modifier = Modifier.wrapContentWidth().padding(horizontal = 4.dp),
                             containerColor = Color.White,
+                            shape = RoundedCornerShape(20.dp),
                             expanded = expandedSort.value,
                             onDismissRequest = { expandedSort.value = false }
                         ) {
                             sortOptions.forEach { option ->
-                                dropDownMenuItem(
-                                    item = option,
+                                DropdownMenuItem(
+                                    text = { Text(option) },
                                     onClick = {
                                         selectedSortOption.value = option
                                         expandedSort.value = false
-                                        applySorting(option, expiredProducts) // Sorting logic
+                                        val sortedProducts = applySorting(option, expiredProducts)
+                                        productViewModel.updateProductList(sortedProducts) // Update ViewModel or State
                                     }
                                 )
                             }
@@ -193,7 +203,7 @@ fun ExpiredTab(
                             )
                         }
                         item {
-                            Spacer(modifier = Modifier.height(68.dp))
+                            Spacer(modifier = Modifier.height(110.dp))
                         }
                     }
                 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="xtreme">#74ABAAA8</color>
-    <color name="tree">#EFD7D7</color>
+    <color name="tree">#00EFD7D7</color>
     <color name="DaysLeft">#33691E</color>
     <color name="noDaysLeft">#B71C1C</color>
     <color name="expired">#000000</color>

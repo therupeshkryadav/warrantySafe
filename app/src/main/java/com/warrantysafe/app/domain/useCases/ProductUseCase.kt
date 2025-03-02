@@ -40,39 +40,6 @@ class GetAllProductsUseCase(
     }
 }
 
-class GetExpiringWarrantiesUseCase(
-    private val repository: ProductRepository
-) {
-    @RequiresApi(Build.VERSION_CODES.O)
-    suspend operator fun invoke(daysUntilExpiry: Long): Results<List<Product>> {
-        val result = repository.getProducts()
-
-        if (result is Results.Success) {
-            val products = result.data
-            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-
-            // Filter products whose expiry date is within the specified number of days
-            val expiringWarranties = products.filter { product ->
-                try {
-                    val expiryDate = product.expiry
-                    val currentDate = getCurrentDate()
-                    val expiry = LocalDate.parse(expiryDate, formatter)
-                    val current = LocalDate.parse(currentDate, formatter)
-                    val daysToExpiry = current.until(expiry).days
-
-                    daysToExpiry in 0..daysUntilExpiry
-                } catch (e: Exception) {
-                    false
-                }
-            }
-
-            return Results.Success(expiringWarranties)
-        }
-
-        return Results.Failure(Exception("Failed to get products"))
-    }
-}
-
 
 class SearchProductsUseCase(
     private val productRepository: ProductRepository

@@ -14,7 +14,7 @@ class BottomNavigationRepositoryImpl: BottomNavigationRepository {
             route = Route.HomeScreen
         ),
         BottomNavigation(
-            icon = R.drawable.add_warranty,
+            icon = R.drawable.add_product,
             text = "Add",
             route = Route.AddScreen
         ),

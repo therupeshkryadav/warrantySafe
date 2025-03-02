@@ -188,5 +188,11 @@ class ProductViewModel(
     private fun getCurrentDate(): String {
         return java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"))
     }
+
+    fun updateProductList(sortedProducts: List<Product>) {
+        _activeProductsState.value = Results.Success(sortedProducts)
+        _expiredProductsState.value = Results.Success(sortedProducts)
+        _allProductsState.value = Results.Success(sortedProducts)
+    }
 }
 
