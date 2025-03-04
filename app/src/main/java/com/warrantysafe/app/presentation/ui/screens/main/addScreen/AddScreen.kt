@@ -6,6 +6,11 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,7 +28,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,7 +37,6 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -128,349 +131,359 @@ fun AddScreen(navController: NavController) {
 
     // Handle loading, success, and failure states
     val result = addState.value
-    Box(modifier = Modifier.fillMaxSize()) {
-        // Activity Result Launcher for Image Picker
-        val productReceiptLauncher =
-            rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-                if (uri != null) {
-                    selectedProductReceiptImageUri =
-                        uri // Handle success (uri is not null, content was selected)
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        isVisible = true // Trigger animation when the screen opens
+    }
+
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+        exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            // Activity Result Launcher for Image Picker
+            val productReceiptLauncher =
+                rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+                    if (uri != null) {
+                        selectedProductReceiptImageUri =
+                            uri // Handle success (uri is not null, content was selected)
+                    }
                 }
+
+            // Activity Result Launcher for Image Picker
+            val productImgLauncher =
+                rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+                    if (uri != null) {
+                        selectedProductImageUri =
+                            uri // Handle success (uri is not null, content was selected)
+                    }
+                }
+
+            if (showPurchaseDatePicker.value) {
+                DatePickerDialog(
+                    context,
+                    { _, year, month, dayOfMonth ->
+                        val localDate = LocalDate.of(year, month + 1, dayOfMonth)
+                        purchaseDate = dateFormatter.format(localDate)
+                        purchaseDateLocalDate = localDate // Store selected date
+                        purchaseDateSelected.value = true
+                        showPurchaseDatePicker.value = false
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+                ).apply {
+                    setOnCancelListener {
+                        showPurchaseDatePicker.value = false // Dismiss dialog without updating date
+                    }
+                }.show()
             }
 
-        // Activity Result Launcher for Image Picker
-        val productImgLauncher =
-            rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-                if (uri != null) {
-                    selectedProductImageUri =
-                        uri // Handle success (uri is not null, content was selected)
-                }
+            if (showExpiryDatePicker.value) {
+                DatePickerDialog(
+                    context,
+                    { _, year, month, dayOfMonth ->
+                        val localDate = LocalDate.of(year, month + 1, dayOfMonth)
+                        expiryDate = dateFormatter.format(localDate)
+                        showExpiryDatePicker.value = false
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+                ).apply {
+                    purchaseDateLocalDate?.let {
+                        datePicker.minDate =
+                            it.atStartOfDay().toEpochSecond(java.time.ZoneOffset.UTC) * 1000
+                    }
+                    setOnCancelListener {
+                        showExpiryDatePicker.value = false
+                    }
+                }.show()
             }
-
-        if (showPurchaseDatePicker.value) {
-            DatePickerDialog(
-                context,
-                { _, year, month, dayOfMonth ->
-                    val localDate = LocalDate.of(year, month + 1, dayOfMonth)
-                    purchaseDate = dateFormatter.format(localDate)
-                    purchaseDateLocalDate = localDate // Store selected date
-                    purchaseDateSelected.value = true
-                    showPurchaseDatePicker.value = false
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            ).apply {
-                setOnCancelListener {
-                    showPurchaseDatePicker.value = false // Dismiss dialog without updating date
-                }
-            }.show()
-        }
-
-        if (showExpiryDatePicker.value) {
-            DatePickerDialog(
-                context,
-                { _, year, month, dayOfMonth ->
-                    val localDate = LocalDate.of(year, month + 1, dayOfMonth)
-                    expiryDate = dateFormatter.format(localDate)
-                    showExpiryDatePicker.value = false
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            ).apply {
-                purchaseDateLocalDate?.let {
-                    datePicker.minDate =
-                        it.atStartOfDay().toEpochSecond(java.time.ZoneOffset.UTC) * 1000
-                }
-                setOnCancelListener {
-                    showExpiryDatePicker.value = false
-                }
-            }.show()
-        }
-
-        Column(
-            modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp)
-                .fillMaxSize()
-        ) {
-            CustomTopAppBar(
-                title = {
-                    Text(
-                        text = "Add Product",
-                        style = MaterialTheme.typography.titleLarge,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,  // Handling overflow text
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                    )
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { navController.popBackStack() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = "Close"
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = {
-                        if (productName.isBlank() || purchaseDate.isBlank() || expiryDate.isBlank()) {
-                            Toast.makeText(
-                                context,
-                                "Please fill all required fields.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            productViewModel.addProduct(
-                                context,
-                                Product(
-                                    productName = productName,
-                                    purchase = purchaseDate,
-                                    expiry = expiryDate,
-                                    category = updatedCategory,
-                                    notes = notes,
-                                    receiptImageUri = selectedProductReceiptImageUri.toString(),
-                                    productImageUri = selectedProductImageUri.toString()
-                                )
-                            )
-                        }
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = "Add Product Card Icon"
-                        )
-                    }
-
-                }
-            )
 
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 8.dp)
                     .fillMaxSize()
-                    .verticalScroll(scrollState)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(8.dp)
-                        .border(width = 2.dp, color = colorResource(R.color.black))
-                ) {
-                    // Displaying the product image
-                    Image(
-                        painter = rememberAsyncImagePainter(
-                            selectedProductImageUri
-                                ?: Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
-                        ),
-                        contentDescription = "Product Image",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(280.dp)
-                            .padding(2.dp)
-                    )
-
-                    IconButton(
-                        onClick = {
-                            productImgLauncher.launch("image/*") // Open the gallery to select an image
-                            //i want to open the gallery and want to select the image and the selected image should be set to the above image composable!!
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.Black)
-                    ) {
-                        Row(
-                            modifier = Modifier.wrapContentWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                CustomTopAppBar(
+                    title = {
+                        Text(
+                            text = "Add Product",
+                            style = MaterialTheme.typography.titleLarge,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,  // Handling overflow text
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = { navController.popBackStack() }
                         ) {
-                            Text(
-                                text = if (selectedProductImageUri == null) "Upload Product Image Image" else "Change Image",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
-                            )
-
-                            Spacer(modifier = Modifier.width(4.dp)) // Add spacing between Icon and Text
-
                             Icon(
-                                painter = if (selectedProductImageUri == null) painterResource(R.drawable.upload) else painterResource(
-                                    R.drawable.refresh_icon
-                                ),
-                                contentDescription = "Add Product Image",
-                                tint = Color.White
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = "Close"
                             )
                         }
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            if (productName.isBlank() || purchaseDate.isBlank() || expiryDate.isBlank()) {
+                                Toast.makeText(
+                                    context,
+                                    "Please fill all required fields.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                productViewModel.addProduct(
+                                    context,
+                                    Product(
+                                        productName = productName,
+                                        purchase = purchaseDate,
+                                        expiry = expiryDate,
+                                        category = updatedCategory,
+                                        notes = notes,
+                                        receiptImageUri = selectedProductReceiptImageUri.toString(),
+                                        productImageUri = selectedProductImageUri.toString()
+                                    )
+                                )
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Check,
+                                contentDescription = "Add Product Card Icon"
+                            )
+                        }
+
                     }
-                }
-
-                // Product Name Field
-                DetailRow(
-                    label = "Product Name",
-                    textColor = Color.DarkGray,
-                    enable = true,
-                    icon = null,
-                    placeHolder = "write product name -->",
-                    updatedValue = productName,
-                    onValueChange = { productName = it } // Update product name dynamically
                 )
 
-                // Category Section
-                CategorySection(
-                    updatedCategory = updatedCategory,
-                    onSelectEnabled = true,
-                    onCategoryChange = { updatedCategory = it },
-                    onCategorySelection = { expanded = !expanded }
-                )
-                // Dropdown Menu
-                if (expanded) {
-                    Box(
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                ) {
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight()
-                            .padding(horizontal = 8.dp)
-                            .background(Color.White, RoundedCornerShape(20.dp))
-                            .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
+                            .padding(8.dp)
+                            .border(width = 2.dp, color = colorResource(R.color.black))
                     ) {
-                        Column {
-                            categoryOptions.forEach { category ->
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            updatedCategory = category // Pass selected category
-                                            expanded = false // Close dropdown
-                                        }
-                                        .padding(12.dp)
-                                        .background(Color.Transparent)
-                                ) {
-                                    Text(
-                                        text = category,
-                                        fontSize = 16.sp,
-                                        color = Color.Black
-                                    )
+                        // Displaying the product image
+                        Image(
+                            painter = rememberAsyncImagePainter(
+                                selectedProductImageUri
+                                    ?: Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
+                            ),
+                            contentDescription = "Product Image",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(280.dp)
+                                .padding(2.dp)
+                        )
+
+                        IconButton(
+                            onClick = {
+                                productImgLauncher.launch("image/*") // Open the gallery to select an image
+                                //i want to open the gallery and want to select the image and the selected image should be set to the above image composable!!
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color.Black)
+                        ) {
+                            Row(
+                                modifier = Modifier.wrapContentWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = if (selectedProductImageUri == null) "Upload Product Image Image" else "Change Image",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+
+                                Spacer(modifier = Modifier.width(4.dp)) // Add spacing between Icon and Text
+
+                                Icon(
+                                    painter = if (selectedProductImageUri == null) painterResource(R.drawable.upload) else painterResource(
+                                        R.drawable.refresh_icon
+                                    ),
+                                    contentDescription = "Add Product Image",
+                                    tint = Color.White
+                                )
+                            }
+                        }
+                    }
+
+                    // Product Name Field
+                    DetailRow(
+                        label = "Product Name",
+                        textColor = Color.DarkGray,
+                        enable = true,
+                        icon = null,
+                        placeHolder = "write product name -->",
+                        updatedValue = productName,
+                        onValueChange = { productName = it } // Update product name dynamically
+                    )
+
+                    // Category Section
+                    CategorySection(
+                        updatedCategory = updatedCategory,
+                        onSelectEnabled = true,
+                        onCategoryChange = { updatedCategory = it },
+                        onCategorySelection = { expanded = !expanded }
+                    )
+                    // Dropdown Menu
+                    if (expanded) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(horizontal = 8.dp)
+                                .background(Color.White, RoundedCornerShape(20.dp))
+                                .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
+                        ) {
+                            Column {
+                                categoryOptions.forEach { category ->
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable {
+                                                updatedCategory = category // Pass selected category
+                                                expanded = false // Close dropdown
+                                            }
+                                            .padding(12.dp)
+                                            .background(Color.Transparent)
+                                    ) {
+                                        Text(
+                                            text = category,
+                                            fontSize = 16.sp,
+                                            color = Color.Black
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                // Purchase Date Field
-                DetailRow(
-                    label = "Purchase Date",
-                    textColor = Color.DarkGray,
-                    enable = false,
-                    icon = R.drawable.calendar,
-                    placeHolder = "DD/MM/YYYY",
-                    updatedValue = purchaseDate,
-                    onDetailRowClick = {
-                        showPurchaseDatePicker.value = true
-                    },
-                    onValueChange = {
-                        purchaseDate = it
-                    } // This handles the case where user types in the field (optional)
-                )
-                // Expiry Date Field
-                DetailRow(
-                    label = "Expiry Date",
-                    textColor = Color.DarkGray,
-                    enable = false,
-                    icon = R.drawable.calendar,
-                    placeHolder = "DD/MM/YYYY",
-                    updatedValue = expiryDate,
-                    onDetailRowClick = {
-                        if (purchaseDateSelected.value) {
-                            showExpiryDatePicker.value = true
-                        } else {
-                            Toast.makeText(
-                                context,
-                                "Please select Purchase Date first!",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    },
-                    onValueChange = {
-                        expiryDate = it
-                    } // This handles the case where user types in the field (optional)
-                )
-
-                // Upload Receipt Image Section
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(colorResource(R.color.body))
-                        .border(width = 1.dp, color = colorResource(R.color.black))
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null // Disables ripple effect
-                        ) {
-                            productReceiptLauncher.launch("image/*") // Open gallery for image selection
-                        }
-                        .padding(horizontal = 8.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        textAlign = TextAlign.Center,
-                        color = colorResource(R.color.white),
-                        text = if (selectedProductReceiptImageUri == null) "Upload Receipt Image" else "Change Image",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        maxLines = 1
+                    // Purchase Date Field
+                    DetailRow(
+                        label = "Purchase Date",
+                        textColor = Color.DarkGray,
+                        enable = false,
+                        icon = R.drawable.calendar,
+                        placeHolder = "DD/MM/YYYY",
+                        updatedValue = purchaseDate,
+                        onDetailRowClick = {
+                            showPurchaseDatePicker.value = true
+                        },
+                        onValueChange = {
+                            purchaseDate = it
+                        } // This handles the case where user types in the field (optional)
                     )
-                    Icon(
+                    // Expiry Date Field
+                    DetailRow(
+                        label = "Expiry Date",
+                        textColor = Color.DarkGray,
+                        enable = false,
+                        icon = R.drawable.calendar,
+                        placeHolder = "DD/MM/YYYY",
+                        updatedValue = expiryDate,
+                        onDetailRowClick = {
+                            if (purchaseDateSelected.value) {
+                                showExpiryDatePicker.value = true
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Please select Purchase Date first!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        },
+                        onValueChange = {
+                            expiryDate = it
+                        } // This handles the case where user types in the field (optional)
+                    )
+
+                    // Upload Receipt Image Section
+                    Row(
                         modifier = Modifier
-                            .padding(start = 8.dp)
-                            .size(24.dp),
-                        tint = colorResource(R.color.white),
-                        painter = if (selectedProductReceiptImageUri == null) painterResource(R.drawable.upload) else painterResource(
-                            R.drawable.refresh_icon
-                        ),
-                        contentDescription = null
+                            .fillMaxWidth()
+                            .background(colorResource(R.color.body))
+                            .border(width = 1.dp, color = colorResource(R.color.black))
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null // Disables ripple effect
+                            ) {
+                                productReceiptLauncher.launch("image/*") // Open gallery for image selection
+                            }
+                            .padding(horizontal = 8.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            modifier = Modifier.align(Alignment.CenterVertically),
+                            textAlign = TextAlign.Center,
+                            color = colorResource(R.color.white),
+                            text = if (selectedProductReceiptImageUri == null) "Upload Receipt Image" else "Change Image",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            maxLines = 1
+                        )
+                        Icon(
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .size(24.dp),
+                            tint = colorResource(R.color.white),
+                            painter = if (selectedProductReceiptImageUri == null) painterResource(R.drawable.upload) else painterResource(
+                                R.drawable.refresh_icon
+                            ),
+                            contentDescription = null
+                        )
+                    }
+
+                    // Display the selected image below the button
+                    selectedProductReceiptImageUri?.let { uri ->
+                        Image(
+                            painter = rememberImagePainter(data = uri),
+                            contentDescription = "Selected Image",
+                            modifier = Modifier
+                                .wrapContentWidth()
+                                .height(350.dp)
+                                .padding(8.dp)
+                                .border(width = 1.dp, color = Color.Gray)
+                                .align(Alignment.CenterHorizontally)
+                        )
+                    }
+
+
+                    DetailRow(
+                        label = "Notes",
+                        textColor = Color.DarkGray,
+                        enable = true,
+                        icon = null,
+                        placeHolder = "write your notes here -->",
+                        updatedValue = notes,
+                        onValueChange = {
+                            notes = it
+                        } // This handles the case where user types in the field (optional)
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
-
-                // Display the selected image below the button
-                selectedProductReceiptImageUri?.let { uri ->
-                    Image(
-                        painter = rememberImagePainter(data = uri),
-                        contentDescription = "Selected Image",
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .height(350.dp)
-                            .padding(8.dp)
-                            .border(width = 1.dp, color = Color.Gray)
-                            .align(Alignment.CenterHorizontally)
-                    )
-                }
-
-
-                DetailRow(
-                    label = "Notes",
-                    textColor = Color.DarkGray,
-                    enable = true,
-                    icon = null,
-                    placeHolder = "write your notes here -->",
-                    updatedValue = notes,
-                    onValueChange = {
-                        notes = it
-                    } // This handles the case where user types in the field (optional)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
             }
-        }
 
-        if (result != null) {
-            when {
-                result is Results.Loading -> {
+            if (result != null) {
+                when {
+                    result is Results.Loading -> {
                         Dialog(onDismissRequest = {}) {
                             Card(
                                 modifier = Modifier
@@ -500,34 +513,35 @@ fun AddScreen(navController: NavController) {
                                 }
                             }
                         }
-                }
+                    }
 
-                result is Results.Success -> {
+                    result is Results.Success -> {
 
-                    // Add the notification to the ViewModel's list
-                    notificationViewModel.addNotification(
-                        notificationText = "$productName has been successfully added to your list."
-                    )//i want that the notification is added to the notificationList within the NotificationModel
+                        // Add the notification to the ViewModel's list
+                        notificationViewModel.addNotification(
+                            notificationText = "$productName has been successfully added to your list."
+                        )//i want that the notification is added to the notificationList within the NotificationModel
 
-                    // Send the notification when the product is successfully added
-                    NotificationHelper.sendNotification(
-                        context,
-                        "Product Added",
-                        "$productName has been successfully added to your list."
-                    )
+                        // Send the notification when the product is successfully added
+                        NotificationHelper.sendNotification(
+                            context,
+                            "Product Added",
+                            "$productName has been successfully added to your list."
+                        )
 
-                    // Navigate to home screen after success
-                    LaunchedEffect(result) {
-                        navController.navigate(Route.HomeScreen.route) {
-                            popUpTo(Route.AddScreen.route) { inclusive = true }
+                        // Navigate to home screen after success
+                        LaunchedEffect(result) {
+                            navController.navigate(Route.HomeScreen.route) {
+                                popUpTo(Route.AddScreen.route) { inclusive = true }
+                            }
                         }
                     }
-                }
 
-                result is Results.Failure -> {
-                    // Show error message on failure
-                    val errorMessage = result.exception.message ?: "Unknown error"
-                    Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+                    result is Results.Failure -> {
+                        // Show error message on failure
+                        val errorMessage = result.exception.message ?: "Unknown error"
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         }

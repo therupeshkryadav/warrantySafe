@@ -7,6 +7,12 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -125,6 +131,7 @@ fun EditProductDetailScreen(
                 Log.d("ProductUpdate", "Updating product...")
 
             }
+
             is Results.Success -> {
                 // Handle the success case when the product has been updated
                 val updatedProduct = (updateProductsState as Results.Success).data
@@ -132,15 +139,27 @@ fun EditProductDetailScreen(
                 navController.popBackStack()
                 Toast.makeText(context, "Product updated successfully!", Toast.LENGTH_SHORT).show()
             }
+
             is Results.Failure -> {
                 // Handle failure state
-                val errorMessage = (updateProductsState as Results.Failure).exception.message ?: "Unknown error"
+                val errorMessage =
+                    (updateProductsState as Results.Failure).exception.message ?: "Unknown error"
                 Log.e("ProductUpdate", "Error updating product: $errorMessage")
-                Toast.makeText(context, "Failed to update product: $errorMessage", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    "Failed to update product: $errorMessage",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             else -> {}
         }
+    }
+
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        isVisible = true // Trigger animation when the screen opens
     }
 
     // Handle Date Pickers
@@ -148,11 +167,13 @@ fun EditProductDetailScreen(
     val showExpiryDatePicker = remember { mutableStateOf(false) }
 
     // Activity Result Launcher for Image Picker
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        if (uri != null) {
-            selectedProductImageUri = uri // Handle success (uri is not null, content was selected)
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            if (uri != null) {
+                selectedProductImageUri =
+                    uri // Handle success (uri is not null, content was selected)
+            }
         }
-    }
 
     if (showPurchaseDatePicker.value) {
         // Parse the validPurchaseDate or use the current date as default
@@ -220,285 +241,300 @@ fun EditProductDetailScreen(
         }.show()
     }
 
-
-    // UI Composition
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 8.dp)
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+        exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
     ) {
-        CustomTopAppBar(
-            title = {
-                Text(
-                    text = "Edit Product Card Detail",
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                }
-            },
-            actions = {
-                IconButton(
-                    onClick = {
-                        isConnected.value=checkValidNetworkConnection(context)
-                        if(!isConnected.value){
-                            Toast.makeText(context, "No Valid Internet Connection!!", Toast.LENGTH_LONG).show()
-                        }else{
-                            productViewModel.updateProduct(
-                                product = Product(
-                                    id = product.id,
-                                    productName = validProductName,
-                                    purchase = validPurchaseDate,
-                                    expiry = validExpiryDate,
-                                    category = updatedCategory,
-                                    productImageUri = selectedProductImageUri.toString(),
-                                    receiptImageUri = selectedProductImageUri.toString(),
-                                    notes = validNotes
-                                )
-                            )
-                        }
-                    }
-                ) {
-                    Icon(imageVector = Icons.Filled.Check, contentDescription = "Edited Successfully!!")
-                }
-            }
-        )
-
-        // Show loading indicator if the product is being updated
-        if (updateProductsState is Results.Loading) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
-                    .statusBarsPadding()
-                    .navigationBarsPadding(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("Updating Product Details....")
-                LinearProgressIndicator()
-            }
-        }else{
-            // Main content
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 8.dp)
-                    .verticalScroll(scrollState)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(8.dp)
-                        .border(width = 2.dp, color = colorResource(R.color.black))
-                ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(
-                            model = selectedProductImageUri ?: product.productImageUri,
-                            placeholder = rememberAsyncImagePainter(product.productImageUri),
-                            error = painterResource(id = R.drawable.product_placeholder)
-                        ),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(280.dp)
-                            .padding(2.dp)
-                    )
-
-                    IconButton(
-                        onClick = {
-                            launcher.launch("image/*") // Open the gallery to select an image
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.Black)
-                    ) {
-                        Row(
-                            modifier = Modifier.wrapContentWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.refresh_icon),
-                                contentDescription = null,
-                                tint = Color.White
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = "Change Image",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
-                            )
-                        }
-                    }
-                }
-
-                DetailRow(
-                    label = "Product Name",
-                    updatedValue = validProductName,
-                    enable = true,
-                    textColor = Color.DarkGray,
-                    icon = null,
-                    onValueChange = { validProductName = it },
-                )
-
-                CategorySection(
-                    updatedCategory = updatedCategory,
-                    onSelectEnabled = true,
-                    onCategoryChange = { updatedCategory = it },
-                    onCategorySelection = { expanded = !expanded }
-                )
-
-                if (expanded) {
-                    Box(
+        // UI Composition
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp)
+        ) {
+            CustomTopAppBar(
+                title = {
+                    Text(
+                        text = "Edit Product Card Detail",
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight()
-                            .padding(horizontal = 8.dp)
-                            .background(Color.White, RoundedCornerShape(20.dp))
-                            .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            isConnected.value = checkValidNetworkConnection(context)
+                            if (!isConnected.value) {
+                                Toast.makeText(
+                                    context,
+                                    "No Valid Internet Connection!!",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            } else {
+                                productViewModel.updateProduct(
+                                    product = Product(
+                                        id = product.id,
+                                        productName = validProductName,
+                                        purchase = validPurchaseDate,
+                                        expiry = validExpiryDate,
+                                        category = updatedCategory,
+                                        productImageUri = selectedProductImageUri.toString(),
+                                        receiptImageUri = selectedProductImageUri.toString(),
+                                        notes = validNotes
+                                    )
+                                )
+                            }
+                        }
                     ) {
-                        Column {
-                            categoryOptions.forEach { category ->
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            updatedCategory = category
-                                            expanded = false
-                                        }
-                                        .padding(12.dp)
-                                        .background(Color.Transparent)
-                                ) {
-                                    Text(text = category, fontSize = 16.sp, color = Color.Black)
+                        Icon(
+                            imageVector = Icons.Filled.Check,
+                            contentDescription = "Edited Successfully!!"
+                        )
+                    }
+                }
+            )
+
+            // Show loading indicator if the product is being updated
+            if (updateProductsState is Results.Loading) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White)
+                        .statusBarsPadding()
+                        .navigationBarsPadding(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("Updating Product Details....")
+                    LinearProgressIndicator()
+                }
+            } else {
+                // Main content
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 8.dp)
+                        .verticalScroll(scrollState)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .padding(8.dp)
+                            .border(width = 2.dp, color = colorResource(R.color.black))
+                    ) {
+                        Image(
+                            painter = rememberAsyncImagePainter(
+                                model = selectedProductImageUri ?: product.productImageUri,
+                                placeholder = rememberAsyncImagePainter(product.productImageUri),
+                                error = painterResource(id = R.drawable.product_placeholder)
+                            ),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(280.dp)
+                                .padding(2.dp)
+                        )
+
+                        IconButton(
+                            onClick = {
+                                launcher.launch("image/*") // Open the gallery to select an image
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color.Black)
+                        ) {
+                            Row(
+                                modifier = Modifier.wrapContentWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.refresh_icon),
+                                    contentDescription = null,
+                                    tint = Color.White
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "Change Image",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+                            }
+                        }
+                    }
+
+                    DetailRow(
+                        label = "Product Name",
+                        updatedValue = validProductName,
+                        enable = true,
+                        textColor = Color.DarkGray,
+                        icon = null,
+                        onValueChange = { validProductName = it },
+                    )
+
+                    CategorySection(
+                        updatedCategory = updatedCategory,
+                        onSelectEnabled = true,
+                        onCategoryChange = { updatedCategory = it },
+                        onCategorySelection = { expanded = !expanded }
+                    )
+
+                    if (expanded) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(horizontal = 8.dp)
+                                .background(Color.White, RoundedCornerShape(20.dp))
+                                .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
+                        ) {
+                            Column {
+                                categoryOptions.forEach { category ->
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable {
+                                                updatedCategory = category
+                                                expanded = false
+                                            }
+                                            .padding(12.dp)
+                                            .background(Color.Transparent)
+                                    ) {
+                                        Text(text = category, fontSize = 16.sp, color = Color.Black)
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                DetailRow(
-                    label = "Purchase Date",
-                    textColor = Color.DarkGray,
-                    enable = false,
-                    icon = R.drawable.calendar,
-                    placeHolder = "DD/MM/YYYY",
-                    updatedValue = validPurchaseDate,
-                    onDetailRowClick = {
-                        showPurchaseDatePicker.value = true
-                    },
-                    onValueChange = { validPurchaseDate = it }
-                )
+                    DetailRow(
+                        label = "Purchase Date",
+                        textColor = Color.DarkGray,
+                        enable = false,
+                        icon = R.drawable.calendar,
+                        placeHolder = "DD/MM/YYYY",
+                        updatedValue = validPurchaseDate,
+                        onDetailRowClick = {
+                            showPurchaseDatePicker.value = true
+                        },
+                        onValueChange = { validPurchaseDate = it }
+                    )
 
-                DetailRow(
-                    label = "Expiry Date",
-                    textColor = Color.DarkGray,
-                    enable = false,
-                    icon = R.drawable.calendar,
-                    placeHolder = "DD/MM/YYYY",
-                    updatedValue = validExpiryDate,
-                    onDetailRowClick = {
-                        showExpiryDatePicker.value = true
-                    },
-                    onValueChange = { validExpiryDate = it }
-                )
+                    DetailRow(
+                        label = "Expiry Date",
+                        textColor = Color.DarkGray,
+                        enable = false,
+                        icon = R.drawable.calendar,
+                        placeHolder = "DD/MM/YYYY",
+                        updatedValue = validExpiryDate,
+                        onDetailRowClick = {
+                            showExpiryDatePicker.value = true
+                        },
+                        onValueChange = { validExpiryDate = it }
+                    )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                        .height(48.dp)
-                        .clip(shape = RoundedCornerShape(2.dp))
-                        .border(width = 1.dp, color = colorResource(R.color.black)),
-                    horizontalArrangement = Arrangement.spacedBy(0.dp)
-
-                ) {
                     Row(
                         modifier = Modifier
-                            .weight(0.5f)
-                            .background(colorResource(R.color.green))
-                            .border(
-                                width = 1.dp,
-                                color = colorResource(R.color.black)
-                            )
-                            .padding(horizontal = 8.dp), // Set a fixed height to align items properly
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                            .height(48.dp)
+                            .clip(shape = RoundedCornerShape(2.dp))
+                            .border(width = 1.dp, color = colorResource(R.color.black)),
+                        horizontalArrangement = Arrangement.spacedBy(0.dp)
+
                     ) {
-                        Text(
-                            modifier = Modifier.align(Alignment.CenterVertically), // Use weight to distribute space equally
-                            textAlign = TextAlign.Center,
-                            text = "View Receipt Image",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            maxLines = 1
-                        )
-                        Icon(
+                        Row(
                             modifier = Modifier
-                                .padding(start = 8.dp)
-                                .fillMaxHeight(1f),
-                            painter = painterResource(R.drawable.view_receipt),
-                            contentDescription = null
-                        )
-                    }
-                    Row(
-                        modifier = Modifier
-                            .background(colorResource(R.color.teal_700))
-                            .border(
-                                width = 1.dp,
-                                color = colorResource(R.color.black)
+                                .weight(0.5f)
+                                .background(colorResource(R.color.green))
+                                .border(
+                                    width = 1.dp,
+                                    color = colorResource(R.color.black)
+                                )
+                                .padding(horizontal = 8.dp), // Set a fixed height to align items properly
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                modifier = Modifier.align(Alignment.CenterVertically), // Use weight to distribute space equally
+                                textAlign = TextAlign.Center,
+                                text = "View Receipt Image",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                maxLines = 1
                             )
-                            .padding(horizontal = 8.dp), // Set a fixed height to align items properly
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            modifier = Modifier, // Use weight to distribute space equally
-                            textAlign = TextAlign.End,
-                            text = "Edit",
-                            color = colorResource(R.color.white),
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 1
-                        )
-                        Icon(
+                            Icon(
+                                modifier = Modifier
+                                    .padding(start = 8.dp)
+                                    .fillMaxHeight(1f),
+                                painter = painterResource(R.drawable.view_receipt),
+                                contentDescription = null
+                            )
+                        }
+                        Row(
                             modifier = Modifier
-                                .padding(start = 8.dp)
-                                .fillMaxHeight(1f),
-                            tint = colorResource(R.color.white),
-                            painter = painterResource(R.drawable.edit),
-                            contentDescription = null
-                        )
+                                .background(colorResource(R.color.teal_700))
+                                .border(
+                                    width = 1.dp,
+                                    color = colorResource(R.color.black)
+                                )
+                                .padding(horizontal = 8.dp), // Set a fixed height to align items properly
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                modifier = Modifier, // Use weight to distribute space equally
+                                textAlign = TextAlign.End,
+                                text = "Edit",
+                                color = colorResource(R.color.white),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1
+                            )
+                            Icon(
+                                modifier = Modifier
+                                    .padding(start = 8.dp)
+                                    .fillMaxHeight(1f),
+                                tint = colorResource(R.color.white),
+                                painter = painterResource(R.drawable.edit),
+                                contentDescription = null
+                            )
+                        }
                     }
+                    DetailRow(
+                        label = "Notes",
+                        textColor = Color.DarkGray,
+                        enable = true,
+                        icon = null,
+                        placeHolder = "write your notes here -->",
+                        updatedValue = validNotes,
+                        onDetailRowClick = {
+                            showExpiryDatePicker.value = true
+                        },
+                        onValueChange = {
+                            validNotes = it
+                        } // This handles the case where user types in the field (optional)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
-                DetailRow(
-                    label = "Notes",
-                    textColor = Color.DarkGray,
-                    enable = true,
-                    icon = null,
-                    placeHolder = "write your notes here -->",
-                    updatedValue = validNotes,
-                    onDetailRowClick = {
-                        showExpiryDatePicker.value = true
-                    },
-                    onValueChange = {
-                        validNotes = it
-                    } // This handles the case where user types in the field (optional)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }

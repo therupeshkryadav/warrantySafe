@@ -1,6 +1,12 @@
 package com.warrantysafe.app.presentation.ui.screens.main.utils.searchScreen
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -58,183 +64,195 @@ fun SearchScreen(
     val productViewModel: ProductViewModel = koinViewModel()
     val searchResults by productViewModel.searchResults.observeAsState(initial = Results.Loading)
 
-    LaunchedEffect(Unit) {
-        productViewModel.loadAllProducts()
-    }
     var text by remember { mutableStateOf("") }
     val focusRequester = FocusRequester()
 
-    Column(
-        modifier = Modifier.fillMaxSize()
+    // 🚀 State to control screen visibility
+    var isScreenVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        productViewModel.loadAllProducts()
+        isScreenVisible = true // Start animation on screen entry
+    }
+
+    AnimatedVisibility(
+        visible = isScreenVisible,
+        enter = fadeIn() + slideInHorizontally(initialOffsetX = { it / 4 })
     ) {
-        CustomTopAppBar(
-            title = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .background(color = colorResource(R.color.transparent))
-                ) {
-                    // Placeholder
-                    if (text.isEmpty()) {
-                        Text(
-                            text = "Search",
-                            style = MaterialTheme.typography.titleLarge,
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            CustomTopAppBar(
+                title = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .background(color = colorResource(R.color.transparent))
+                    ) {
+                        // Placeholder
+                        if (text.isEmpty()) {
+                            Text(
+                                text = "Search",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .align(Alignment.Center)
+                                    .clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null
+                                    ) {
+                                        focusRequester.requestFocus()
+                                    }
+                                    .background(color = colorResource(R.color.transparent))
+                            )
+                        }
+
+                        // TextField
+                        BasicTextField(
+                            value = text,
+                            onValueChange = {
+                                text = it
+                                productViewModel.searchProducts(it)
+                            },
+                            textStyle = MaterialTheme.typography.titleLarge.copy(
+                                color = colorResource(R.color.black)
+                            ),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .align(Alignment.Center)
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null
-                                ) {
-                                    focusRequester.requestFocus()
-                                }
                                 .background(color = colorResource(R.color.transparent))
+                                .focusRequester(focusRequester),
+                            singleLine = true
                         )
                     }
-
-                    // TextField
-                    BasicTextField(
-                        value = text,
-                        onValueChange = {
-                            text = it
-                        productViewModel.searchProducts(it) // Trigger search on text change
-                        },
-                        textStyle = MaterialTheme.typography.titleLarge.copy(
-                            color = colorResource(R.color.black)
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.Center)
-                            .background(color = colorResource(R.color.transparent))
-                            .focusRequester(focusRequester),
-                        singleLine = true
-                    )
-                }
-            },
-            navigationIcon = {
-                IconButton(
-                    onClick = { navController.popBackStack() }
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
-                    )
-                }
-            },
-            actions = {
-                IconButton(onClick = {}) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.search_warranty),
-                        contentDescription = "Search",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            }
-        )
-
-        // Initially show Recent Searches
-        if (text.isEmpty()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search Products",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(64.dp)
-                )
-                Text(
-                    text = "Search your query for products !!",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 16.dp)
-                )
-            }
-        }
-
-        // Show Products only when text is not empty
-        if (text.isNotEmpty()) {
-            when (searchResults) {
-                is Results.Loading -> {
-                    Text(
-                        text = "Searching...",
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                }
-                is Results.Success -> {
-                    val matchedList = (searchResults as Results.Success<List<Product>>).data
-                    if (matchedList.isNotEmpty()) {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(top = 8.dp, start = 8.dp, end = 8.dp)
-                        ) {
-                            items(matchedList.size) { index ->
-                                val product = matchedList[index]
-                                ProductCard(
-                                    onClick = { navigateToDetails(product, navController) },
-                                    onSlidingForward = {},
-                                    productName = product.productName,
-                                    itemTint = Color.Transparent,
-                                    category = product.category,
-                                    detailsColor = Color.Black,
-                                    purchase = product.purchase,
-                                    expiry = product.expiry,
-                                    imageUri = product.productImageUri,
-                                    onSlidingBackward = {}
-                                )
-                            }
-                            item {
-                                Spacer(modifier = Modifier.height(16.dp))
-                            }
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            isScreenVisible = false
+                            navController.popBackStack()
                         }
-                    } else {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.ShoppingCart,
-                                contentDescription = "No Products",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(64.dp)
-                            )
-                            Text(
-                                text = "No Products Found !!",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(top = 16.dp)
-                            )
-                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {}) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.search_warranty),
+                            contentDescription = "Search",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
-                is Results.Failure -> {
-                    Text(
-                        text = "Failed to load products",
-                        color = Color.Red,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+
+            // Initially show Recent Searches
+            if (text.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search Products",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(64.dp)
                     )
+                    Text(
+                        text = "Search your query for products !!",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                }
+            }
+
+            // Show Products only when text is not empty
+            if (text.isNotEmpty()) {
+                when (searchResults) {
+                    is Results.Loading -> {
+                        Text(
+                            text = "Searching...",
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                    }
+                    is Results.Success -> {
+                        val matchedList = (searchResults as Results.Success<List<Product>>).data
+                        if (matchedList.isNotEmpty()) {
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(top = 8.dp, start = 8.dp, end = 8.dp)
+                            ) {
+                                items(matchedList.size) { index ->
+                                    val product = matchedList[index]
+                                    ProductCard(
+                                        onClick = { navigateToDetails(product, navController) },
+                                        onSlidingForward = {},
+                                        productName = product.productName,
+                                        itemTint = Color.Transparent,
+                                        category = product.category,
+                                        detailsColor = Color.Black,
+                                        purchase = product.purchase,
+                                        expiry = product.expiry,
+                                        imageUri = product.productImageUri,
+                                        onSlidingBackward = {}
+                                    )
+                                }
+                                item {
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                }
+                            }
+                        } else {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.ShoppingCart,
+                                    contentDescription = "No Products",
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(64.dp)
+                                )
+                                Text(
+                                    text = "No Products Found !!",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.padding(top = 16.dp)
+                                )
+                            }
+                        }
+                    }
+                    is Results.Failure -> {
+                        Text(
+                            text = "Failed to load products",
+                            color = Color.Red,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                    }
                 }
             }
         }
     }
 }
 
-
 private fun navigateToDetails(product: Product, navController: NavController) {
-
     val route = Route.ProductDetailsScreen.createRoute(
         id = product.id
     )
     Log.d("fatal", "Navigating to route: $route")
     navController.navigate(route)
 }
+

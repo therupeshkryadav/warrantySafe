@@ -247,5 +247,5 @@ fun LoginScreen(navController: NavController) {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewLoginPage() {
-    ForgotPasswordScreen(rememberNavController())
+    LoginScreen(rememberNavController())
 }
