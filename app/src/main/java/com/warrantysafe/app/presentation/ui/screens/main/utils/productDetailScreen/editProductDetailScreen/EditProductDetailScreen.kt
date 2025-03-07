@@ -79,6 +79,7 @@ import org.koin.androidx.compose.koinViewModel
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
@@ -242,8 +243,14 @@ fun EditProductDetailScreen(
             selectedExpiryDate.dayOfMonth
         ).apply {
             // Properly set the minimum date using time in milliseconds
-            datePicker.minDate =
-                selectedPurchaseDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+            purchaseDateLocalDate?.let {
+                val minExpiryDate = it.plusDays(1) // Ensures expiry date is at least 1 day after purchase date
+                val minDateMillis = minExpiryDate
+                    .atStartOfDay(ZoneId.systemDefault())
+                    .toInstant()
+                    .toEpochMilli()
+                datePicker.minDate = minDateMillis
+            }
 
             setOnCancelListener {
                 showExpiryDatePicker.value = false

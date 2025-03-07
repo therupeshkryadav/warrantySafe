@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -63,6 +64,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
@@ -78,6 +80,7 @@ import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import com.warrantysafe.app.utils.NotificationHelper
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
@@ -142,7 +145,7 @@ fun AddScreen(navController: NavController) {
         enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
         exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize().navigationBarsPadding()) {
             // Activity Result Launcher for Image Picker
             val productReceiptLauncher =
                 rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -194,8 +197,12 @@ fun AddScreen(navController: NavController) {
                     calendar.get(Calendar.DAY_OF_MONTH)
                 ).apply {
                     purchaseDateLocalDate?.let {
-                        datePicker.minDate =
-                            it.atStartOfDay().toEpochSecond(java.time.ZoneOffset.UTC) * 1000
+                        val minExpiryDate = it.plusDays(1) // Ensures expiry date is at least 1 day after purchase date
+                        val minDateMillis = minExpiryDate
+                            .atStartOfDay(ZoneId.systemDefault())
+                            .toInstant()
+                            .toEpochMilli()
+                        datePicker.minDate = minDateMillis
                     }
                     setOnCancelListener {
                         showExpiryDatePicker.value = false
@@ -281,7 +288,7 @@ fun AddScreen(navController: NavController) {
                         Image(
                             painter = rememberAsyncImagePainter(
                                 selectedProductImageUri
-                                    ?: Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}")
+                                    ?: "android.resource://com.warrantysafe.app/${R.drawable.product_placeholder}".toUri()
                             ),
                             contentDescription = "Product Image",
                             contentScale = ContentScale.Crop,
