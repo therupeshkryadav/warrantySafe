@@ -24,7 +24,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.CircularProgressIndicator
@@ -45,9 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -55,14 +52,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
 import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.sideNavDrawer.productCardList.components.ProductCard
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
-import com.warrantysafe.app.presentation.ui.screens.main.utils.dropDownMenu.components.dropDownMenuItem
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import com.warrantysafe.app.utils.checkValidNetworkConnection
 import org.koin.androidx.compose.koinViewModel
@@ -230,57 +225,25 @@ fun ProductCardList(
                         items(allProducts) { product ->
                             val isSelected = selectedProducts.contains(product)
 
-                            Row {
-                                if (isSelected) {
-                                    Icon(
-                                        modifier = Modifier.align(Alignment.CenterVertically),
-                                        imageVector = Icons.Filled.Check,
-                                        contentDescription = "Selected",
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                    ProductCard(
-                                        productName = product.productName,
-                                        purchase = product.purchase,
-                                        expiry = product.expiry,
-                                        category = product.category,
-                                        imageUri = product.productImageUri,
-                                        itemTint = Color.Transparent, // Indicate selection
-                                        detailsColor = Color.Black, // Change text color for selected item
-                                        onSlidingForward = {
-                                            // Add to selected products
-                                            selectedProducts.add(product)
-                                        },
-                                        onSlidingBackward = {
-                                            // If already selected, deselect it
-                                            selectedProducts.remove(product)
-                                        },
-                                        onClick = {
-                                            navigateToDetails(product, navController)
-                                        }
-                                    )
-                                } else {
-                                    ProductCard(
-                                        productName = product.productName,
-                                        purchase = product.purchase,
-                                        expiry = product.expiry,
-                                        category = product.category,
-                                        imageUri = product.productImageUri,
-                                        itemTint = Color.Transparent, // Indicate selection
-                                        detailsColor = Color.Black, // Change text color for selected item
-                                        onSlidingForward = {
-                                            // Add to selected products
-                                            selectedProducts.add(product)
-                                        },
-                                        onSlidingBackward = {
-                                            // If already selected, deselect it
-                                            selectedProducts.remove(product)
-                                        },
-                                        onClick = {
-                                            navigateToDetails(product, navController)
-                                        }
-                                    )
-                                }
-                            }
+                            ProductCard(
+                                productName = product.productName,
+                                purchase = product.purchase,
+                                expiry = product.expiry,
+                                category = product.category,
+                                imageUri = product.productImageUri,
+                                itemTint = Color.Transparent,
+                                detailsColor = Color.Black,
+                                isSelected = isSelected,
+                                showSelection = true, // ✅ Show selection box only if selected
+                                onSelectToggle = {
+                                    if (isSelected) {
+                                        selectedProducts.remove(product)
+                                    } else {
+                                        selectedProducts.add(product)
+                                    }
+                                },
+                                onClick = { navigateToDetails(product, navController) }
+                            )
                         }
                         item {
                             Spacer(modifier = Modifier.height(16.dp))
