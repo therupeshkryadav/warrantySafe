@@ -173,7 +173,7 @@ class ProductRepositoryImpl(
             // Convert receipt image to PDF and upload to Appwrite (if provided)
             val receiptImageUri = product.receiptImageUri?:""
             val uploadedReceiptImagePdfUrl = if (receiptImageUri.isNotEmpty()) {
-                convertImageToPdfAndUpload(receiptImageUri)
+                uploadReceiptImageToAppwrite(receiptImageUri)
             } else {
                 ""
             }
@@ -223,43 +223,47 @@ class ProductRepositoryImpl(
             if (product.id.isNotEmpty()) {
                 val productRef = usersCollection.document(userId).collection("userProducts").document(product.id)
 
-                // Upload profile image to Appwrite (if provided)
+                val updatedFields = mutableMapOf<String, Any>()
+
+                // Check if product name changed
+                updatedFields["productName"] = product.productName
+
+                // Check if category, purchase, expiry, or notes changed
+                updatedFields["category"] = product.category
+                updatedFields["purchase"] = product.purchase
+                updatedFields["expiry"] = product.expiry
+                updatedFields["notes"] = product.notes
+
+                // Upload product image if selected
                 val productImageUri = product.productImageUri
-                val updatedProductImageUrl = if (productImageUri.isNotEmpty()) {
-                    uploadProductImageToAppwrite(productImageUri)
-                } else {
-                    ""
+
+                Log.d("ProductXD",productImageUri)
+                if (product.productImageUri != "test" ) {
+                    Log.d("ProductXD","1 $productImageUri")
+                    val updatedProductImageUrl = uploadProductImageToAppwrite(productImageUri)
+                    updatedFields["productImgUri"] = updatedProductImageUrl
                 }
 
-                // Convert receipt image to PDF and upload to Appwrite (if provided)
+                // Convert receipt image to PDF and upload if selected
                 val receiptImageUri = product.receiptImageUri
-                val updatedReceiptImagePdfUrl = if (receiptImageUri.isNotEmpty()) {
-                    convertImageToPdfAndUpload(receiptImageUri)
-                } else {
-                    ""
+                if (receiptImageUri != "test") {
+                    val updatedReceiptImagePdfUrl = uploadReceiptImageToAppwrite(receiptImageUri)
+                      //  convertImageToPdfAndUpload(receiptImageUri)
+                    Log.d("ProductXD","3 $updatedReceiptImagePdfUrl")
+                    updatedFields["receiptImgUri"] = updatedReceiptImagePdfUrl
                 }
 
-                // Prepare the product data
-                val productData = mapOf(
-                    "id" to productRef.id,
-                    "productName" to product.productName,
-                    "receiptImgUri" to updatedReceiptImagePdfUrl,
-                    "productImgUri" to updatedProductImageUrl,
-                    "category" to product.category,
-                    "purchase" to product.purchase,
-                    "expiry" to product.expiry,
-                    "notes" to product.notes
-                )
+                // Logging for debugging
+                Log.d("ProductRepo", "Fields to be updated: $updatedFields")
 
-                // Logging the product data for debugging
-                Log.d("ProductRepo", "Product data to be saved: $productData")
-
-                // Save the product data in the user's "userProducts" subcollection
-                productRef.set(productData).await()
-
-                // Success: Return the product object with the ID set
-                Log.d("ProductRepo", "Product added successfully: ${productRef.id}")
-                Results.Success(product)
+                // Only update changed fields
+                if (updatedFields.isNotEmpty()) {
+                    productRef.update(updatedFields).await()
+                    Log.d("ProductRepo", "Product updated successfully: ${productRef.id}")
+                    return Results.Success(product)
+                } else {
+                    return Results.Failure(Exception("No changes detected"))
+                }
             } else {
                 Results.Failure(Exception("Product ID is empty"))
             }
@@ -267,6 +271,7 @@ class ProductRepositoryImpl(
             Results.Failure(e)
         }
     }
+
 
     override suspend fun deleteProducts(products: List<Product>) {
         val userId = firebaseAuth.currentUser?.uid ?: return
@@ -289,6 +294,36 @@ class ProductRepositoryImpl(
             val contentResolver: ContentResolver = context.contentResolver
             val tempFile = withContext(Dispatchers.IO) {
                 File.createTempFile("product_image", ".jpg", context.cacheDir)
+            }
+
+            // Open the input stream and copy to the temporary file
+            contentResolver.openInputStream(Uri.parse(uri)).use { inputStream ->
+                tempFile.outputStream().use { outputStream ->
+                    inputStream?.copyTo(outputStream)
+                }
+            }
+
+            // Upload the temporary file to Appwrite storage
+            val file = appwriteStorage.createFile(
+                bucketId = "678fd444002f3d3c4897",
+                fileId = ID.unique(),
+                file = InputFile.fromFile(tempFile)
+            )
+
+            // Return the file's public URL
+            "${appwriteClient.endPoint}/storage/buckets/${file.bucketId}/files/${file.id}/view?project=warranty-safe&project=warranty-safe&mode=admin"
+        } catch (e: Exception) {
+            Log.e("AppwriteUpload", "Error uploading product image $uri", e)
+            ""
+        }
+    }
+
+    private suspend fun uploadReceiptImageToAppwrite(uri: String): String {
+        return try {
+            // Resolve the content:// URI using ContentResolver
+            val contentResolver: ContentResolver = context.contentResolver
+            val tempFile = withContext(Dispatchers.IO) {
+                File.createTempFile("receipt_image", ".jpg", context.cacheDir)
             }
 
             // Open the input stream and copy to the temporary file

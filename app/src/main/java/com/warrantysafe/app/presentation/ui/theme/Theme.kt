@@ -55,7 +55,8 @@ fun WarrantySafeTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         val window = (view.context as? Activity)?.window
-        window?.statusBarColor = android.graphics.Color.WHITE // Always black status bar
+        window?.statusBarColor = android.graphics.Color.WHITE // Always white status bar
+        window?.navigationBarColor = android.graphics.Color.WHITE // Always white nav bar
         WindowCompat.getInsetsController(window!!, view).isAppearanceLightStatusBars = true // Forces white icons
     }
 

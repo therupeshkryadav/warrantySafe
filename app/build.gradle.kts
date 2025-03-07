@@ -74,9 +74,6 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.10.1") // Or the latest version
 
-    // Replace 'latest-version' with the actual latest version number
-    implementation("com.github.barteksc:AndroidPdfViewerV1:1.6.0")
-
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
 
     // Koin

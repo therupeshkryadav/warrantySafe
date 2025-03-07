@@ -65,6 +65,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.google.gson.Gson
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
@@ -122,6 +123,8 @@ fun EditProductDetailScreen(
 
     // States for selected image URI
     var selectedProductImageUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedReceiptImageUri by remember { mutableStateOf<Uri?>(null) }
+
 
     // Handle state changes for user updates
     LaunchedEffect(updateProductsState) {
@@ -167,13 +170,20 @@ fun EditProductDetailScreen(
     val showExpiryDatePicker = remember { mutableStateOf(false) }
 
     // Activity Result Launcher for Image Picker
-    val launcher =
-        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
                 selectedProductImageUri =
                     uri // Handle success (uri is not null, content was selected)
             }
         }
+
+    // Activity Result Launcher for Image Picker
+    val launcher2 = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if (uri != null) {
+            selectedReceiptImageUri =
+                uri // Handle success (uri is not null, content was selected)
+        }
+    }
 
     if (showPurchaseDatePicker.value) {
         // Parse the validPurchaseDate or use the current date as default
@@ -293,11 +303,12 @@ fun EditProductDetailScreen(
                                         purchase = validPurchaseDate,
                                         expiry = validExpiryDate,
                                         category = updatedCategory,
-                                        productImageUri = selectedProductImageUri.toString(),
-                                        receiptImageUri = selectedProductImageUri.toString(),
+                                        productImageUri = selectedProductImageUri?.toString()?:"test",
+                                        receiptImageUri = selectedReceiptImageUri?.toString()?:"test",
                                         notes = validNotes
                                     )
                                 )
+
                             }
                         }
                     ) {
@@ -496,7 +507,7 @@ fun EditProductDetailScreen(
                                 .border(
                                     width = 1.dp,
                                     color = colorResource(R.color.black)
-                                )
+                                ).clickable{launcher2.launch("image/*")}
                                 .padding(horizontal = 8.dp), // Set a fixed height to align items properly
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -518,6 +529,19 @@ fun EditProductDetailScreen(
                                 contentDescription = null
                             )
                         }
+                    }
+                    //  updated receipt image ui
+                    selectedReceiptImageUri?.let { uri ->
+                        Image(
+                            painter = rememberImagePainter(data = uri),
+                            contentDescription = "Selected Image",
+                            modifier = Modifier
+                                .wrapContentWidth()
+                                .height(350.dp)
+                                .padding(8.dp)
+                                .border(width = 1.dp, color = Color.Gray)
+                                .align(Alignment.CenterHorizontally)
+                        )
                     }
                     DetailRow(
                         label = "Notes",

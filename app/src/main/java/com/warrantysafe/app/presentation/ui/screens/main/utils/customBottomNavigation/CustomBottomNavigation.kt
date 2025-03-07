@@ -37,7 +37,7 @@ fun CustomBottomNavigation(
     NavigationBar(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp)
+            .padding(8.dp)
             .clip(RoundedCornerShape(24.dp)).border(1.dp,Color.DarkGray, RoundedCornerShape(24.dp)),
         containerColor = Color.White,
         tonalElevation = 10.dp

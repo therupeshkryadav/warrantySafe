@@ -1,6 +1,7 @@
 package com.warrantysafe.app.presentation.ui.screens.main.homeScreen
 
 import CustomBottomNavigation
+import android.R.attr.maxHeight
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -143,13 +145,13 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .systemBarsPadding()
             .statusBarsPadding()
+            .navigationBarsPadding()
     ) {
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
-                BoxWithConstraints(
+                Box(
                     modifier = Modifier
                         .fillMaxHeight()
                         .wrapContentWidth()

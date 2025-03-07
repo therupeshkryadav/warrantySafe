@@ -2,8 +2,7 @@ package com.warrantysafe.app.presentation.ui.screens.main.utils.productDetailScr
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.media.MediaScannerConnection
-import android.net.Uri
+import android.graphics.pdf.PdfDocument
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
@@ -11,7 +10,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,13 +22,14 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -38,7 +37,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,9 +44,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -59,14 +55,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
-import com.github.barteksc.pdfviewer.PDFView
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.google.gson.Gson
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.Product
@@ -79,7 +73,6 @@ import com.warrantysafe.app.presentation.ui.screens.main.utils.categorySection.C
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.viewModel.ProductViewModel
 import com.warrantysafe.app.utils.checkValidNetworkConnection
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -98,7 +91,8 @@ fun ProductDetailScreen(
     productId: String
 ) {
     val context = LocalContext.current
-    val showPdfViewer = remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val showReceipt = remember { mutableStateOf(false) }
     val productViewModel: ProductViewModel = koinViewModel()
     val productDetailState = productViewModel.productDetailState.observeAsState(initial = Results.Loading)
     // Remember and update internet connection status dynamically
@@ -192,11 +186,11 @@ fun ProductDetailScreen(
                         }
                     }
                 )
-                    if (showPdfViewer.value) {
+                    if (showReceipt.value) {
                         ViewReceiptDialog(
                             receiptUrl = product.receiptImageUri,
                             onDismiss = {
-                                showPdfViewer.value = false // Close the dialog
+                                showReceipt.value = false // Close the dialog
                             }
                         )
                     }
@@ -207,11 +201,10 @@ fun ProductDetailScreen(
                         .verticalScroll(scrollState)
                 ) {
                     // Handling image loading and displaying with simplified logic
-                    val initialImageUri by remember { mutableStateOf<Uri?>(product.productImageUri.toUri()) }
 
                     Image(
                         painter = rememberAsyncImagePainter(
-                            model = initialImageUri?:product.productImageUri ,
+                            model = product.productImageUri ,
                             placeholder = rememberAsyncImagePainter(product.productImageUri),
                             error = painterResource(id = R.drawable.product_placeholder)
                         ),
@@ -268,7 +261,7 @@ fun ProductDetailScreen(
                                     color = colorResource(R.color.black)
                                 )
                                 .clickable {
-                                    showPdfViewer.value =true // Call viewReceipt here
+                                    showReceipt.value =true // Call viewReceipt here
                                 }
                                 .padding(horizontal = 8.dp), // Set a fixed height to align items properly
                             verticalAlignment = Alignment.CenterVertically,
@@ -296,8 +289,10 @@ fun ProductDetailScreen(
                                 .clickable {
                                     product.receiptImageUri.let { receiptUrl ->
                                         if (receiptUrl.isNotEmpty()) {
-                                            val fileName = "${product.productName}_receipt.pdf"
-                                            downloadAndSavePdf(context, receiptUrl, fileName)
+                                            val fileName = "${product.productName}_receipt"
+                                            coroutineScope.launch {
+                                                downloadAndSavePdf(context, receiptUrl, fileName)
+                                            }
                                         } else {
                                             Toast.makeText(context, "No Receipt Available", Toast.LENGTH_LONG).show()
                                         }
@@ -387,53 +382,49 @@ fun ProductDetailScreen(
     }
 }
 
-fun downloadAndSavePdf(context: Context, url: String, fileName: String) {
-    val client = OkHttpClient()
-    val request = Request.Builder().url(url).build()
+suspend fun downloadAndSavePdf(context: Context, url: String, fileName: String) {
+    withContext(Dispatchers.IO) {  // Run on IO thread for performance
+        val imageLoader = ImageLoader(context)
+        val request = ImageRequest.Builder(context)
+            .data(url)
+            .allowHardware(false) // Needed for bitmap conversion
+            .build()
 
-    CoroutineScope(Dispatchers.IO).launch {
         try {
-            val response = client.newCall(request).execute()
+            val result = (imageLoader.execute(request) as? SuccessResult)?.drawable
+            val bitmap = (result as? android.graphics.drawable.BitmapDrawable)?.bitmap
 
-            if (!response.isSuccessful) {
-                throw IOException("Failed to download file: $url")
-            }
+            if (bitmap != null) {
+                // Convert image to PDF
+                val pdfDocument = PdfDocument()
+                val pageInfo = PdfDocument.PageInfo.Builder(bitmap.width, bitmap.height, 1).create()
+                val page = pdfDocument.startPage(pageInfo)
+                val canvas = page.canvas
+                canvas.drawBitmap(bitmap, 0f, 0f, null)
+                pdfDocument.finishPage(page)
 
-            val inputStream = response.body?.byteStream()
+                // Save PDF in device's private storage
+                // ✅ Try saving in Downloads folder
+                val pdfFile = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                    "$fileName.pdf"
+                )
 
-            // Save to public Downloads folder
-            val file = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                fileName
-            )
-
-            val outputStream = FileOutputStream(file)
-
-            inputStream?.use { input ->
-                outputStream.use { output ->
-                    input.copyTo(output)
+                FileOutputStream(pdfFile).use { outputStream ->
+                    pdfDocument.writeTo(outputStream)
+                    pdfDocument.close()
                 }
-            }
 
-            // Notify MediaScanner about the new file
-            MediaScannerConnection.scanFile(
-                context,
-                arrayOf(file.absolutePath),
-                arrayOf("application/pdf")
-            ) { path, uri ->
-                Log.d("DownloadAndSavePDF", "File scanned: $path, Uri: $uri")
+                // Log and notify user
+                Log.d("DownloadPdf", "✅ PDF saved at: ${pdfFile.absolutePath}")
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "PDF saved: ${pdfFile.name}", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                Log.e("DownloadPdf", "❌ Failed to load image.")
             }
-
-            withContext(Dispatchers.Main) {
-                Log.d("PDF", "Path: ${file.absolutePath}")
-                Toast.makeText(context, "PDF Saved: ${file.absolutePath}", Toast.LENGTH_LONG).show()
-            }
-
         } catch (e: Exception) {
-            Log.e("DownloadAndSavePDF", "Error downloading PDF: ${e.message}")
-            withContext(Dispatchers.Main) {
-                Toast.makeText(context, "Failed to Download PDF", Toast.LENGTH_LONG).show()
-            }
+            Log.e("DownloadPdf", "❌ Error saving PDF: ${e.message}", e)
         }
     }
 }
@@ -443,95 +434,35 @@ fun ViewReceiptDialog(
     receiptUrl: String,
     onDismiss: () -> Unit
 ) {
-    val context = LocalContext.current
-    val pdfFile = remember { mutableStateOf<File?>(null) }
-    val coroutineScope = rememberCoroutineScope()
-
-    // Download and cache the PDF
-    LaunchedEffect(receiptUrl) {
-        coroutineScope.launch(Dispatchers.IO) {
-            try {
-                // Download the PDF and save locally
-                val downloadedFile = downloadPdf(context, receiptUrl)
-                pdfFile.value = downloadedFile
-            } catch (e: Exception) {
-                Log.e("ViewReceipt", "Failed to download PDF: ${e.message}")
-                coroutineScope.launch(Dispatchers.Main) {
-                    Toast.makeText(context, "Failed to load PDF", Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-    }
-
-
-
-    if (pdfFile.value != null) {
-        Dialog(
-            onDismissRequest = { onDismiss() },
-            properties = DialogProperties(dismissOnBackPress = true,dismissOnClickOutside = true,usePlatformDefaultWidth = false)
-        ) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = Color.White,
+        title = { Text("Receipt") },
+        text = {
             Box(
                 modifier = Modifier
-                    .wrapContentSize()
-                    .border(1.dp,Color.Black)// Make Box fill the entire Dialog
+                    .fillMaxWidth()
+                    .height(400.dp),
+                contentAlignment = Alignment.Center
             ) {
-                AndroidView(
-                    factory = { context ->
-                        PDFView(context, null).apply {
-                            try {
-                                // Load PDF from the cached file
-                                fromFile(pdfFile.value)
-                                    .enableSwipe(false)
-                                    .showPageWithAnimation(false)
-                                    .enableDoubletap(true)
-                                    .onLoad { nbPages ->
-                                        Log.d("PDFViewer", "Loaded PDF with $nbPages pages")
-
-                                    }
-                                    .onError { t ->
-                                        Log.d("CheckPdf", "Exception: ${t.localizedMessage}")
-                                        Toast.makeText(
-                                            context,
-                                            "Failed to load PDF: ${t.message}",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                    .load()
-                            } catch (e: Exception) {
-                                Toast.makeText(context, "Invalid receipt URI", Toast.LENGTH_LONG).show()
-                                Log.e("ViewReceipt", "Error loading PDF: ${e.message}")
-                            }
-                        }
-                    },
-                    modifier = Modifier.fillMaxSize(0.6f) // Make PDF Viewer fill the Box
+                Image(
+                    painter = rememberAsyncImagePainter(receiptUrl),
+                    contentDescription = "Receipt Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Fit
                 )
             }
+        },
+        confirmButton = {
+            Button(onClick = onDismiss) {
+                Text("Close")
+            }
         }
-    }
+    )
 }
 
-
-fun downloadPdf(context: Context, url: String): File {
-    val client = OkHttpClient()
-    val request = Request.Builder().url(url).build()
-    val response = client.newCall(request).execute()
-
-    if (!response.isSuccessful) {
-        throw IOException("Failed to download file: $url")
-    }
-
-    val inputStream = response.body?.byteStream()
-    val file = File(context.cacheDir, "downloaded_receipt.pdf")
-    val outputStream = FileOutputStream(file)
-
-    inputStream?.use { input ->
-        outputStream.use { output ->
-            input.copyTo(output)
-        }
-    }
-
-    return file
-}
 
 // Helper function to get the current date in "dd/MM/yyyy" format
 @SuppressLint("NewApi")
