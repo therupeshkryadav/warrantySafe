@@ -144,37 +144,43 @@ class UserRepositoryImpl(
         return try {
             val userId = firebaseAuth.currentUser?.uid
                 ?: return Results.Failure(Exception("No authenticated user found"))
-            Log.d("AppWriteUploa", "upload profile image: ${user.profileImageUrl}")
-            // Upload profile image to Appwrite (if provided)
-            val updatedProfileImageUrl = if (user.profileImageUrl.isNotEmpty()) {
-                try {
-                    uploadProfileImageToAppwrite(user.profileImageUrl)
-                } catch (e: Exception) {
-                    Log.e("AppWriteUploa", "Failed to upload profile image: ${e.message}")
-                    return Results.Failure(e)
-                }
-            } else {
-                ""
-            }
+
+            Log.d("AppWriteUpload", "Updating user: ${user.username}")
+
+            // Fetch current user data from Firestore
+            val userSnapshot = usersCollection.document(userId).get().await()
+            val currentProfileImageUrl = userSnapshot.getString("profileImageUrl") ?: ""
 
             // Prepare user data for update
-            val userData = mapOf(
+            val userData = mutableMapOf<String, Any>(
                 "username" to user.username,
                 "name" to user.name,
                 "email" to user.email,
-                "phoneNumber" to user.phoneNumber,
-                "profileImageUrl" to updatedProfileImageUrl
+                "phoneNumber" to user.phoneNumber
             )
+
+            // Upload new profile image only if it's different from the existing one
+            if (user.profileImageUrl != currentProfileImageUrl) {
+                try {
+                    val updatedProfileImageUri = uploadProfileImageToAppwrite(user.profileImageUrl)
+                    userData["profileImageUrl"] = updatedProfileImageUri
+                } catch (e: Exception) {
+                    Log.e("AppWriteUpload", "Failed to upload profile image: ${e.message}")
+                    return Results.Failure(e)
+                }
+            }
 
             // Update Firestore database
             usersCollection.document(userId).update(userData).await()
 
-            Results.Success(user.copy(profileImageUrl = updatedProfileImageUrl))
+            Results.Success(user.copy(profileImageUrl = userData["profileImageUrl"] as? String ?: currentProfileImageUrl))
         } catch (e: Exception) {
             Log.e("UpdateUser", "Error updating user: ${e.message}")
             Results.Failure(e)
         }
     }
+
+
 
     override suspend fun signOutUser(): Results<Unit> {
         return try {

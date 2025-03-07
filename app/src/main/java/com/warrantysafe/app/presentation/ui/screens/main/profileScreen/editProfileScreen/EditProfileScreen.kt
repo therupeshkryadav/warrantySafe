@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -77,6 +78,11 @@ fun EditProfileScreen(
     var actualPhoneNumber by remember { mutableStateOf(phoneNumber) }
     val scrollState = rememberScrollState()
     val userViewModel: UserViewModel = koinViewModel()
+    // Validation Logic
+    val isValidName = actualName.isNotBlank()
+    val isValidUsername = actualUsername.matches(Regex("^[a-z0-9.]+$"))
+    val isValidEmail = android.util.Patterns.EMAIL_ADDRESS.matcher(actualEmail).matches()
+    val isValidPhone = actualPhoneNumber.length in 10..15 && actualPhoneNumber.all { it.isDigit() }
 
     // State to handle updated profile image
     var updatedProfileUri by remember { mutableStateOf<Uri?>(profileImgUri) }
@@ -97,14 +103,14 @@ fun EditProfileScreen(
         when (updateUserState) {
             is Results.Loading -> {
                 // Show a loading indicator while the product is being updated
-                Log.d("ProductUpdate", "Updating product...")
+                Log.d("ProductUpdate", "Updating profile...")
 
             }
             is Results.Success -> {
                 // Handle the success case when the product has been updated
                 val updatedProduct = (updateUserState as Results.Success).data
                 Log.d("ProfileUpdate", "Profile updated successfully: ${updatedProduct.username}")
-                Toast.makeText(context, "Product updated successfully!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Profile updated successfully!", Toast.LENGTH_SHORT).show()
                 navController.popBackStack()
             }
             is Results.Failure -> {
@@ -117,7 +123,7 @@ fun EditProfileScreen(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().navigationBarsPadding()) {
         CustomTopAppBar(
             title = {
                 Text(
@@ -147,8 +153,8 @@ fun EditProfileScreen(
                 IconButton(onClick = {
                     Log.d("AppwriteUpload", "updatedProfileUri ->> ${updatedProfileUri.toString()}")
                     isConnected.value=checkValidNetworkConnection(context)
-                    if(!isConnected.value){
-                        Toast.makeText(context, "No Valid Internet Connection!!", Toast.LENGTH_LONG).show()
+                    if(!isConnected.value || !isValidPhone || !isValidName || !isValidEmail || !isValidUsername){
+                        Toast.makeText(context, "No Valid Details or Check the connection!!", Toast.LENGTH_LONG).show()
                     }else{
                         userViewModel.updateUser(
                             user = User(
@@ -216,6 +222,8 @@ fun EditProfileScreen(
 
                 Spacer(modifier = Modifier.size(16.dp))
 
+
+
                 // Profile details (e.g., name, username, email, phone number)
                 DetailRow(
                     "Name",
@@ -225,6 +233,14 @@ fun EditProfileScreen(
                     icon = null,
                     onValueChange = { actualName = it }
                 )
+                if (!isValidName) {
+                    Text(
+                        text = "Name cannot be empty",
+                        color = Color.Red,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                    )
+                }
                 DetailRow(
                     "Username",
                     updatedValue = actualUsername,
@@ -233,6 +249,14 @@ fun EditProfileScreen(
                     icon = null,
                     onValueChange = { actualUsername = it }
                 )
+                if (!isValidUsername) {
+                    Text(
+                        text = "Invalid username! Only lowercase letters, numbers, and dots are allowed.",
+                        color = Color.Red,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                    )
+                }
                 DetailRow(
                     "Email",
                     updatedValue = actualEmail,
@@ -241,6 +265,14 @@ fun EditProfileScreen(
                     icon = null,
                     onValueChange = { actualEmail = it }
                 )
+                if (!isValidEmail) {
+                    Text(
+                        text = "Invalid email address",
+                        color = Color.Red,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                    )
+                }
                 PhoneDetailRow(
                     label = "Phone",
                     enable = true,
@@ -249,7 +281,16 @@ fun EditProfileScreen(
                     onCountryCodeChange = { /* Handle country code */ },
                     onPhoneNumberChange = { actualPhoneNumber = it }
                 )
+                if (!isValidPhone) {
+                    Text(
+                        text = "Enter a valid phone number (10-15 digits)",
+                        color = Color.Red,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                    )
+                }
             }
+
         }
     }
 }
