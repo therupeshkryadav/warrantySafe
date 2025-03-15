@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -27,13 +26,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -61,21 +57,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.google.firebase.firestore.FirebaseFirestore
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-import androidx.core.net.toUri
 
 @Composable
 fun SignUpScreen(
@@ -111,8 +104,14 @@ fun SignUpScreen(
     val password = remember { mutableStateOf("") }
     val confPassword = remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var confPasswordVisible by remember { mutableStateOf(false) }
+    // State for storing the error message
+    var phoneError by remember { mutableStateOf<String?>(null) }
+    // Email Address Field
+    var isEmailValid by remember { mutableStateOf(true) }
+    var emailExistenceMessage by remember { mutableStateOf<String?>(null) }
 
-    val isUsernameTaken by userViewModel.isUsernameTaken.collectAsState()
+    var passwordError by remember { mutableStateOf<String?>(null) }
 
     // Default profile image URI (when no image is selected)
     val defaultProfileImage =
@@ -128,7 +127,7 @@ fun SignUpScreen(
         profileImageUri = uri ?: defaultProfileImage
     }
 
-    val isValidInput = name.value.isNotEmpty() && email.value.isNotEmpty() && phoneNumber.value.isNotEmpty() && password.value.isNotEmpty() && confPassword.value == password.value
+    val isValidInput = name.value.isNotEmpty() && email.value.isNotEmpty() && phoneNumber.value.isNotEmpty() && password.value.isNotEmpty() && confPassword.value == password.value && phoneError.isNullOrEmpty()
 
     Column(
         modifier = Modifier
@@ -225,8 +224,15 @@ fun SignUpScreen(
                 return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
             }
 
-// Email Address Field
-            var isEmailValid by remember { mutableStateOf(true) }
+            LaunchedEffect(email.value) {
+                if (email.value.isNotEmpty() && isValidEmail(email.value)) {
+                    checkEmailIdExists(email.value) { exists ->
+                        emailExistenceMessage = if (exists) "Email ID is registered with us!!" else null
+                    }
+                } else {
+                    emailExistenceMessage = null
+                }
+            }
 
             TextField(
                 value = email.value,
@@ -265,29 +271,43 @@ fun SignUpScreen(
                 )
             )
 
-// Error message if email is invalid
-            if (email.value.isNotEmpty() && !isEmailValid) {
-                Text(
-                    text = "Invalid email address",
-                    color = Color.Red,
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-                )
+            // Error messages
+            if (email.value.isNotEmpty()) {
+                if (!isEmailValid) {
+                    Text(
+                        text = "Incorrect email address format!!",
+                        color = Color.Red,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                    )
+                } else if (emailExistenceMessage != null) {
+                    Text(
+                        text = emailExistenceMessage!!,
+                        color = Color.Red,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                    )
+                }
             }
 
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // State for storing the error message
-            var phoneError by remember { mutableStateOf<String?>(null) }
 
-// Phone Number Field
+
+            // Phone Number Field
             TextField(
                 value = phoneNumber.value,
                 onValueChange = {
                     if (it.all { char -> char.isDigit() }) { // Check if all characters are digits
                         phoneNumber.value = it
                         phoneError = if (phoneNumber.value.isEmpty() || it.length in 10..15) null else "Enter a valid phone number (10-15 digits)"
+                        // Check in database
+                        checkPhoneNumberExists(it) { exists ->
+                            if (exists) {
+                                phoneError = "Number is registered with us!!"
+                            }
+                        }
                     } else {
                         phoneError = "Only numbers are allowed!"
                     }
@@ -324,7 +344,7 @@ fun SignUpScreen(
                 )
             )
 
-// Show Error Message if Validation Fails
+           // Show Error Message if Validation Fails
             phoneError?.let {
                 Text(
                     text = it,
@@ -336,22 +356,22 @@ fun SignUpScreen(
 
 
             Spacer(modifier = Modifier.height(16.dp))
-            var passwordError by remember { mutableStateOf<String?>(null) }
 
             // Function to validate password
             fun isValidPassword(input: String): Boolean {
-                val passwordRegex = "^[A-Z][a-zA-Z0-9@]*$".toRegex() // Starts with UpperCase, contains only allowed characters
+                val passwordRegex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[@\$!%*?&])[A-Za-z0-9@\$!%*?&]{8,}$".toRegex()
+                // Contains at least one UpperCase, contains only allowed characters
                 return input.matches(passwordRegex) &&
                         input.any { it.isDigit() } && // At least one digit
                         input.contains("@") // At least one '@'
             }
 
-// Password Field
+            // Password Field
             TextField(
                 value = password.value,
                 onValueChange = {
                     password.value = it
-                    passwordError = if (password.value.isEmpty() || isValidPassword(it)) null else "Password must start with an uppercase letter, contain at least one digit, one '@', and no other special characters."
+                    passwordError = if (password.value.isEmpty() || isValidPassword(it)) null else "Password must contain an uppercase letter, contain at least one digit, one '@', and no other special characters."
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -394,7 +414,7 @@ fun SignUpScreen(
                 )
             )
 
-// Show error message if validation fails
+            // Show error message if validation fails
             passwordError?.let {
                 Text(
                     text = it,
@@ -418,7 +438,7 @@ fun SignUpScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .border(width = 1.dp,
-                        color = if (passwordError != null) Color.Red else Color.LightGray,
+                        color = if (confPasswordError != null) Color.Red else Color.LightGray,
                         shape = RoundedCornerShape(20.dp)),
                 placeholder = {
                     Text("Confirm Your Password", color = Color.Gray)
@@ -430,11 +450,11 @@ fun SignUpScreen(
                     )
                 },
                 singleLine = true,
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                visualTransformation = if (confPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
-                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    IconButton(onClick = { confPasswordVisible = !confPasswordVisible }) {
                         Icon(
-                            painter = if(passwordVisible)painterResource(R.drawable.ic_eye)else painterResource(R.drawable.unhide_password),
+                            painter = if(confPasswordVisible)painterResource(R.drawable.ic_eye)else painterResource(R.drawable.unhide_password),
                             contentDescription = "Toggle Password Visibility"
                         )
                     }
@@ -519,6 +539,32 @@ fun SignUpScreen(
 
 
     }
+}
+
+// Function to check if the phone number exists in Firestore
+fun checkPhoneNumberExists(phone: String, onResult: (Boolean) -> Unit) {
+    val usersCollection = FirebaseFirestore.getInstance().collection("users")
+    usersCollection.whereEqualTo("phoneNumber", phone)
+        .get()
+        .addOnSuccessListener { documents ->
+            onResult(!documents.isEmpty) // If documents are found, phone exists
+        }
+        .addOnFailureListener {
+            onResult(false) // Assume not found on failure
+        }
+}
+
+// Function to check if the phone number exists in Firestore
+fun checkEmailIdExists(email: String, onResult: (Boolean) -> Unit) {
+    val usersCollection = FirebaseFirestore.getInstance().collection("users")
+    usersCollection.whereEqualTo("email", email)
+        .get()
+        .addOnSuccessListener { documents ->
+            onResult(!documents.isEmpty) // If documents are found, phone exists
+        }
+        .addOnFailureListener {
+            onResult(false) // Assume not found on failure
+        }
 }
 
 @Preview(showBackground = true)

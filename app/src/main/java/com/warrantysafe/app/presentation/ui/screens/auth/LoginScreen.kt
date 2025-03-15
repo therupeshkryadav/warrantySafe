@@ -75,7 +75,7 @@ fun LoginScreen(navController: NavController) {
     }
 
     // Remember state for user input
-    val email = remember { mutableStateOf("") }
+    val identifier = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
 
     Column(
@@ -104,8 +104,8 @@ fun LoginScreen(navController: NavController) {
 
         // Email Field
         TextField(
-            value = email.value,
-            onValueChange = { email.value = it },
+            value = identifier.value,
+            onValueChange = { identifier.value = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -115,7 +115,7 @@ fun LoginScreen(navController: NavController) {
                     shape = RoundedCornerShape(20.dp)
                 ),
             placeholder = {
-                Text("Enter Email", color = Color.Gray)
+                Text("Enter Email / Phone Number", color = Color.Gray)
             },
             shape = RoundedCornerShape(20.dp),
             leadingIcon = {
@@ -198,9 +198,9 @@ fun LoginScreen(navController: NavController) {
         // Login Button
         Button(
             onClick = {
-                if (email.value.isNotEmpty() && password.value.isNotEmpty()) {
+                if (identifier.value.isNotEmpty() && password.value.isNotEmpty()) {
                     userViewModel.loginUser(
-                        email = email.value,
+                        identifier = identifier.value,
                         password = password.value
                     )
                 } else {
@@ -212,7 +212,7 @@ fun LoginScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            enabled = email.value.isNotEmpty() && password.value.isNotEmpty(), // Disable the button while loading
+            enabled = identifier.value.isNotEmpty() && password.value.isNotEmpty(), // Disable the button while loading
         ) {
             if (isLoading.value) {
                 CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))

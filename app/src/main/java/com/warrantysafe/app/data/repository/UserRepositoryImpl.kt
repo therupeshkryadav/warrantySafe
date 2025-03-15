@@ -7,6 +7,7 @@ import android.util.Log
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.domain.repository.UserRepository
@@ -37,7 +38,6 @@ class UserRepositoryImpl(
         else
             Route.LoginScreen.route
     }
-
 
     override suspend fun signUpUser(user: User): Results<User> {
         return try {
@@ -80,12 +80,26 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun loginUser(email: String, password: String): Results<User> {
+    override suspend fun loginUser(identifier: String, password: String): Results<User> {
         return try {
+            val email = if (identifier.contains("@")) {
+                identifier // If it's an email, use it directly.
+            } else {
+                getEmailFromPhoneNumber(identifier) ?: return Results.Failure(Exception("No account linked with this phone number."))
+            }
+
             val authResult = firebaseAuth.signInWithEmailAndPassword(email, password).await()
             val firebaseUser = authResult.user
+            getUserFromFirestore(firebaseUser)
 
-            if (firebaseUser != null) {
+        } catch (e: Exception) {
+            Results.Failure(e)
+        }
+    }
+
+    private suspend fun getUserFromFirestore(firebaseUser: FirebaseUser?): Results<User> {
+        return if (firebaseUser != null) {
+            try {
                 val userDocument = usersCollection.document(firebaseUser.uid).get().await()
 
                 if (userDocument.exists()) {
@@ -99,11 +113,25 @@ class UserRepositoryImpl(
                 } else {
                     Results.Failure(Exception("User data not found in Firestore"))
                 }
+            } catch (e: Exception) {
+                Results.Failure(e)
+            }
+        } else {
+            Results.Failure(Exception("Authentication failed: Firebase user is null"))
+        }
+    }
+
+
+    private suspend fun getEmailFromPhoneNumber(phoneNumber: String): String? {
+        return try {
+            val querySnapshot = usersCollection.whereEqualTo("phoneNumber", phoneNumber).get().await()
+            if (!querySnapshot.isEmpty) {
+                querySnapshot.documents.first().getString("email")
             } else {
-                Results.Failure(Exception("Authentication failed: Firebase user is null"))
+                null
             }
         } catch (e: Exception) {
-            Results.Failure(e)
+            null
         }
     }
 

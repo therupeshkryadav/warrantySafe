@@ -32,9 +32,6 @@ class UserViewModel(
     private val deleteUserUseCase: DeleteUserUseCase
 ) : ViewModel() {
 
-    private val _isUsernameTaken = MutableStateFlow<Boolean?>(null) // `null` initially
-    val isUsernameTaken: StateFlow<Boolean?> = _isUsernameTaken
-
     private val _loginState = MutableLiveData<Results<User>>()
     val loginState: LiveData<Results<User>> get() = _loginState
 
@@ -94,12 +91,14 @@ class UserViewModel(
         }
     }
 
+
+
     // Handle user login
-    fun loginUser(email: String, password: String) {
+    fun loginUser(identifier: String, password: String) {
         viewModelScope.launch {
             try {
                 _isLoading.value = true // Start loading
-                val result = loginUserUseCase.invoke(email, password)
+                val result = loginUserUseCase.invoke(identifier, password)
                 _loginState.value = result
                 _isLoading.value = false // Stop loading
             } catch (e: Exception) {

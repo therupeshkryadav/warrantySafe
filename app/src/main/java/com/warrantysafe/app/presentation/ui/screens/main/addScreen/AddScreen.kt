@@ -241,7 +241,7 @@ fun AddScreen(navController: NavController) {
                     },
                     actions = {
                         IconButton(onClick = {
-                            if (productName.isBlank() || purchaseDate.isBlank() || expiryDate.isBlank()) {
+                            if (productName.isBlank() || purchaseDate.isBlank() || expiryDate.isBlank() || updatedCategory.isBlank()) {
                                 Toast.makeText(
                                     context,
                                     "Please fill all required fields.",
@@ -461,7 +461,7 @@ fun AddScreen(navController: NavController) {
                     // Display the selected image below the button
                     selectedProductReceiptImageUri?.let { uri ->
                         Image(
-                            painter = rememberImagePainter(data = uri),
+                            painter = rememberAsyncImagePainter(model = uri),
                             contentDescription = "Selected Image",
                             modifier = Modifier
                                 .wrapContentWidth()
@@ -489,8 +489,8 @@ fun AddScreen(navController: NavController) {
             }
 
             if (result != null) {
-                when {
-                    result is Results.Loading -> {
+                when (result) {
+                    is Results.Loading -> {
                         Dialog(onDismissRequest = {}) {
                             Card(
                                 modifier = Modifier
@@ -522,7 +522,7 @@ fun AddScreen(navController: NavController) {
                         }
                     }
 
-                    result is Results.Success -> {
+                    is Results.Success -> {
 
                         // Add the notification to the ViewModel's list
                         notificationViewModel.addNotification(
@@ -544,7 +544,7 @@ fun AddScreen(navController: NavController) {
                         }
                     }
 
-                    result is Results.Failure -> {
+                    is Results.Failure -> {
                         // Show error message on failure
                         val errorMessage = result.exception.message ?: "Unknown error"
                         Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()

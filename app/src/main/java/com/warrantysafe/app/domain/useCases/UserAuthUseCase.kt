@@ -47,9 +47,9 @@ class DeleteUserUseCase(private val userRepository: UserRepository) {
 class LoginUserUseCase(
     private val userRepository: UserRepository
 ) {
-    suspend operator fun invoke(email: String, password: String): Results<User> {
+    suspend operator fun invoke(identifier: String, password: String): Results<User> {
         return try {
-            userRepository.loginUser(email, password)
+            userRepository.loginUser(identifier, password)
         } catch (e: Exception) {
             Results.Failure(e) // Return failure with the exception
         }

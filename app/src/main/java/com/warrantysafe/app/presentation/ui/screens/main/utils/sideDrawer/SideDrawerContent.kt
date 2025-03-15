@@ -67,7 +67,7 @@ fun SideDrawerContent(
                 "Terms & Conditions" to R.drawable.policy_warranty,
                 "Privacy Policy" to R.drawable.terms_warranty,
                 "About the App" to R.drawable.about_app,
-                "Notifications" to R.drawable.not_found_notification,
+                "Notifications" to R.drawable.notifications,
                 "Upcoming Features" to R.drawable.upcoming_features,
                 "Settings" to R.drawable.settings,
                 "Logout" to R.drawable.logout
