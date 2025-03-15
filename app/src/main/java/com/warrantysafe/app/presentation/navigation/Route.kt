@@ -37,21 +37,19 @@ sealed class Route(
     object EditProductDetailsScreen : Route("editProductDetailsScreen/{productJson}")
 
     object EditProfileScreen :
-        Route("editProfileScreen/{profileImgUrl}/{fullName}/{userName}/{emailId}/{phone}") {
+        Route("editProfileScreen/{profileImgUrl}/{fullName}/{emailId}/{phone}") {
         fun createRoute(
             profileImgUri: Uri?,
             fullName: String?,
-            userName: String?,
             emailId: String?,
             phone: String?
         ): String {
             // Provide safe defaults and encode the values
             val safeFullName = Uri.encode(fullName ?: "----")
             val safeProfileImgUri = Uri.encode(profileImgUri?.toString() ?: "N/A")
-            val safeUserName = Uri.encode(userName ?: "----")
             val safeEmailId = Uri.encode(emailId ?: "----")
             val safePhone = Uri.encode(phone ?: "----")
-            return "editProfileScreen/$safeProfileImgUri/$safeFullName/$safeUserName/$safeEmailId/$safePhone"
+            return "editProfileScreen/$safeProfileImgUri/$safeFullName/$safeEmailId/$safePhone"
         }
     }
 

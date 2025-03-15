@@ -62,12 +62,12 @@ fun PhoneDetailRow(
                     .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)), // Take up remaining space
                 placeholder = { Text("Enter phone number") },
                 singleLine = true,
-                shape = RectangleShape,
+                shape = RoundedCornerShape(8.dp),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedContainerColor = Color.White,
-                    disabledContainerColor = Color.White,
+                    disabledContainerColor = Color.LightGray,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
                     unfocusedTextColor = Color.Black,

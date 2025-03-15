@@ -6,26 +6,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.domain.useCases.CheckUserUseCase
-import com.warrantysafe.app.domain.useCases.CheckUsernameUseCase
+import com.warrantysafe.app.domain.useCases.DeleteUserUseCase
 import com.warrantysafe.app.domain.useCases.GetUserUseCase
 import com.warrantysafe.app.domain.useCases.LoginUserUseCase
+import com.warrantysafe.app.domain.useCases.SendPasswordResetUseCase
 import com.warrantysafe.app.domain.useCases.SignOutUserUseCase
 import com.warrantysafe.app.domain.useCases.SignUpUserUseCase
 import com.warrantysafe.app.domain.useCases.UpdateUserUseCase
 import com.warrantysafe.app.domain.utils.Results
-import com.warrantysafe.app.presentation.navigation.Route
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class UserViewModel(
-    private val checkUsernameUseCase: CheckUsernameUseCase,
     private val signUpUserUseCase: SignUpUserUseCase,
     private val loginUserUseCase: LoginUserUseCase,
     private val checkUserUseCase: CheckUserUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val updateUserUseCase: UpdateUserUseCase,
-    private val signOutUserUseCase: SignOutUserUseCase
+    private val sendPasswordResetUseCase: SendPasswordResetUseCase,
+    private val signOutUserUseCase: SignOutUserUseCase,
+    private val deleteUserUseCase: DeleteUserUseCase
 ) : ViewModel() {
 
     private val _isUsernameTaken = MutableStateFlow<Boolean?>(null) // `null` initially
@@ -50,6 +52,12 @@ class UserViewModel(
     private val _updateUserState = MutableLiveData<Results<User>>()
     val updateUserState: LiveData<Results<User>> get() = _updateUserState
 
+    private val _resetState = MutableStateFlow<Results<Unit>?>(null)
+    val resetState = _resetState.asStateFlow()
+
+    private val _deleteUserState = MutableStateFlow<Results<Unit>?>(null)
+    val deleteUserState = _deleteUserState.asStateFlow()
+
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> get() = _isLoading
 
@@ -58,13 +66,6 @@ class UserViewModel(
         viewModelScope.launch {
             val route = checkUserUseCase()
             _navigationRoute.value = route
-        }
-    }
-
-    fun checkUsername(username: String) {
-        viewModelScope.launch {
-            val isTaken = checkUsernameUseCase(username)
-            _isUsernameTaken.value = isTaken
         }
     }
 
@@ -79,6 +80,12 @@ class UserViewModel(
             } catch (e: Exception) {
                 _signUpState.value = Results.Failure(e)
             }
+        }
+    }
+
+    fun sendPasswordReset(email: String) {
+        viewModelScope.launch {
+            _resetState.value = sendPasswordResetUseCase(email)
         }
     }
 
@@ -131,6 +138,13 @@ class UserViewModel(
             } catch (e: Exception) {
                 _signOutState.value = Results.Failure(e) // Notify the UI about failure
             }
+        }
+    }
+
+    fun deleteUser(password: String) {
+        viewModelScope.launch {
+            _deleteUserState.value = Results.Loading
+            _deleteUserState.value = deleteUserUseCase(password)
         }
     }
 

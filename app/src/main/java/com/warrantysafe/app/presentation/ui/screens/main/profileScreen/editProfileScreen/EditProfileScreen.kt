@@ -67,20 +67,17 @@ fun EditProfileScreen(
     navController: NavController,
     profileImgUri: Uri,
     name: String,
-    username: String,
     email: String,
     phoneNumber: String
 ) {
     val context = LocalContext.current
     var actualName by remember { mutableStateOf(name) }
-    var actualUsername by remember { mutableStateOf(username) }
     var actualEmail by remember { mutableStateOf(email) }
     var actualPhoneNumber by remember { mutableStateOf(phoneNumber) }
     val scrollState = rememberScrollState()
     val userViewModel: UserViewModel = koinViewModel()
     // Validation Logic
     val isValidName = actualName.isNotBlank()
-    val isValidUsername = actualUsername.matches(Regex("^[a-z0-9.]+$"))
     val isValidEmail = android.util.Patterns.EMAIL_ADDRESS.matcher(actualEmail).matches()
     val isValidPhone = actualPhoneNumber.length in 10..15 && actualPhoneNumber.all { it.isDigit() }
 
@@ -108,8 +105,8 @@ fun EditProfileScreen(
             }
             is Results.Success -> {
                 // Handle the success case when the product has been updated
-                val updatedProduct = (updateUserState as Results.Success).data
-                Log.d("ProfileUpdate", "Profile updated successfully: ${updatedProduct.username}")
+                val updatedUser = (updateUserState as Results.Success).data
+                Log.d("ProfileUpdate", "Profile updated successfully: ${updatedUser.name}")
                 Toast.makeText(context, "Profile updated successfully!", Toast.LENGTH_SHORT).show()
                 navController.popBackStack()
             }
@@ -153,13 +150,12 @@ fun EditProfileScreen(
                 IconButton(onClick = {
                     Log.d("AppwriteUpload", "updatedProfileUri ->> ${updatedProfileUri.toString()}")
                     isConnected.value=checkValidNetworkConnection(context)
-                    if(!isConnected.value || !isValidPhone || !isValidName || !isValidEmail || !isValidUsername){
+                    if(!isConnected.value || !isValidPhone || !isValidName || !isValidEmail ){
                         Toast.makeText(context, "No Valid Details or Check the connection!!", Toast.LENGTH_LONG).show()
                     }else{
                         userViewModel.updateUser(
                             user = User(
                                 name = actualName,
-                                username = actualUsername,
                                 email = actualEmail,
                                 phoneNumber = actualPhoneNumber,
                                 profileImageUrl = updatedProfileUri.toString()
@@ -242,25 +238,9 @@ fun EditProfileScreen(
                     )
                 }
                 DetailRow(
-                    "Username",
-                    updatedValue = actualUsername,
-                    enable = true,
-                    textColor = colorResource(R.color.purple_500),
-                    icon = null,
-                    onValueChange = { actualUsername = it }
-                )
-                if (!isValidUsername) {
-                    Text(
-                        text = "Invalid username! Only lowercase letters, numbers, and dots are allowed.",
-                        color = Color.Red,
-                        fontSize = 12.sp,
-                        modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-                    )
-                }
-                DetailRow(
                     "Email",
                     updatedValue = actualEmail,
-                    enable = true,
+                    enable = false,
                     textColor = colorResource(R.color.purple_500),
                     icon = null,
                     onValueChange = { actualEmail = it }
@@ -275,7 +255,7 @@ fun EditProfileScreen(
                 }
                 PhoneDetailRow(
                     label = "Phone",
-                    enable = true,
+                    enable = false,
                     phoneNumber = actualPhoneNumber,
                     textColor = colorResource(R.color.purple_500),
                     onCountryCodeChange = { /* Handle country code */ },

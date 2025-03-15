@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.warrantysafe.app.domain.model.User
@@ -36,21 +37,6 @@ class UserRepositoryImpl(
             Route.LoginScreen.route
     }
 
-    override suspend fun checkUsername(username: String): Boolean {
-        return try {
-            val querySnapshot = usersCollection
-                .whereEqualTo("username", username)
-                .get()
-                .await()
-
-            // If the query returns any documents, the username is already taken
-            querySnapshot.documents.isNotEmpty()
-        } catch (e: Exception) {
-            Log.e("CheckUsername", "Error checking username availability", e)
-            false // Assuming username is available in case of an error (handle gracefully)
-        }
-    }
-
 
     override suspend fun signUpUser(user: User): Results<User> {
         return try {
@@ -68,7 +54,6 @@ class UserRepositoryImpl(
                 // Save user data to Firestore
                 val userId = firebaseUser.uid
                 val userData = mapOf(
-                    "username" to user.username,
                     "name" to user.name,
                     "email" to user.email,
                     "phoneNumber" to user.phoneNumber,
@@ -80,6 +65,15 @@ class UserRepositoryImpl(
             } else {
                 Results.Failure(Exception("User creation failed"))
             }
+        } catch (e: Exception) {
+            Results.Failure(e)
+        }
+    }
+
+    override suspend fun sendPasswordResetLink(email: String): Results<Unit> {
+        return try {
+            firebaseAuth.sendPasswordResetEmail(email).await()
+            Results.Success(Unit)
         } catch (e: Exception) {
             Results.Failure(e)
         }
@@ -97,7 +91,6 @@ class UserRepositoryImpl(
                     val user = User(
                         name = userDocument.getString("name") ?: "",
                         email = userDocument.getString("email") ?: "",
-                        username = userDocument.getString("username") ?: "",
                         phoneNumber = userDocument.getString("phoneNumber") ?: "",
                         profileImageUrl = userDocument.getString("profileImageUrl") ?: ""
                     )
@@ -124,7 +117,6 @@ class UserRepositoryImpl(
                     val user = User(
                         name = userDocument.getString("name") ?: "",
                         email = userDocument.getString("email") ?: "",
-                        username = userDocument.getString("username") ?: "",
                         phoneNumber = userDocument.getString("phoneNumber") ?: "",
                         profileImageUrl = userDocument.getString("profileImageUrl") ?: ""
                     )
@@ -145,7 +137,7 @@ class UserRepositoryImpl(
             val userId = firebaseAuth.currentUser?.uid
                 ?: return Results.Failure(Exception("No authenticated user found"))
 
-            Log.d("AppWriteUpload", "Updating user: ${user.username}")
+            Log.d("AppWriteUpload", "Updating user: ${user.email}")
 
             // Fetch current user data from Firestore
             val userSnapshot = usersCollection.document(userId).get().await()
@@ -153,7 +145,6 @@ class UserRepositoryImpl(
 
             // Prepare user data for update
             val userData = mutableMapOf<String, Any>(
-                "username" to user.username,
                 "name" to user.name,
                 "email" to user.email,
                 "phoneNumber" to user.phoneNumber
@@ -180,7 +171,36 @@ class UserRepositoryImpl(
         }
     }
 
+    override suspend fun deleteUser(password: String): Results<Unit> {
+        return try {
+            val user = firebaseAuth.currentUser
+            if (user != null) {
+                val email = user.email ?: return Results.Failure(Exception("No email associated with account"))
+                val credential = EmailAuthProvider.getCredential(email, password)
 
+                // Step 1: Reauthenticate user
+                user.reauthenticate(credential).await()
+
+                // Step 2: Delete Firestore data
+                val userId = user.uid
+                val userDocRef = firestore.collection("users").document(userId)
+
+                firestore.runBatch { batch ->
+                    batch.delete(userDocRef)
+                    // Add more collections if needed (e.g., orders, logs, etc.)
+                }.await()
+
+                // Step 3: Delete Firebase Authentication account
+                user.delete().await()
+
+                Results.Success(Unit)
+            } else {
+                Results.Failure(Exception("No user logged in"))
+            }
+        } catch (e: Exception) {
+            Results.Failure(e)
+        }
+    }
 
     override suspend fun signOutUser(): Results<Unit> {
         return try {

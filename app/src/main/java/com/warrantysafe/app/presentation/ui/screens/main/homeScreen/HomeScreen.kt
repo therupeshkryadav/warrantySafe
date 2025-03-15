@@ -4,6 +4,7 @@ import CustomBottomNavigation
 import android.R.attr.maxHeight
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -43,6 +44,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -93,10 +95,10 @@ fun HomeScreen(
     // Handle user state
     when (val result = userState.value) {
         is Results.Loading -> {
-            username= "----"
+            username= "chief"
         }
         is Results.Success -> {
-            username = (result.data).username
+            username = result.data.name.split(" ").first().lowercase()
         }
         is Results.Failure -> {
             val errorMessage = result.exception.message?: "Unknown error"
@@ -137,8 +139,7 @@ fun HomeScreen(
         }
     }
 
-    // State to manage the visibility of the dropdown menu
-    var isMenuExpanded by remember { mutableStateOf(false) }
+
 
     Box(
         modifier = Modifier
@@ -155,8 +156,6 @@ fun HomeScreen(
                         .fillMaxHeight()
                         .wrapContentWidth()
                 ) {
-                    val maxHeight = maxHeight
-
                     // Here we calculate the available height and adjust content dynamically
                     SideDrawerContent(
                         modifier = Modifier
@@ -171,7 +170,9 @@ fun HomeScreen(
                                 "Share with Friends" -> shareApp(context)
                                 "About the App" -> navigateToTab(navController, Route.AboutAppScreen)
                                 "Upcoming Features" -> navigateToTab(navController, Route.UpcomingFeaturesScreen)
+                                "Notifications" -> navigateToTab(navController, Route.NotificationScreen)
                                 "Settings" -> navigateToTab(navController, Route.SettingsScreen)
+                                "Logout" -> userViewModel.signOutUser()
                             }
                         }
                     )
@@ -213,34 +214,7 @@ fun HomeScreen(
                                 )
                             }
                         },
-                        actions = {
-                            IconButton(onClick = { navController.navigate(route = Route.NotificationScreen.route) }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Notifications,
-                                    contentDescription = "Notifications"
-                                )
-                            }
-                            IconButton(onClick = {isMenuExpanded = !isMenuExpanded}) {
-                                Icon(
-                                    imageVector = Icons.Filled.MoreVert,
-                                    contentDescription = "More Options"
-                                )
-                            }
-                            // Dropdown Menu
-                            DropdownMenu(
-                                expanded = isMenuExpanded,
-                                containerColor = Color.LightGray,
-                                onDismissRequest = { isMenuExpanded = false }
-                            ) {
-                                DropDownMenuContent(
-                                    navController = navController,
-                                    dropDownList = listOf("Logout"),
-                                    onItemClicked = {
-                                        userViewModel.signOutUser()
-                                    }
-                                )
-                            }
-                        }
+                        actions = {}
                     )
 
                     Box(

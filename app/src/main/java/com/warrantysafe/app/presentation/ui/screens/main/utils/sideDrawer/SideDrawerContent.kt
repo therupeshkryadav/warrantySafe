@@ -2,7 +2,6 @@ package com.warrantysafe.app.presentation.ui.screens.main.utils.sideDrawer
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.warrantysafe.app.R
 import com.warrantysafe.app.presentation.ui.screens.main.utils.sideDrawer.components.SideDrawerItem
+import com.warrantysafe.app.presentation.viewModel.UserViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SideDrawerContent(
@@ -66,8 +67,10 @@ fun SideDrawerContent(
                 "Terms & Conditions" to R.drawable.policy_warranty,
                 "Privacy Policy" to R.drawable.terms_warranty,
                 "About the App" to R.drawable.about_app,
+                "Notifications" to R.drawable.not_found_notification,
                 "Upcoming Features" to R.drawable.upcoming_features,
-                "Settings" to R.drawable.settings
+                "Settings" to R.drawable.settings,
+                "Logout" to R.drawable.logout
             ).forEach { (item, iconRes) ->
                 SideDrawerItem(
                     item = item,
@@ -80,10 +83,4 @@ fun SideDrawerContent(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun SideDrawerContentPreview() {
-    SideDrawerContent(modifier = Modifier.fillMaxHeight(1f), onItemClicked = {})
 }

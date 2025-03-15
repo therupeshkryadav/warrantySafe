@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,14 +43,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.warrantysafe.app.R
+import com.warrantysafe.app.domain.utils.Results
+import com.warrantysafe.app.presentation.viewModel.UserViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ForgotPasswordScreen(navController: NavController) {
     val context = LocalContext.current
-
-    var phoneNumber by remember { mutableStateOf(TextFieldValue("")) }
-    var otpCode by remember { mutableStateOf(TextFieldValue("")) }
-    var otpSent by remember { mutableStateOf(false) }  // Simulates OTP sent state
+    val userViewModel: UserViewModel = koinViewModel()
+    var email by remember { mutableStateOf(TextFieldValue("")) }
+    val resetState by userViewModel.resetState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -63,7 +66,6 @@ fun ForgotPasswordScreen(navController: NavController) {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            // Back Button (Top Left)
             Icon(
                 imageVector = Icons.Default.KeyboardArrowLeft,
                 contentDescription = "Back",
@@ -73,7 +75,6 @@ fun ForgotPasswordScreen(navController: NavController) {
                     .clickable { navController.popBackStack() }
             )
 
-            // Centered Logo
             Image(
                 painter = painterResource(R.drawable.warranty_logo),
                 contentDescription = "App Logo",
@@ -84,74 +85,45 @@ fun ForgotPasswordScreen(navController: NavController) {
             )
         }
 
-
         Text(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             text = "Forgot Password?",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black)
+            color = Color.Black
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (otpSent) {
-            // OTP Input Field
-            OutlinedTextField(
-                value = otpCode,
-                onValueChange = { otpCode = it },
-                label = { Text("Enter OTP") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(20.dp)
-            )
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Enter Email ID") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            shape = RoundedCornerShape(20.dp)
+        )
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-            // Verify OTP Button
-            Button(
-                onClick = {
-                    Toast.makeText(context, "OTP Verified (Mock Action)", Toast.LENGTH_SHORT).show()
-                    Toast.makeText(context,"Auth with Phone Coming Soon!!", Toast.LENGTH_LONG).show() // Navigate to Home Screen (Modify as needed)
-                },
-                enabled = otpCode.text.isNotEmpty(),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-            ) {
-                Text("Verify OTP")
-            }
-        } else {
-            // Phone Number Input Field
-            OutlinedTextField(
-                value = phoneNumber,
-                onValueChange = { phoneNumber = it },
-                label = { Text("Enter Email ID") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(20.dp)
-            )
+        Button(
+            onClick = { userViewModel.sendPasswordReset(email.text) },
+            enabled = email.text.isNotEmpty(),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+        ) {
+            Text("Send Password Reset Link")
+        }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Send OTP Button
-            Button(
-                onClick = {
-                    if (phoneNumber.text.isNotEmpty()) {
-                        otpSent = true
-                        Toast.makeText(context, "OTP Sent (Mock Action)", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(context, "Enter a valid phone number", Toast.LENGTH_SHORT).show()
-                    }
-                },
-                enabled = phoneNumber.text.isNotEmpty(),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-            ) {
-                Text("Send OTP")
-            }
+        // Observe Reset State and Show Messages
+        when (resetState) {
+            is Results.Success -> Toast.makeText(context, "Password Reset Link Sent", Toast.LENGTH_SHORT).show()
+            is Results.Failure -> Toast.makeText(context, "Error: ${(resetState as Results.Failure).exception.message}", Toast.LENGTH_SHORT).show()
+            else -> {} // Do nothing initially
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

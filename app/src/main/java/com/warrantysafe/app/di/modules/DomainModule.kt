@@ -3,8 +3,8 @@ package com.warrantysafe.app.di.modules
 import com.warrantysafe.app.domain.useCases.AddNotificationUseCase
 import com.warrantysafe.app.domain.useCases.AddProductUseCase
 import com.warrantysafe.app.domain.useCases.CheckUserUseCase
-import com.warrantysafe.app.domain.useCases.CheckUsernameUseCase
 import com.warrantysafe.app.domain.useCases.DeleteProductsUseCase
+import com.warrantysafe.app.domain.useCases.DeleteUserUseCase
 import com.warrantysafe.app.domain.useCases.GetActiveProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetAllProductsUseCase
 import com.warrantysafe.app.domain.useCases.GetBottomNavigationIconsUseCase
@@ -16,6 +16,7 @@ import com.warrantysafe.app.domain.useCases.GetUserUseCase
 import com.warrantysafe.app.domain.useCases.LoginUserUseCase
 import com.warrantysafe.app.domain.useCases.MarkNotificationReadUseCase
 import com.warrantysafe.app.domain.useCases.SearchProductsUseCase
+import com.warrantysafe.app.domain.useCases.SendPasswordResetUseCase
 import com.warrantysafe.app.domain.useCases.SignOutUserUseCase
 import com.warrantysafe.app.domain.useCases.SignUpUserUseCase
 import com.warrantysafe.app.domain.useCases.UpdateProductUseCase
@@ -36,9 +37,10 @@ val domainModule = module {
     // User Use Cases
     single { SignUpUserUseCase(get()) }
     single { CheckUserUseCase(get()) }
-    single { CheckUsernameUseCase(get()) }
     single { LoginUserUseCase(get()) }
     single { GetUserUseCase(get()) }
+    single { SendPasswordResetUseCase(get()) }
+    single { DeleteUserUseCase(get()) }
     single { UpdateUserUseCase(get()) }
     single { SignOutUserUseCase(get()) }
 

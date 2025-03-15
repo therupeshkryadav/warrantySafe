@@ -32,13 +32,17 @@ class SignUpUserUseCase(
     }
 }
 
-class CheckUsernameUseCase(private val userRepository: UserRepository) {
-
-    suspend operator fun invoke(username: String): Boolean {
-        return userRepository.checkUsername(username)
+class SendPasswordResetUseCase(private val userRepository: UserRepository) {
+    suspend operator fun invoke(email: String): Results<Unit> {
+        return userRepository.sendPasswordResetLink(email)
     }
 }
 
+class DeleteUserUseCase(private val userRepository: UserRepository) {
+    suspend operator fun invoke(password: String): Results<Unit> {
+        return userRepository.deleteUser(password)
+    }
+}
 
 class LoginUserUseCase(
     private val userRepository: UserRepository

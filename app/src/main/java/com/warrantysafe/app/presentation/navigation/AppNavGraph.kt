@@ -27,6 +27,7 @@ import com.warrantysafe.app.presentation.ui.screens.main.utils.productDetailScre
 import com.warrantysafe.app.presentation.ui.screens.main.utils.productDetailScreen.editProductDetailScreen.EditProductDetailScreen
 import com.warrantysafe.app.presentation.ui.screens.main.utils.searchScreen.SearchScreen
 import com.warrantysafe.app.presentation.ui.screens.splash.SplashScreen
+import androidx.core.net.toUri
 
 @Composable
 fun AppNavGraph() {
@@ -123,27 +124,22 @@ fun AppNavGraph() {
 
         // EditProfileScreen with arguments
         composable(
-            route = "editProfileScreen/{profileImgUri}/{fullName}/{userName}/{emailId}/{phone}",
+            route = "editProfileScreen/{profileImgUri}/{fullName}/{emailId}/{phone}",
             arguments = listOf(
                 navArgument("profileImgUri") { type = NavType.StringType },
                 navArgument("fullName") { type = NavType.StringType },
-                navArgument("userName") { type = NavType.StringType },
                 navArgument("emailId") { type = NavType.StringType },
                 navArgument("phone") { type = NavType.StringType }
             )
         ) {
             // Handle the default image URI logic
             val profileImgUriString = it.arguments?.getString("profileImgUri")
-            val profileImgUri = if (profileImgUriString != null) {
-                Uri.parse(profileImgUriString)
-            } else {
-                // Default image (placeholder) is provided as a resource ID
+            val profileImgUri = profileImgUriString?.toUri()
+                ?: // Default image (placeholder) is provided as a resource ID
                 // To use it with Image composable, you need to provide a painter or drawable resource.
                 // For example, this is just a placeholder for the case when imageUri is null
-                Uri.parse("android.resource://com.warrantysafe.app/${R.drawable.profile_placeholder}")
-            }
+                "android.resource://com.warrantysafe.app/${R.drawable.profile_placeholder}".toUri()
             val fullName = it.arguments?.getString("fullName") ?: "----"
-            val userName = it.arguments?.getString("userName") ?: "----"
             val emailId = it.arguments?.getString("emailId") ?: "----"
             val phone = it.arguments?.getString("phone") ?: "----"
 
@@ -151,7 +147,6 @@ fun AppNavGraph() {
                 navController = navController,
                 profileImgUri = profileImgUri,
                 name = fullName,
-                username = userName,
                 email = emailId,
                 phoneNumber = phone
             )

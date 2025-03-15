@@ -27,11 +27,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -55,6 +56,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -118,33 +120,15 @@ fun ProfileScreen(
                     onItemClicked = { item ->
                         coroutineScope.launch { drawerState.close() }
                         when (item) {
-                            "List of Product Cards" -> navigateToTab(
-                                navController,
-                                Route.ProductCardList
-                            )
-
-                            "Help & Support" -> navigateToTab(
-                                navController,
-                                Route.HelpSupportScreen
-                            )
-
-                            "Terms & Privacy" -> navigateToTab(
-                                navController,
-                                Route.TermsConditionScreen
-                            )
-
-                            "Privacy Policy" -> navigateToTab(
-                                navController,
-                                Route.PrivacyPolicyScreen
-                            )
-
+                            "List of Product Cards" -> navigateToTab(navController, Route.ProductCardList)
+                            "Help & Support" -> navigateToTab(navController, Route.HelpSupportScreen)
+                            "Terms & Privacy" -> navigateToTab(navController, Route.TermsConditionScreen)
+                            "Privacy Policy" -> navigateToTab(navController, Route.PrivacyPolicyScreen)
                             "About the App" -> navigateToTab(navController, Route.AboutAppScreen)
-                            "Upcoming Features" -> navigateToTab(
-                                navController,
-                                Route.UpcomingFeaturesScreen
-                            )
-
+                            "Upcoming Features" -> navigateToTab(navController, Route.UpcomingFeaturesScreen)
+                            "Notifications" -> navigateToTab(navController, Route.NotificationScreen)
                             "Settings" -> navigateToTab(navController, Route.SettingsScreen)
+                            "Logout" -> userViewModel.signOutUser()
                         }
                     }
                 )
@@ -177,32 +161,7 @@ fun ProfileScreen(
                             )
                         }
                     },
-                    actions = {
-                        IconButton(onClick = { navController.navigate(route = Route.NotificationScreen.route) }) {
-                            Icon(
-                                imageVector = Icons.Filled.Notifications,
-                                contentDescription = "Notifications"
-                            )
-                        }
-                        IconButton(onClick = { isMenuExpanded = !isMenuExpanded }) {
-                            Icon(
-                                imageVector = Icons.Filled.MoreVert,
-                                contentDescription = "More Options"
-                            )
-                        }
-                        // Dropdown Menu
-                        DropdownMenu(
-                            expanded = isMenuExpanded,
-                            containerColor = Color.LightGray,
-                            onDismissRequest = { isMenuExpanded = false }
-                        ) {
-                            DropDownMenuContent(
-                                navController = navController,
-                                dropDownList = listOf("Logout"),
-                                onItemClicked = { userViewModel.signOutUser() }
-                            )
-                        }
-                    }
+                    actions = {}
                 )
 
                 // Loading State
@@ -252,7 +211,6 @@ fun ProfileScreen(
                             }
 
                             ModernProfileDetailRow("Name", user.name)
-                            ModernProfileDetailRow("Username", user.username)
                             ModernProfileDetailRow("Email", user.email)
                             ModernProfileDetailRow("Phone", user.phoneNumber)
 
@@ -299,9 +257,6 @@ fun ProfileScreen(
                                     contentDescription = "Edit Profile"
                                 )
                             }
-
-                            ModernLogoutButton { userViewModel.signOutUser() }
-
                             Spacer(modifier = Modifier.size(120.dp))
                         }
                     }
@@ -389,9 +344,9 @@ fun ModernProfileDetailRow(label: String, value: String) {
 }
 
 @Composable
-fun ModernLogoutButton(onLogout: () -> Unit) {
+fun ModernButton(imageVector: ImageVector, btnText: String, onClick: () -> Unit) {
     Button(
-        onClick = onLogout,
+        onClick = onClick,
         colors = ButtonDefaults.elevatedButtonColors(Color.White),
         shape = RoundedCornerShape(20.dp),
         border = BorderStroke(1.dp,Color.LightGray),
@@ -405,13 +360,13 @@ fun ModernLogoutButton(onLogout: () -> Unit) {
             horizontalArrangement = Arrangement.Center
         ) {
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                contentDescription = "Logout",
+                imageVector = imageVector,
+                contentDescription = btnText,
                 tint = Color.Red.copy(alpha = 0.7f) // Better visibility
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Logout",
+                text = btnText,
                 fontSize = 18.sp,
                 color = Color.Red.copy(alpha = 0.7f),
                 fontWeight = FontWeight.Bold
@@ -428,7 +383,6 @@ fun navigateToEditProfile(
     val route = Route.EditProfileScreen.createRoute(
         profileImgUri = user.profileImageUrl.toUri(),
         fullName = user.name,
-        userName = user.username,
         emailId = user.email,
         phone = user.phoneNumber
     )

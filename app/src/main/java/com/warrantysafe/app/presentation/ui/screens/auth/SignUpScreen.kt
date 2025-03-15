@@ -75,6 +75,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import androidx.core.net.toUri
 
 @Composable
 fun SignUpScreen(
@@ -104,20 +105,18 @@ fun SignUpScreen(
         else -> { /* No-op for initial or null state */ }
     }
     // Remember state for user input
-    val username = remember { mutableStateOf("") }
     val name = remember { mutableStateOf("") }
     val email = remember { mutableStateOf("") }
     val phoneNumber = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val confPassword = remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    var isUsernameValid by remember { mutableStateOf(true) }
 
     val isUsernameTaken by userViewModel.isUsernameTaken.collectAsState()
 
     // Default profile image URI (when no image is selected)
     val defaultProfileImage =
-        Uri.parse("android.resource://com.warrantysafe.app/drawable/profile_placeholder")
+        "android.resource://com.warrantysafe.app/drawable/profile_placeholder".toUri()
 
     // State to handle profile image
     var profileImageUri by remember { mutableStateOf<Uri?>(defaultProfileImage) }
@@ -129,7 +128,7 @@ fun SignUpScreen(
         profileImageUri = uri ?: defaultProfileImage
     }
 
-    val isValidInput = name.value.isNotEmpty() && username.value.isNotEmpty() && email.value.isNotEmpty() && phoneNumber.value.isNotEmpty() && password.value.isNotEmpty() && confPassword.value == password.value
+    val isValidInput = name.value.isNotEmpty() && email.value.isNotEmpty() && phoneNumber.value.isNotEmpty() && password.value.isNotEmpty() && confPassword.value == password.value
 
     Column(
         modifier = Modifier
@@ -218,87 +217,6 @@ fun SignUpScreen(
                     unfocusedContainerColor = Color.White
                 )
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Username validation regex: Only lowercase letters, numbers, and dots (no spaces or special characters)
-            fun isValidUsername(username: String): Boolean {
-                return username.matches(Regex("^[a-z0-9.]+$"))
-            }
-
-// Username Field
-            TextField(
-                value = username.value,
-                onValueChange = { input ->
-                    val lowercasedInput = input.lowercase()  // Convert to lowercase
-                    username.value = lowercasedInput
-                    isUsernameValid = isValidUsername(lowercasedInput)
-                    // Check username availability only if it's not empty
-                    if (lowercasedInput.isNotEmpty()) {
-                        userViewModel.checkUsername(lowercasedInput)
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .border(
-                        width = 1.dp,
-                        color = if (username.value.isEmpty() || isUsernameValid) Color.LightGray else Color.Red,
-                        shape = RoundedCornerShape(20.dp)
-                    ),
-                placeholder = {
-                    Text("Choose Your Username", color = Color.Gray)
-                },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.username_pp),
-                        contentDescription = "Username Icon"
-                    )
-                },
-                trailingIcon = {
-                    when {
-                        isUsernameTaken == true ->
-                            Icon(
-                            imageVector = Icons.Filled.Warning,
-                            contentDescription = "Username Taken",
-                            tint = Color.Red
-                        )
-                    }
-                },
-                singleLine = true,
-                textStyle = TextStyle(
-                    fontSize = 16.sp,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Normal
-                ),
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
-                )
-            )
-
-// Error message if username is invalid
-            if (username.value.isNotEmpty() && !isUsernameValid) {
-                Text(
-                    text = "Invalid username! Only lowercase letters, numbers, and dots are allowed.",
-                    color = Color.Red,
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-                )
-            }
-
-            else if(isUsernameTaken == true) {
-                Text(
-                    text = "Username is already taken! Choose another one.",
-                    color = Color.Red,
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-                )
-            }
-
-
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -452,8 +370,16 @@ fun SignUpScreen(
                         contentDescription = "Password Icon"
                     )
                 },
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            painter = if(passwordVisible)painterResource(R.drawable.ic_eye)else painterResource(R.drawable.unhide_password),
+                            contentDescription = "Toggle Password Visibility"
+                        )
+                    }
+                },
                 singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 textStyle = TextStyle(
                     fontSize = 16.sp,
                     color = Color.Black,
@@ -545,7 +471,6 @@ fun SignUpScreen(
                         userViewModel.signUpUser(
                             User(
                                 name = name.value,
-                                username = username.value,
                                 email = email.value,
                                 phoneNumber = phoneNumber.value,
                                 profileImageUrl = profileImageUri.toString(),
