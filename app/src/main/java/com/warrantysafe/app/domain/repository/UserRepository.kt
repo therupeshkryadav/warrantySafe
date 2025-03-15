@@ -10,6 +10,7 @@ interface UserRepository {
     suspend fun loginUser(email: String, password: String): Results<User>
     suspend fun getUser(): Results<User>
     suspend fun updateUser(user: User): Results<User>
+    suspend fun changePassword(currentPassword: String, newPassword: String): Results<Unit>
     suspend fun deleteUser(password: String): Results<Unit>
     suspend fun signOutUser(): Results<Unit>
 }

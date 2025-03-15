@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.warrantysafe.app.domain.model.User
+import com.warrantysafe.app.domain.useCases.ChangePasswordUseCase
 import com.warrantysafe.app.domain.useCases.CheckUserUseCase
 import com.warrantysafe.app.domain.useCases.DeleteUserUseCase
 import com.warrantysafe.app.domain.useCases.GetUserUseCase
@@ -27,6 +28,7 @@ class UserViewModel(
     private val updateUserUseCase: UpdateUserUseCase,
     private val sendPasswordResetUseCase: SendPasswordResetUseCase,
     private val signOutUserUseCase: SignOutUserUseCase,
+    private val changePasswordUseCase: ChangePasswordUseCase,
     private val deleteUserUseCase: DeleteUserUseCase
 ) : ViewModel() {
 
@@ -51,6 +53,9 @@ class UserViewModel(
 
     private val _updateUserState = MutableLiveData<Results<User>>()
     val updateUserState: LiveData<Results<User>> get() = _updateUserState
+
+    private val _changePasswordState = MutableStateFlow<Results<Unit>?>(null)
+    val changePasswordState: StateFlow<Results<Unit>?> = _changePasswordState
 
     private val _resetState = MutableStateFlow<Results<Unit>?>(null)
     val resetState = _resetState.asStateFlow()
@@ -101,6 +106,13 @@ class UserViewModel(
 
                 _loginState.value = Results.Failure(e)
             }
+        }
+    }
+
+    fun changePassword(currentPassword: String, newPassword: String) {
+        viewModelScope.launch {
+            _changePasswordState.value = Results.Loading
+            _changePasswordState.value = changePasswordUseCase(currentPassword, newPassword)
         }
     }
 

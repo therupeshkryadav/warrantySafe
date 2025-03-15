@@ -88,7 +88,7 @@ fun SettingsScreen(navController: NavController) {
         }
 
         if (showChangePasswordDialog) {
-            ChangePasswordDialog(onDismiss = { showChangePasswordDialog = false })
+            ChangePasswordDialog(userViewModel,onDismiss = { showChangePasswordDialog = false })
         }
         if (showDeleteAccountDialog) {
             DeleteAccountDialog(userViewModel,navController, onDismiss = { showDeleteAccountDialog = false })
@@ -97,15 +97,34 @@ fun SettingsScreen(navController: NavController) {
 }
 
 @Composable
-fun ChangePasswordDialog(onDismiss: () -> Unit) {
+fun ChangePasswordDialog(
+    userViewModel: UserViewModel,
+    onDismiss: () -> Unit
+) {
+    val context = LocalContext.current
     var currentPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
+    var showError by remember { mutableStateOf(false) }
+
+    val changePasswordState by userViewModel.changePasswordState.collectAsState()
+
+    LaunchedEffect(changePasswordState) {
+        when (changePasswordState) {
+            is Results.Success -> {
+                Toast.makeText(context, "Password changed successfully", Toast.LENGTH_SHORT).show()
+                onDismiss()
+            }
+            is Results.Failure -> {
+                val errorMessage = (changePasswordState as Results.Failure).exception.message
+                Toast.makeText(context, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
+            }
+            else -> {}
+        }
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = Color.White,
         title = { Text("Change Password", fontWeight = FontWeight.Bold) },
         text = {
             Column {
@@ -113,42 +132,50 @@ fun ChangePasswordDialog(onDismiss: () -> Unit) {
                     value = currentPassword,
                     onValueChange = { currentPassword = it },
                     label = { Text("Current Password") },
-                    singleLine = true
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    isError = showError,
+                    modifier = Modifier.fillMaxWidth()
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+
                 OutlinedTextField(
                     value = newPassword,
                     onValueChange = { newPassword = it },
                     label = { Text("New Password") },
-                    singleLine = true
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    isError = showError,
+                    modifier = Modifier.fillMaxWidth()
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+
                 OutlinedTextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
                     label = { Text("Confirm New Password") },
-                    singleLine = true
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    isError = showError,
+                    modifier = Modifier.fillMaxWidth()
                 )
-                Spacer(modifier = Modifier.height(8.dp))
 
-                errorMessage?.let {
-                    Text(text = it, color = Color.Red, fontSize = 14.sp)
-                    Spacer(modifier = Modifier.height(4.dp))
+                if (showError) {
+                    Text(
+                        text = "Passwords do not match.",
+                        color = Color.Red,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
                 }
             }
         },
         confirmButton = {
-            TextButton(onClick = {
-                if (newPassword != confirmPassword) {
-                    errorMessage = "Passwords do not match"
-                } else if (newPassword.isEmpty() || currentPassword.isEmpty()) {
-                    errorMessage = "All fields are required"
-                } else {
-                    // TODO: Implement password change logic
-                    onDismiss()
+            TextButton(
+                onClick = {
+                    if (newPassword == confirmPassword && newPassword.isNotEmpty()) {
+                        userViewModel.changePassword(currentPassword, newPassword)
+                    } else {
+                        showError = true
+                    }
                 }
-            }) {
-                Text("Change")
+            ) {
+                Text("Change", color = Color.Blue)
             }
         },
         dismissButton = {
@@ -158,6 +185,7 @@ fun ChangePasswordDialog(onDismiss: () -> Unit) {
         }
     )
 }
+
 
 @Composable
 fun DeleteAccountDialog(

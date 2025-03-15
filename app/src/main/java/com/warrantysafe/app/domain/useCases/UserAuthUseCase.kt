@@ -68,6 +68,12 @@ class UpdateUserUseCase(
     }
 }
 
+class ChangePasswordUseCase(private val userRepository: UserRepository) {
+    suspend operator fun invoke(currentPassword: String, newPassword: String): Results<Unit> {
+        return userRepository.changePassword(currentPassword, newPassword)
+    }
+}
+
 class SignOutUserUseCase(
     private val userRepository: UserRepository
 ) {

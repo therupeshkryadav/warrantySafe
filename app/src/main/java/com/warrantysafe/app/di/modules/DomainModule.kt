@@ -2,6 +2,7 @@ package com.warrantysafe.app.di.modules
 
 import com.warrantysafe.app.domain.useCases.AddNotificationUseCase
 import com.warrantysafe.app.domain.useCases.AddProductUseCase
+import com.warrantysafe.app.domain.useCases.ChangePasswordUseCase
 import com.warrantysafe.app.domain.useCases.CheckUserUseCase
 import com.warrantysafe.app.domain.useCases.DeleteProductsUseCase
 import com.warrantysafe.app.domain.useCases.DeleteUserUseCase
@@ -41,6 +42,7 @@ val domainModule = module {
     single { GetUserUseCase(get()) }
     single { SendPasswordResetUseCase(get()) }
     single { DeleteUserUseCase(get()) }
+    single { ChangePasswordUseCase(get()) }
     single { UpdateUserUseCase(get()) }
     single { SignOutUserUseCase(get()) }
 

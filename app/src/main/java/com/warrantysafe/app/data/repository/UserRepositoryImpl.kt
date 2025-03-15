@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.domain.repository.UserRepository
@@ -167,6 +168,28 @@ class UserRepositoryImpl(
             Results.Success(user.copy(profileImageUrl = userData["profileImageUrl"] as? String ?: currentProfileImageUrl))
         } catch (e: Exception) {
             Log.e("UpdateUser", "Error updating user: ${e.message}")
+            Results.Failure(e)
+        }
+    }
+
+    override suspend fun changePassword(currentPassword: String, newPassword: String): Results<Unit> {
+        return try {
+            val user = firebaseAuth.currentUser
+                ?: return Results.Failure(Exception("User not authenticated"))
+
+            // Re-authenticate user before changing password
+            val email = user.email ?: return Results.Failure(Exception("Email not found"))
+            val credential = EmailAuthProvider.getCredential(email, currentPassword)
+
+            user.reauthenticate(credential).await()
+
+            // If re-authentication is successful, update password
+            user.updatePassword(newPassword).await()
+
+            Results.Success(Unit)
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            Results.Failure(Exception("Current password is incorrect"))
+        } catch (e: Exception) {
             Results.Failure(e)
         }
     }
