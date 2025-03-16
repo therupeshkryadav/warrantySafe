@@ -50,7 +50,8 @@ fun PhoneDetailRow(
         ) {
             // Country Code Picker
             CountryCodePickerComposable(
-                onCountrySelected = onCountryCodeChange
+                onCountrySelected = onCountryCodeChange,
+                enable = false
             )
 
             // Phone Number Input Field
@@ -67,7 +68,7 @@ fun PhoneDetailRow(
                     focusedContainerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedContainerColor = Color.White,
-                    disabledContainerColor = Color.LightGray,
+                    disabledContainerColor = Color.LightGray.copy(alpha = 0.4f),
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
                     unfocusedTextColor = Color.Black,

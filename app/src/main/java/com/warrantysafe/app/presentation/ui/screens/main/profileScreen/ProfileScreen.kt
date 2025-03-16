@@ -101,7 +101,6 @@ fun ProfileScreen(
     val isConnected = remember { mutableStateOf(checkValidNetworkConnection(context)) }
 
     var user by remember { mutableStateOf(User()) }
-    var isMenuExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
     Box(
@@ -342,39 +341,6 @@ fun ModernProfileDetailRow(label: String, value: String) {
         )
     }
 }
-
-@Composable
-fun ModernButton(imageVector: ImageVector, btnText: String, onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-        colors = ButtonDefaults.elevatedButtonColors(Color.White),
-        shape = RoundedCornerShape(20.dp),
-        border = BorderStroke(1.dp,Color.LightGray),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp),
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp) // Remove elevation since we use shadow
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = imageVector,
-                contentDescription = btnText,
-                tint = Color.Red.copy(alpha = 0.7f) // Better visibility
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = btnText,
-                fontSize = 18.sp,
-                color = Color.Red.copy(alpha = 0.7f),
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}
-
 
 fun navigateToEditProfile(
     navController: NavController,

@@ -66,6 +66,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.ccp) // Add CountryCodePicker here
+    implementation ("com.googlecode.libphonenumber:libphonenumber:8.12.54")
+
 
     // Coil
     implementation(libs.coil.compose)

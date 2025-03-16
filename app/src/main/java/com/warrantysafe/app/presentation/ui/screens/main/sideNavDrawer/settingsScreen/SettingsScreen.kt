@@ -141,6 +141,7 @@ fun ChangePasswordDialog(
     }
 
     AlertDialog(
+        containerColor = Color.White,
         onDismissRequest = onDismiss,
         title = { Text("Change Password", fontWeight = FontWeight.Bold) },
         text = {
@@ -235,6 +236,7 @@ fun DeleteAccountDialog(
     }
 
     AlertDialog(
+        containerColor = Color.White,
         onDismissRequest = onDismiss,
         title = { Text("Delete Account", fontWeight = FontWeight.Bold) },
         text = {

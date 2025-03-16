@@ -51,6 +51,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.google.i18n.phonenumbers.NumberParseException
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.domain.utils.Results
@@ -73,7 +75,16 @@ fun EditProfileScreen(
     val context = LocalContext.current
     var actualName by remember { mutableStateOf(name) }
     var actualEmail by remember { mutableStateOf(email) }
-    var actualPhoneNumber by remember { mutableStateOf(phoneNumber) }
+    // General solution using libphonenumber to get the number without the country code
+    var actualPhoneNumber = remember(phoneNumber) {
+        try {
+            val phoneUtil = PhoneNumberUtil.getInstance()
+            val numberProto = phoneUtil.parse(phoneNumber, null)
+            numberProto.nationalNumber.toString()
+        } catch (e: NumberParseException) {
+            phoneNumber
+        }
+    }
     val scrollState = rememberScrollState()
     val userViewModel: UserViewModel = koinViewModel()
     // Validation Logic

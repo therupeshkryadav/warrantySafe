@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -66,6 +67,7 @@ import com.warrantysafe.app.R
 import com.warrantysafe.app.domain.model.User
 import com.warrantysafe.app.domain.utils.Results
 import com.warrantysafe.app.presentation.navigation.Route
+import com.warrantysafe.app.presentation.ui.screens.main.profileScreen.components.CountryCodePickerComposable
 import com.warrantysafe.app.presentation.ui.screens.main.utils.customTopAppBar.CustomTopAppBar
 import com.warrantysafe.app.presentation.viewModel.UserViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -92,10 +94,11 @@ fun SignUpScreen(
 
         is Results.Failure -> {
             val errorMessage = result.exception.message ?: "No account found with these credentials"
-            Toast.makeText(context,errorMessage, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
         }
 
-        else -> { /* No-op for initial or null state */ }
+        else -> { /* No-op for initial or null state */
+        }
     }
     // Remember state for user input
     val name = remember { mutableStateOf("") }
@@ -117,6 +120,8 @@ fun SignUpScreen(
     val defaultProfileImage =
         "android.resource://com.warrantysafe.app/drawable/profile_placeholder".toUri()
 
+    var countryCode by remember { mutableStateOf("+91") } // Default: India
+
     // State to handle profile image
     var profileImageUri by remember { mutableStateOf<Uri?>(defaultProfileImage) }
 
@@ -127,7 +132,8 @@ fun SignUpScreen(
         profileImageUri = uri ?: defaultProfileImage
     }
 
-    val isValidInput = name.value.isNotEmpty() && email.value.isNotEmpty() && phoneNumber.value.isNotEmpty() && password.value.isNotEmpty() && confPassword.value == password.value && phoneError.isNullOrEmpty()
+    val isValidInput =
+        name.value.isNotEmpty() && email.value.isNotEmpty() && phoneNumber.value.isNotEmpty() && password.value.isNotEmpty() && confPassword.value == password.value && phoneError.isNullOrEmpty()
 
     Column(
         modifier = Modifier
@@ -162,7 +168,11 @@ fun SignUpScreen(
             },
             actions = {}
         )
-        Column(Modifier.fillMaxSize() .verticalScroll(rememberScrollState())){
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
             Spacer(modifier = Modifier.height(16.dp))
             Box(
                 modifier = Modifier
@@ -227,7 +237,8 @@ fun SignUpScreen(
             LaunchedEffect(email.value) {
                 if (email.value.isNotEmpty() && isValidEmail(email.value)) {
                     checkEmailIdExists(email.value) { exists ->
-                        emailExistenceMessage = if (exists) "Email ID is registered with us!!" else null
+                        emailExistenceMessage =
+                            if (exists) "Email ID is registered with us!!" else null
                     }
                 } else {
                     emailExistenceMessage = null
@@ -293,15 +304,14 @@ fun SignUpScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-
-
             // Phone Number Field
             TextField(
                 value = phoneNumber.value,
                 onValueChange = {
                     if (it.all { char -> char.isDigit() }) { // Check if all characters are digits
                         phoneNumber.value = it
-                        phoneError = if (phoneNumber.value.isEmpty() || it.length in 10..15) null else "Enter a valid phone number (10-15 digits)"
+                        phoneError =
+                            if (phoneNumber.value.isEmpty() || it.length in 10..15) null else "Enter a valid phone number (10-15 digits)"
                         // Check in database
                         checkPhoneNumberExists(it) { exists ->
                             if (exists) {
@@ -324,9 +334,12 @@ fun SignUpScreen(
                     Text("Enter Your Phone Number", color = Color.Gray)
                 },
                 leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.phone_pp),
-                        contentDescription = "Phone Number Icon"
+                    // Country Code Picker
+                    CountryCodePickerComposable(
+                        defaultCountryCode = 91,
+                        onCountrySelected = { selectedCode ->
+                            countryCode = selectedCode
+                        }
                     )
                 },
                 singleLine = true,
@@ -344,13 +357,15 @@ fun SignUpScreen(
                 )
             )
 
-           // Show Error Message if Validation Fails
+            // Show Error Message if Validation Fails
             phoneError?.let {
                 Text(
                     text = it,
                     color = Color.Red,
                     fontSize = 12.sp,
-                    modifier = Modifier.padding(start = 20.dp, top = 4.dp).fillMaxWidth()
+                    modifier = Modifier
+                        .padding(start = 20.dp, top = 4.dp)
+                        .fillMaxWidth()
                 )
             }
 
@@ -359,7 +374,8 @@ fun SignUpScreen(
 
             // Function to validate password
             fun isValidPassword(input: String): Boolean {
-                val passwordRegex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[@\$!%*?&])[A-Za-z0-9@\$!%*?&]{8,}$".toRegex()
+                val passwordRegex =
+                    "^(?=.*[A-Z])(?=.*[0-9])(?=.*[@\$!%*?&])[A-Za-z0-9@\$!%*?&]{8,}$".toRegex()
                 // Contains at least one UpperCase, contains only allowed characters
                 return input.matches(passwordRegex) &&
                         input.any { it.isDigit() } && // At least one digit
@@ -371,7 +387,8 @@ fun SignUpScreen(
                 value = password.value,
                 onValueChange = {
                     password.value = it
-                    passwordError = if (password.value.isEmpty() || isValidPassword(it)) null else "Password must contain an uppercase letter, contain at least one digit, one '@', and no other special characters."
+                    passwordError =
+                        if (password.value.isEmpty() || isValidPassword(it)) null else "Password must contain an uppercase letter, contain at least one digit, one '@', and no other special characters."
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -393,7 +410,9 @@ fun SignUpScreen(
                 trailingIcon = {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
-                            painter = if(passwordVisible)painterResource(R.drawable.ic_eye)else painterResource(R.drawable.unhide_password),
+                            painter = if (passwordVisible) painterResource(R.drawable.ic_eye) else painterResource(
+                                R.drawable.unhide_password
+                            ),
                             contentDescription = "Toggle Password Visibility"
                         )
                     }
@@ -432,14 +451,17 @@ fun SignUpScreen(
                 value = confPassword.value,
                 onValueChange = {
                     confPassword.value = it
-                    confPasswordError = if (confPassword.value.isEmpty() || password.value == it) null else "Password does not matches, Check your password!!"
+                    confPasswordError =
+                        if (confPassword.value.isEmpty() || password.value == it) null else "Password does not matches, Check your password!!"
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .border(width = 1.dp,
+                    .border(
+                        width = 1.dp,
                         color = if (confPasswordError != null) Color.Red else Color.LightGray,
-                        shape = RoundedCornerShape(20.dp)),
+                        shape = RoundedCornerShape(20.dp)
+                    ),
                 placeholder = {
                     Text("Confirm Your Password", color = Color.Gray)
                 },
@@ -454,7 +476,9 @@ fun SignUpScreen(
                 trailingIcon = {
                     IconButton(onClick = { confPasswordVisible = !confPasswordVisible }) {
                         Icon(
-                            painter = if(confPasswordVisible)painterResource(R.drawable.ic_eye)else painterResource(R.drawable.unhide_password),
+                            painter = if (confPasswordVisible) painterResource(R.drawable.ic_eye) else painterResource(
+                                R.drawable.unhide_password
+                            ),
                             contentDescription = "Toggle Password Visibility"
                         )
                     }
@@ -483,7 +507,8 @@ fun SignUpScreen(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-
+            // Pass Full Phone Number (With Country Code) to ViewModel
+            val fullPhoneNumber = "$countryCode${phoneNumber.value}"
             // SignUp Button
             Button(
                 onClick = {
@@ -492,7 +517,7 @@ fun SignUpScreen(
                             User(
                                 name = name.value,
                                 email = email.value,
-                                phoneNumber = phoneNumber.value,
+                                phoneNumber = fullPhoneNumber,
                                 profileImageUrl = profileImageUri.toString(),
                                 password = password.value
                             )

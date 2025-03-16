@@ -99,7 +99,7 @@ fun DetailRow(
                     focusedContainerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedContainerColor = Color.White,
-                    disabledContainerColor = Color.LightGray,
+                    disabledContainerColor = Color.LightGray.copy(alpha = 0.4f),
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
                     unfocusedTextColor = Color.Black,

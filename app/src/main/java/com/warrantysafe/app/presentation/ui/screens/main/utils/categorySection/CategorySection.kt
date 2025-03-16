@@ -78,6 +78,7 @@ fun CategorySection(
                 placeholder = {
                     Text(text = "Select a category", color = Color.Gray)
                 },
+                shape = RoundedCornerShape(20.dp),
                 readOnly = true,
                 enabled = false, // Prevent typing
                 modifier = Modifier
