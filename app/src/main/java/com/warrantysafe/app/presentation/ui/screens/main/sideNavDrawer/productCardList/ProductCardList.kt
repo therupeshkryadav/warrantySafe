@@ -164,7 +164,9 @@ fun ProductCardList(
                                 )
                                 Icon(
                                     modifier = Modifier.size(24.dp),
-                                    painter = if(!expandedSort.value)painterResource(id = R.drawable.drop_down)else painterResource(id = R.drawable.drop_up),
+                                    painter = if (!expandedSort.value) painterResource(id = R.drawable.drop_down) else painterResource(
+                                        id = R.drawable.drop_up
+                                    ),
                                     contentDescription = "Sort Dropdown"
                                 )
                             }
@@ -191,7 +193,7 @@ fun ProductCardList(
                                 }
                             }
                         }
-                        if (selectedProducts.size > 0) {
+                        if (selectedProducts.isNotEmpty()) {
                             Icon(
                                 modifier = Modifier.clickable(
                                     interactionSource = remember { MutableInteractionSource() },
@@ -215,7 +217,6 @@ fun ProductCardList(
                         }
 
                     }
-
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
@@ -249,29 +250,6 @@ fun ProductCardList(
                             Spacer(modifier = Modifier.height(16.dp))
                         }
                     }
-                } else {
-                    // Empty state if no products are available
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 8.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ShoppingCart,
-                            contentDescription = "No Products",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(64.dp)
-                        )
-                        Text(
-                            text = "No Products, Add to display.",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(top = 16.dp)
-                        )
-                    }
                 }
             }
 
@@ -279,6 +257,29 @@ fun ProductCardList(
                 // Error state UI
                 val errorMessage = (productState as Results.Failure).exception
                 Log.d("Error", "error why failure occurred? $errorMessage")
+
+                // Empty state if no products are available
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 8.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ShoppingCart,
+                        contentDescription = "No Products",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(64.dp)
+                    )
+                    Text(
+                        text = errorMessage.localizedMessage,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                }
             }
         }
     }
