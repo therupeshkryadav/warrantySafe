@@ -5,9 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,23 +50,30 @@ fun SplashScreen(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween,
+            verticalArrangement = Arrangement.Center, // Centers everything vertically
             modifier = Modifier.padding(16.dp)
         ) {
             Image(
                 painter = painterResource(R.drawable.warranty_logo),
-                contentDescription = "Warranty Safe Logo"
+                contentDescription = "Warranty Safe Logo",
+                modifier = Modifier.size(300.dp).padding(bottom = 16.dp) // Adjust size & spacing
             )
             Text(
-                text = "v1.0.0",
-                style = MaterialTheme.typography.titleLarge,
+                text = "Track your warranties anywhere",
+                style = MaterialTheme.typography.bodyLarge, // Use a standard style
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                modifier = Modifier.fillMaxWidth()
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(8.dp)) // Add spacing between text
+            Text(
+                text = "(v1.0.0)",
+                style = MaterialTheme.typography.bodySmall, // Smaller font for version // align at the bottom
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
             )
         }
     }
+
 
     // Use ViewModel to manage navigation logic
     val userViewModel: UserViewModel = koinViewModel()

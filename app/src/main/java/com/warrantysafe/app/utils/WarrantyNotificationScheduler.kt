@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 object WarrantyNotificationScheduler {
 
-    private const val WORK_NAME_DAILY = "warranty_notification_daily"
+    private const val WORK_NAME_DAILY = "warranty_notifications_daily"
     private const val TAG = "WarrantyScheduler"
 
     fun schedule(context: Context) {
@@ -17,23 +17,26 @@ object WarrantyNotificationScheduler {
 
         val workManager = WorkManager.getInstance(context)
 
-        val initialDelay = calculateDelay() // Schedule at 11:55 AM
+        val initialDelay = calculateDelay() // delay for 6 hours
 
         val dailyRequest = OneTimeWorkRequestBuilder<WarrantyWorker>()
-            .setInitialDelay(initialDelay, TimeUnit.DAYS)
-            .setConstraints(getWorkConstraints())
+            .setInitialDelay(initialDelay, TimeUnit.HOURS) // Wait for 'initialDelay' hours before executing
+            .setConstraints(getWorkConstraints()) // Apply conditions like charging, network, etc.
             .build()
 
-        workManager.enqueueUniqueWork(WORK_NAME_DAILY, ExistingWorkPolicy.KEEP, dailyRequest)
 
-        Log.d(TAG, "Warranty Reminder Scheduled at 11:55 AM")
+
+
+        workManager.enqueueUniqueWork(WORK_NAME_DAILY, ExistingWorkPolicy.REPLACE, dailyRequest)
+
+        Log.d(TAG, "Warranty Reminder Scheduled with delay of 6 hours")
     }
 
     private fun calculateDelay(): Long {
         val now = Calendar.getInstance()
         val targetTime = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 11)
-            set(Calendar.MINUTE, 55)
+            set(Calendar.HOUR_OF_DAY, 6)
+            set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
         }
 
